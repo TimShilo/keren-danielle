@@ -23,7 +23,7 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "date_desc", label: "תאריך (מהחדש לישן)" },
   { key: "date_asc", label: "תאריך (מהישן לחדש)" },
   { key: "title", label: "כותרת (א-ת)" },
-  { key: "category", label: "קטגוריה" },
+  { key: "category", label: "פעילות" },
   { key: "status", label: "סטטוס (טיוטות קודם)" },
   { key: "updated", label: "עודכן לאחרונה" },
 ];
@@ -159,7 +159,7 @@ function ContentList() {
           onChange={(e) => setCatFilter(e.target.value)}
           className={`${inputClass} !w-auto`}
         >
-          <option value="">כל הקטגוריות</option>
+          <option value="">כל הפעילויות</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {categoryLabel(categories, c.id)}
@@ -200,7 +200,7 @@ function ContentList() {
             onChange={(e) => setBulkCat(e.target.value)}
             className={`${inputClass} !w-auto !py-1.5 text-foreground`}
           >
-            <option value="">שיוך לקטגוריה…</option>
+            <option value="">שיוך לפעילות…</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {categoryLabel(categories, c.id)}
@@ -212,7 +212,7 @@ function ContentList() {
             disabled={!bulkCat || bulk.isPending}
             onClick={() => bulk.mutate({ category_id: bulkCat })}
           >
-            החל קטגוריה
+            החל פעילות
           </GhostButton>
           <button className="ms-auto text-sm underline" onClick={() => setSelected(new Set())}>
             ביטול בחירה
@@ -235,7 +235,7 @@ function ContentList() {
                 />
               </th>
               <th className="px-4 py-3 text-start font-semibold">כותרת</th>
-              <th className="px-4 py-3 text-start font-semibold">קטגוריה</th>
+              <th className="px-4 py-3 text-start font-semibold">פעילות</th>
               <th className="px-4 py-3 text-start font-semibold">תאריך</th>
               <th className="px-4 py-3 text-start font-semibold">סטטוס</th>
               <th className="w-24 px-4 py-3" />

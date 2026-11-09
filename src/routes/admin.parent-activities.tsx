@@ -58,10 +58,10 @@ function ParentActivities() {
 
   return (
     <div>
-      <PageTitle>פעילויות אב</PageTitle>
+      <PageTitle>פעילויות ראשיות</PageTitle>
       <div className="mb-6 rounded-2xl bg-secondary px-5 py-4 text-sm">
-        פעילות אב מציגה רק את הקטגוריות של תתי-הפעילויות שלה. כאן מנהלים את הטקסט, התמונה והסדר של
-        כל אחת. את התוכן של כל תת-פעילות (טקסטים, תמונות, וידאו) מנהלים בלשונית "תתי פעילויות".
+        פעילות ראשית מציגה רק את הפעילויות המשניות שלה. כאן מנהלים את הטקסט, התמונה והסדר של כל אחת.
+        את התוכן של כל פעילות משנית (טקסטים, תמונות, וידאו) מנהלים בלשונית "פעילויות משניות".
       </div>
       <div className="grid gap-5 md:grid-cols-2">
         {parents.map((p) => {
@@ -86,7 +86,7 @@ function ParentActivities() {
               <div className="min-w-0 flex-1">
                 <h2 className="text-xl font-extrabold">{p.name_he}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {subs.length} תתי פעילויות · {pageCount} עמודים
+                  {subs.length} פעילויות משניות · {pageCount} עמודים
                 </p>
                 <p className="mt-1 truncate text-sm text-muted-foreground">
                   {subs.map((s) => s.name_he).join(" · ")}

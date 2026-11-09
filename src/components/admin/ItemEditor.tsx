@@ -259,13 +259,13 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               </select>
             </Field>
           </div>
-          <Field label="קטגוריה">
+          <Field label="פעילות">
             <select
               className={inputClass}
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
             >
-              <option value="">ללא קטגוריה</option>
+              <option value="">ללא פעילות</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {categoryLabel(categories, c.id)}

@@ -15,7 +15,6 @@ import {
   Type,
   Video,
   Image as ImageIcon,
-  FolderTree,
   Users,
   Settings,
   ExternalLink,
@@ -31,7 +30,7 @@ import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 const CONTENT_NAV = [
-  { slug: "activities", label: "תתי פעילויות", icon: Layers },
+  { slug: "activities", label: "פעילויות משניות", icon: Layers },
   { slug: "news", label: "חדשות ועדכונים", icon: Newspaper },
   { slug: "events", label: "אירועים", icon: CalendarDays },
   { slug: "books", label: "ראו אור", icon: BookOpen },
@@ -148,7 +147,7 @@ export function AdminLayout() {
             className={linkClass}
             activeProps={{ className: cn(linkClass, activeClass) }}
           >
-            <LayoutGrid className="size-5" /> פעילויות אב
+            <LayoutGrid className="size-5" /> פעילויות ראשיות
             <Count n={counts.data?.parents} />
           </Link>
           {CONTENT_NAV.map(({ slug, label, icon: Icon }) => (
@@ -172,13 +171,6 @@ export function AdminLayout() {
             activeProps={{ className: cn(linkClass, activeClass) }}
           >
             <ImageIcon className="size-5" /> מדיה <Count n={counts.data?.media} />
-          </Link>
-          <Link
-            to="/admin/categories"
-            className={linkClass}
-            activeProps={{ className: cn(linkClass, activeClass) }}
-          >
-            <FolderTree className="size-5" /> קטגוריות <Count n={counts.data?.categories} />
           </Link>
           {isAdmin && (
             <Link

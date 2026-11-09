@@ -13,7 +13,7 @@ export type ContentType =
   | "page";
 
 export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; single: string }[] = [
-  { type: "activity", slug: "activities", label: "תתי פעילויות", single: "תת-פעילות" },
+  { type: "activity", slug: "activities", label: "פעילויות משניות", single: "פעילות משנית" },
   { type: "news", slug: "news", label: "חדשות ועדכונים", single: "חדשה" },
   { type: "event", slug: "events", label: "אירועים", single: "אירוע" },
   { type: "book", slug: "books", label: "ראו אור", single: "ספר" },

@@ -98,7 +98,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
     },
     onSuccess: () => {
       setNewName("");
-      toast.success("תת-פעילות נוספה");
+      toast.success("פעילות משנית נוספה");
       refresh();
     },
     onError: (e: Error) => toast.error(e.message),
@@ -112,7 +112,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
         dir="rtl"
       >
         <SheetHeader>
-          <SheetTitle className="text-xl font-extrabold">פעילות אב: {parent.name_he}</SheetTitle>
+          <SheetTitle className="text-xl font-extrabold">פעילות ראשית: {parent.name_he}</SheetTitle>
         </SheetHeader>
         <form
           onSubmit={(e: FormEvent) => {
@@ -157,7 +157,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
           </section>
 
           <section className="space-y-3 rounded-2xl border bg-card p-4">
-            <h3 className="text-base font-extrabold">תתי הפעילויות (קטגוריות) · {subs.length}</h3>
+            <h3 className="text-base font-extrabold">הפעילויות המשניות · {subs.length}</h3>
             <div className="space-y-2">
               {subs.map((s, i) => {
                 const page = pages.filter((p) => p.category_id === s.id);
@@ -204,7 +204,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
             <div className="flex flex-wrap items-end gap-2 border-t pt-3">
               <input
                 className={`${inputClass} !w-40`}
-                placeholder="שם תת-פעילות"
+                placeholder="שם פעילות משנית"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
               />
@@ -221,7 +221,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
               params={{ type: "activities" }}
               className="inline-block text-sm font-bold text-primary underline-offset-4 hover:underline"
             >
-              לניהול התוכן של תתי הפעילויות ←
+              לניהול התוכן של הפעילויות המשניות ←
             </Link>
           </section>
 
