@@ -4,7 +4,7 @@ import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
-import { categoryLabel, type Category, type ContentItem } from "@/lib/content";
+import { mainOf, type Category, type ContentItem } from "@/lib/content";
 import { Field, GhostButton, PrimaryButton, inputClass } from "./ui";
 import { ActivityFields } from "./ActivityFields";
 import { RichTextEditor } from "./RichTextEditor";
@@ -32,6 +32,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [title, setTitle] = useState(item?.title ?? "");
   const [date, setDate] = useState(item?.item_date ?? "");
   const [categoryId, setCategoryId] = useState(item?.category_id ?? "");
+  const mainId = mainOf(categories, categoryId || null)?.id ?? "";
   const [status, setStatus] = useState<ContentItem["status"]>(item?.status ?? "draft");
   const [externalUrl, setExternalUrl] = useState(item?.external_url ?? "");
   const [excerpt, setExcerpt] = useState(item?.excerpt ?? "");
@@ -259,25 +260,38 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               </select>
             </Field>
           </div>
-          <Field label="פעילות משנית">
+          <Field label="קטגוריה ראשית">
             <select
               className={inputClass}
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
+              value={mainId}
+              onChange={(e) => {
+                setCategoryId(e.target.value);
+              }}
             >
-              <option value="">ללא פעילות</option>
+              <option value="">ללא קטגוריה</option>
               {categories
                 .filter((c) => !c.parent_id)
-                .map((top) => (
-                  <optgroup key={top.id} label={top.name_he}>
-                    {categories
-                      .filter((c) => c.parent_id === top.id)
-                      .map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name_he}
-                        </option>
-                      ))}
-                  </optgroup>
+                .map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name_he}
+                  </option>
+                ))}
+            </select>
+          </Field>
+          <Field label="קטגוריה משנית">
+            <select
+              className={inputClass}
+              value={categoryId !== mainId ? categoryId : ""}
+              disabled={!mainId}
+              onChange={(e) => setCategoryId(e.target.value || mainId)}
+            >
+              <option value="">{mainId ? "ללא קטגוריה משנית" : "בחרי קודם קטגוריה ראשית"}</option>
+              {categories
+                .filter((c) => c.parent_id === mainId)
+                .map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name_he}
+                  </option>
                 ))}
             </select>
           </Field>

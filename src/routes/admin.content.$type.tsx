@@ -26,8 +26,8 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "date_desc", label: "תאריך (מהחדש לישן)" },
   { key: "date_asc", label: "תאריך (מהישן לחדש)" },
   { key: "title", label: "כותרת (א-ת)" },
-  { key: "main", label: "פעילות ראשית" },
-  { key: "sub", label: "פעילות משנית" },
+  { key: "main", label: "קטגוריה ראשית" },
+  { key: "sub", label: "קטגוריה משנית" },
   { key: "status", label: "סטטוס (טיוטות קודם)" },
   { key: "updated", label: "עודכן לאחרונה" },
 ];
@@ -175,7 +175,7 @@ function ContentList() {
           }}
           className={`${inputClass} !w-auto`}
         >
-          <option value="">כל הפעילויות הראשיות</option>
+          <option value="">כל הקטגוריות הראשיות</option>
           {categories
             .filter((c) => !c.parent_id)
             .map((c) => (
@@ -189,7 +189,7 @@ function ContentList() {
           onChange={(e) => setSubFilter(e.target.value)}
           className={`${inputClass} !w-auto`}
         >
-          <option value="">כל הפעילויות המשניות</option>
+          <option value="">כל הקטגוריות המשניות</option>
           {categories
             .filter((c) => c.parent_id && (!mainFilter || c.parent_id === mainFilter))
             .map((c) => (
@@ -232,7 +232,7 @@ function ContentList() {
             onChange={(e) => setBulkCat(e.target.value)}
             className={`${inputClass} !w-auto !py-1.5 text-foreground`}
           >
-            <option value="">שיוך לפעילות…</option>
+            <option value="">שיוך לקטגוריה…</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {categoryLabel(categories, c.id)}
@@ -244,7 +244,7 @@ function ContentList() {
             disabled={!bulkCat || bulk.isPending}
             onClick={() => bulk.mutate({ category_id: bulkCat })}
           >
-            החל פעילות
+            החל קטגוריה
           </GhostButton>
           <button className="ms-auto text-sm underline" onClick={() => setSelected(new Set())}>
             ביטול בחירה
@@ -267,8 +267,8 @@ function ContentList() {
                 />
               </th>
               <th className="px-4 py-3 text-start font-semibold">כותרת</th>
-              <th className="px-4 py-3 text-start font-semibold">פעילות ראשית</th>
-              <th className="px-4 py-3 text-start font-semibold">פעילות משנית</th>
+              <th className="px-4 py-3 text-start font-semibold">קטגוריה ראשית</th>
+              <th className="px-4 py-3 text-start font-semibold">קטגוריה משנית</th>
               <th className="px-4 py-3 text-start font-semibold">תאריך</th>
               <th className="px-4 py-3 text-start font-semibold">סטטוס</th>
               <th className="w-24 px-4 py-3" />
