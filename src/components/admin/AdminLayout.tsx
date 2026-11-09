@@ -19,7 +19,10 @@ import {
   KeyRound,
   Loader2,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { CONTENT_TYPES } from "@/lib/content";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +37,14 @@ const CONTENT_NAV = [
   { slug: "videos", label: "סרטונים", icon: Video },
 ] as const;
 
+function Count({ n }: { n: number | undefined }) {
+  return (
+    <span className="ms-auto min-w-7 rounded-full bg-white/15 px-2 py-0.5 text-center text-xs font-bold tabular-nums">
+      {n ?? "…"}
+    </span>
+  );
+}
+
 const linkClass =
   "flex items-center gap-3 rounded-xl px-4 py-2.5 text-[15px] font-semibold text-sidebar-foreground/80 transition-colors hover:bg-white/10 hover:text-sidebar-foreground";
 const activeClass = "!bg-primary !text-primary-foreground shadow-sm";
@@ -41,6 +52,29 @@ const activeClass = "!bg-primary !text-primary-foreground shadow-sm";
 export function AdminLayout() {
   const { session, loading, isStaff, isAdmin, roles, signOut } = useAuth();
   const navigate = useNavigate();
+
+  // counts shown next to each section in the sidebar
+  const counts = useQuery({
+    queryKey: ["nav-counts"],
+    enabled: !!session && isStaff,
+    queryFn: async () => {
+      const [items, media, cats, users] = await Promise.all([
+        supabase.from("content_items").select("type").eq("language", "he"),
+        supabase.from("media").select("id", { count: "exact", head: true }),
+        supabase.from("categories").select("id", { count: "exact", head: true }),
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+      ]);
+      const byType: Record<string, number> = {};
+      for (const r of items.data ?? []) byType[r.type] = (byType[r.type] ?? 0) + 1;
+      return {
+        byType,
+        media: media.count ?? 0,
+        categories: cats.count ?? 0,
+        users: users.count ?? 0,
+      };
+    },
+  });
+  const typeOfSlug = (slug: string) => CONTENT_TYPES.find((t) => t.slug === slug)?.type;
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/admin/login" });
@@ -105,6 +139,9 @@ export function AdminLayout() {
               activeProps={{ className: cn(linkClass, activeClass) }}
             >
               <Icon className="size-5" /> {label}
+              <Count
+                n={counts.data?.byType[typeOfSlug(slug) ?? ""] ?? (counts.data ? 0 : undefined)}
+              />
             </Link>
           ))}
           <div className="mb-1 mt-3 px-4 text-xs font-bold text-sidebar-foreground/45">ניהול</div>
@@ -113,14 +150,14 @@ export function AdminLayout() {
             className={linkClass}
             activeProps={{ className: cn(linkClass, activeClass) }}
           >
-            <ImageIcon className="size-5" /> מדיה
+            <ImageIcon className="size-5" /> מדיה <Count n={counts.data?.media} />
           </Link>
           <Link
             to="/admin/categories"
             className={linkClass}
             activeProps={{ className: cn(linkClass, activeClass) }}
           >
-            <FolderTree className="size-5" /> קטגוריות
+            <FolderTree className="size-5" /> קטגוריות <Count n={counts.data?.categories} />
           </Link>
           {isAdmin && (
             <Link
@@ -128,7 +165,7 @@ export function AdminLayout() {
               className={linkClass}
               activeProps={{ className: cn(linkClass, activeClass) }}
             >
-              <Users className="size-5" /> משתמשים
+              <Users className="size-5" /> משתמשים <Count n={counts.data?.users} />
             </Link>
           )}
           <Link

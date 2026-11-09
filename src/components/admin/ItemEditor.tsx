@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -6,12 +6,23 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { supabase } from "@/integrations/supabase/client";
 import { categoryLabel, type Category, type ContentItem } from "@/lib/content";
 import { Field, GhostButton, PrimaryButton, inputClass } from "./ui";
+import { ActivityFields } from "./ActivityFields";
+import { ItemMedia, type FeaturedRef, type GalleryRow, type VideoRow } from "./ItemMedia";
 
 interface Props {
   typeMeta: { type: ContentItem["type"]; label: string; single: string };
   item: ContentItem | null;
   categories: Category[];
   onClose: () => void;
+}
+
+function safeParse(text: string): Record<string, unknown> {
+  try {
+    const v = JSON.parse(text);
+    return v && typeof v === "object" && !Array.isArray(v) ? v : {};
+  } catch {
+    return {};
+  }
 }
 
 export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
@@ -25,6 +36,55 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [excerpt, setExcerpt] = useState(item?.excerpt ?? "");
   const [body, setBody] = useState(item?.body_html ?? "");
   const [dataText, setDataText] = useState(JSON.stringify(item?.data ?? {}, null, 2));
+
+  const [featured, setFeatured] = useState<FeaturedRef | null>(null);
+  const [gallery, setGallery] = useState<GalleryRow[]>([]);
+  const [videos, setVideos] = useState<VideoRow[]>([]);
+  const showMedia = typeMeta.type !== "sentence";
+
+  // load the item's existing featured image, gallery and videos
+  const existing = useQuery({
+    queryKey: ["item-media", item?.id],
+    enabled: !!item && showMedia,
+    staleTime: 0,
+    queryFn: async () => {
+      const id = item!.id;
+      const [g, v, f] = await Promise.all([
+        supabase
+          .from("content_media")
+          .select("media_id,title,caption,sort_order,media(storage_path)")
+          .eq("content_id", id)
+          .eq("role", "gallery")
+          .order("sort_order"),
+        supabase
+          .from("content_videos")
+          .select("id,url,title,sort_order")
+          .eq("content_id", id)
+          .order("sort_order"),
+        item!.featured_media_id
+          ? supabase
+              .from("media")
+              .select("id,storage_path")
+              .eq("id", item!.featured_media_id)
+              .single()
+          : Promise.resolve({ data: null }),
+      ]);
+      return { g: g.data ?? [], v: v.data ?? [], f: f.data as FeaturedRef | null };
+    },
+  });
+  useEffect(() => {
+    if (!existing.data) return;
+    setFeatured(existing.data.f);
+    setGallery(
+      existing.data.g.map((r) => ({
+        media_id: r.media_id,
+        storage_path: (r.media as unknown as { storage_path: string } | null)?.storage_path ?? "",
+        title: r.title ?? "",
+        caption: r.caption ?? "",
+      })),
+    );
+    setVideos(existing.data.v.map((r) => ({ key: r.id, url: r.url, title: r.title ?? "" })));
+  }, [existing.data]);
 
   const showParent = typeMeta.type === "news" || typeMeta.type === "activity";
   const parents = useQuery({
@@ -58,21 +118,66 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
         external_url: externalUrl.trim() || null,
         excerpt: excerpt.trim() || null,
         body_html: body || null,
+        featured_media_id: showMedia ? (featured?.id ?? null) : (item?.featured_media_id ?? null),
         data,
       };
       if (!payload.title) throw new Error("חובה למלא כותרת");
-      const q = item
-        ? supabase.from("content_items").update(payload).eq("id", item.id)
-        : supabase
-            .from("content_items")
-            .insert({ ...payload, type: typeMeta.type, language: "he" });
-      const { error } = await q;
-      if (error) throw error;
+      let id = item?.id;
+      if (item) {
+        const { error } = await supabase.from("content_items").update(payload).eq("id", item.id);
+        if (error) throw error;
+      } else {
+        const { data: created, error } = await supabase
+          .from("content_items")
+          .insert({ ...payload, type: typeMeta.type, language: "he" })
+          .select("id")
+          .single();
+        if (error) throw error;
+        id = created.id;
+      }
+      if (showMedia && id && (!item || existing.data)) {
+        // replace the gallery and videos with what is on screen
+        const d1 = await supabase
+          .from("content_media")
+          .delete()
+          .eq("content_id", id)
+          .eq("role", "gallery");
+        if (d1.error) throw d1.error;
+        if (gallery.length) {
+          const { error } = await supabase.from("content_media").insert(
+            gallery.map((g, i) => ({
+              content_id: id,
+              media_id: g.media_id,
+              role: "gallery",
+              sort_order: i,
+              title: g.title.trim() || null,
+              caption: g.caption.trim() || null,
+            })),
+          );
+          if (error) throw error;
+        }
+        const d2 = await supabase.from("content_videos").delete().eq("content_id", id);
+        if (d2.error) throw d2.error;
+        const vids = videos.filter((v) => v.url.trim());
+        if (vids.length) {
+          const { error } = await supabase.from("content_videos").insert(
+            vids.map((v, i) => ({
+              content_id: id,
+              url: v.url.trim(),
+              title: v.title.trim() || null,
+              sort_order: i,
+            })),
+          );
+          if (error) throw error;
+        }
+      }
     },
     onSuccess: () => {
       toast.success("נשמר");
       qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["item-media"] });
       qc.invalidateQueries({ queryKey: ["dashboard-counts"] });
+      qc.invalidateQueries({ queryKey: ["nav-counts"] });
       onClose();
     },
     onError: (e: Error) => toast.error(e.message),
@@ -87,6 +192,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
       toast.success("נמחק");
       qc.invalidateQueries({ queryKey: ["items"] });
       qc.invalidateQueries({ queryKey: ["dashboard-counts"] });
+      qc.invalidateQueries({ queryKey: ["nav-counts"] });
       onClose();
     },
     onError: (e: Error) => toast.error(e.message),

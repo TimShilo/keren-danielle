@@ -53,6 +53,7 @@ function ContentList() {
       setBulkCat("");
       qc.invalidateQueries({ queryKey: ["items"] });
       qc.invalidateQueries({ queryKey: ["dashboard-counts"] });
+      qc.invalidateQueries({ queryKey: ["nav-counts"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });

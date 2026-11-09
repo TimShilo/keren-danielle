@@ -36,6 +36,7 @@ export interface ContentItem {
   parent_id: string | null;
   status: "draft" | "published";
   external_url: string | null;
+  featured_media_id: string | null;
   data: Record<string, unknown>;
   sort_order: number;
   created_at: string;
