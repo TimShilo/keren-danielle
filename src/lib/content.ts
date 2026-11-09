@@ -2,7 +2,7 @@ export type ContentType =
   "activity" | "news" | "event" | "book" | "press_article" | "friend_story" | "sentence" | "video";
 
 export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; single: string }[] = [
-  { type: "activity", slug: "activities", label: "פעילויות", single: "פעילות" },
+  { type: "activity", slug: "activities", label: "תתי פעילויות", single: "תת-פעילות" },
   { type: "news", slug: "news", label: "חדשות ועדכונים", single: "חדשה" },
   { type: "event", slug: "events", label: "אירועים", single: "אירוע" },
   { type: "book", slug: "books", label: "ראו אור", single: "ספר" },
@@ -21,6 +21,8 @@ export interface Category {
   name_he: string;
   name_en: string | null;
   sort_order: number;
+  description_html?: string | null;
+  featured_media_id?: string | null;
 }
 
 export interface ContentItem {

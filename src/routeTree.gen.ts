@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
+import { Route as AdminParentActivitiesRouteImport } from './routes/admin.parent-activities'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
@@ -44,6 +45,11 @@ const AdminMediaRoute = AdminMediaRouteImport.update({
   path: '/media',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminParentActivitiesRoute = AdminParentActivitiesRouteImport.update({
+  id: '/parent-activities',
+  path: '/parent-activities',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/parent-activities': typeof AdminParentActivitiesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/login': typeof AdminLoginRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/parent-activities': typeof AdminParentActivitiesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/login': typeof AdminLoginRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/parent-activities': typeof AdminParentActivitiesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin_/login': typeof AdminLoginRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/categories'
     | '/admin/media'
+    | '/admin/parent-activities'
     | '/admin/settings'
     | '/admin/users'
     | '/admin/login'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/categories'
     | '/admin/media'
+    | '/admin/parent-activities'
     | '/admin/settings'
     | '/admin/users'
     | '/admin/login'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/categories'
     | '/admin/media'
+    | '/admin/parent-activities'
     | '/admin/settings'
     | '/admin/users'
     | '/admin_/login'
@@ -176,6 +188,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMediaRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/parent-activities': {
+      id: '/admin/parent-activities'
+      path: '/parent-activities'
+      fullPath: '/admin/parent-activities'
+      preLoaderRoute: typeof AdminParentActivitiesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -210,6 +229,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminMediaRoute: typeof AdminMediaRoute
+  AdminParentActivitiesRoute: typeof AdminParentActivitiesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -219,6 +239,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminMediaRoute: AdminMediaRoute,
+  AdminParentActivitiesRoute: AdminParentActivitiesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
