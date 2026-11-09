@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   STATUS_LABEL,
   categoryLabel,
+  mainOf,
+  subOf,
   typeBySlug,
   type Category,
   type ContentItem,
@@ -16,14 +18,16 @@ import { ItemEditor } from "@/components/admin/ItemEditor";
 
 export const Route = createFileRoute("/admin/content/$type")({ component: ContentList });
 
-type SortKey = "default" | "date_desc" | "date_asc" | "title" | "category" | "status" | "updated";
+type SortKey =
+  "default" | "date_desc" | "date_asc" | "title" | "main" | "sub" | "status" | "updated";
 
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "default", label: "סדר ברירת מחדל" },
   { key: "date_desc", label: "תאריך (מהחדש לישן)" },
   { key: "date_asc", label: "תאריך (מהישן לחדש)" },
   { key: "title", label: "כותרת (א-ת)" },
-  { key: "category", label: "פעילות" },
+  { key: "main", label: "פעילות ראשית" },
+  { key: "sub", label: "פעילות משנית" },
   { key: "status", label: "סטטוס (טיוטות קודם)" },
   { key: "updated", label: "עודכן לאחרונה" },
 ];
@@ -33,7 +37,8 @@ function ContentList() {
   const meta = typeBySlug(slug);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("default");
-  const [catFilter, setCatFilter] = useState("");
+  const [mainFilter, setMainFilter] = useState("");
+  const [subFilter, setSubFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [editing, setEditing] = useState<ContentItem | "new" | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -85,9 +90,11 @@ function ContentList() {
     let r = [...(items.data ?? [])];
     const q = search.trim();
     if (q) r = r.filter((x) => x.title.includes(q) || (x.excerpt ?? "").includes(q));
-    if (catFilter) r = r.filter((x) => x.category_id === catFilter);
+    if (mainFilter) r = r.filter((x) => mainOf(categories, x.category_id)?.id === mainFilter);
+    if (subFilter) r = r.filter((x) => x.category_id === subFilter);
     if (statusFilter) r = r.filter((x) => x.status === statusFilter);
-    const catName = (x: ContentItem) => categoryLabel(categories, x.category_id);
+    const mainName = (x: ContentItem) => mainOf(categories, x.category_id)?.name_he ?? "￿";
+    const subName = (x: ContentItem) => subOf(categories, x.category_id)?.name_he ?? "￿";
     const date = (x: ContentItem) => x.item_date ?? "";
     r.sort((a, b) => {
       switch (sort) {
@@ -97,8 +104,14 @@ function ContentList() {
           return (date(a) || "9999").localeCompare(date(b) || "9999");
         case "title":
           return a.title.localeCompare(b.title, "he");
-        case "category":
-          return catName(a).localeCompare(catName(b), "he") || date(b).localeCompare(date(a));
+        case "main":
+          return (
+            mainName(a).localeCompare(mainName(b), "he") ||
+            subName(a).localeCompare(subName(b), "he") ||
+            date(b).localeCompare(date(a))
+          );
+        case "sub":
+          return subName(a).localeCompare(subName(b), "he") || date(b).localeCompare(date(a));
         case "status":
           return a.status.localeCompare(b.status) || date(b).localeCompare(date(a));
         case "updated":
@@ -108,7 +121,7 @@ function ContentList() {
       }
     });
     return r;
-  }, [items.data, search, catFilter, statusFilter, sort, categories]);
+  }, [items.data, search, mainFilter, subFilter, statusFilter, sort, categories]);
 
   // only act on selected rows that are currently visible (not hidden by filters)
   const selectedIds = useMemo(
@@ -155,16 +168,35 @@ function ContentList() {
           </select>
         </label>
         <select
-          value={catFilter}
-          onChange={(e) => setCatFilter(e.target.value)}
+          value={mainFilter}
+          onChange={(e) => {
+            setMainFilter(e.target.value);
+            setSubFilter("");
+          }}
           className={`${inputClass} !w-auto`}
         >
-          <option value="">כל הפעילויות</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {categoryLabel(categories, c.id)}
-            </option>
-          ))}
+          <option value="">כל הפעילויות הראשיות</option>
+          {categories
+            .filter((c) => !c.parent_id)
+            .map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name_he}
+              </option>
+            ))}
+        </select>
+        <select
+          value={subFilter}
+          onChange={(e) => setSubFilter(e.target.value)}
+          className={`${inputClass} !w-auto`}
+        >
+          <option value="">כל הפעילויות המשניות</option>
+          {categories
+            .filter((c) => c.parent_id && (!mainFilter || c.parent_id === mainFilter))
+            .map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name_he}
+              </option>
+            ))}
         </select>
         <select
           value={statusFilter}
@@ -235,7 +267,8 @@ function ContentList() {
                 />
               </th>
               <th className="px-4 py-3 text-start font-semibold">כותרת</th>
-              <th className="px-4 py-3 text-start font-semibold">פעילות</th>
+              <th className="px-4 py-3 text-start font-semibold">פעילות ראשית</th>
+              <th className="px-4 py-3 text-start font-semibold">פעילות משנית</th>
               <th className="px-4 py-3 text-start font-semibold">תאריך</th>
               <th className="px-4 py-3 text-start font-semibold">סטטוס</th>
               <th className="w-24 px-4 py-3" />
@@ -244,14 +277,14 @@ function ContentList() {
           <tbody>
             {items.isLoading && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                   טוען…
                 </td>
               </tr>
             )}
             {!items.isLoading && rows.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                   אין פריטים להצגה
                 </td>
               </tr>
@@ -273,7 +306,10 @@ function ContentList() {
                 </td>
                 <td className="max-w-md truncate px-4 py-3 font-semibold">{x.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {categoryLabel(categories, x.category_id) || "—"}
+                  {mainOf(categories, x.category_id)?.name_he ?? "—"}
+                </td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {subOf(categories, x.category_id)?.name_he ?? "—"}
                 </td>
                 <td className="px-4 py-3 tabular-nums text-muted-foreground">
                   {x.item_date ?? "—"}

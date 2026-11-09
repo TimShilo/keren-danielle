@@ -259,18 +259,26 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               </select>
             </Field>
           </div>
-          <Field label="פעילות">
+          <Field label="פעילות משנית">
             <select
               className={inputClass}
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
             >
               <option value="">ללא פעילות</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {categoryLabel(categories, c.id)}
-                </option>
-              ))}
+              {categories
+                .filter((c) => !c.parent_id)
+                .map((top) => (
+                  <optgroup key={top.id} label={top.name_he}>
+                    {categories
+                      .filter((c) => c.parent_id === top.id)
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name_he}
+                        </option>
+                      ))}
+                  </optgroup>
+                ))}
             </select>
           </Field>
           {["news", "press_article", "book", "publication"].includes(typeMeta.type) && (

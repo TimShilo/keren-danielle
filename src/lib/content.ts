@@ -69,3 +69,18 @@ export function categoryLabel(cats: Category[], id: string | null): string {
   const p = c.parent_id ? cats.find((x) => x.id === c.parent_id) : null;
   return p ? `${p.name_he} › ${c.name_he}` : c.name_he;
 }
+
+/** The main (top-level) activity of a category id — the category itself when it is already a main one. */
+export function mainOf(cats: Category[], id: string | null): Category | null {
+  if (!id) return null;
+  const c = cats.find((x) => x.id === id);
+  if (!c) return null;
+  return c.parent_id ? (cats.find((x) => x.id === c.parent_id) ?? null) : c;
+}
+
+/** The secondary activity of a category id, or null when the item is attached to a main activity only. */
+export function subOf(cats: Category[], id: string | null): Category | null {
+  if (!id) return null;
+  const c = cats.find((x) => x.id === id);
+  return c?.parent_id ? c : null;
+}
