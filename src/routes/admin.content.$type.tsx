@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Plus, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -35,6 +36,26 @@ function ContentList() {
   const [catFilter, setCatFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [editing, setEditing] = useState<ContentItem | "new" | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkCat, setBulkCat] = useState("");
+  const qc = useQueryClient();
+
+  const bulk = useMutation({
+    mutationFn: async (patch: Partial<Pick<ContentItem, "status" | "category_id">>) => {
+      const ids = selectedIds;
+      const { error } = await supabase.from("content_items").update(patch).in("id", ids);
+      if (error) throw error;
+      return ids.length;
+    },
+    onSuccess: (n) => {
+      toast.success(`עודכנו ${n} פריטים`);
+      setSelected(new Set());
+      setBulkCat("");
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["dashboard-counts"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
 
   const items = useQuery({
     queryKey: ["items", meta?.type],
@@ -58,7 +79,7 @@ function ContentList() {
     },
   });
 
-  const categories = cats.data ?? [];
+  const categories = useMemo(() => cats.data ?? [], [cats.data]);
   const rows = useMemo(() => {
     let r = [...(items.data ?? [])];
     const q = search.trim();
@@ -87,6 +108,12 @@ function ContentList() {
     });
     return r;
   }, [items.data, search, catFilter, statusFilter, sort, categories]);
+
+  // only act on selected rows that are currently visible (not hidden by filters)
+  const selectedIds = useMemo(
+    () => rows.filter((r) => selected.has(r.id)).map((r) => r.id),
+    [rows, selected],
+  );
 
   if (!meta) return <PageTitle>סוג תוכן לא נמצא</PageTitle>;
 
@@ -150,10 +177,62 @@ function ContentList() {
         <span className="text-sm text-muted-foreground">{rows.length} פריטים</span>
       </div>
 
+      {selectedIds.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-3 rounded-2xl bg-sidebar px-4 py-3 text-sidebar-foreground">
+          <span className="font-bold">{selectedIds.length} נבחרו</span>
+          <PrimaryButton
+            className="!py-1.5"
+            disabled={bulk.isPending}
+            onClick={() => bulk.mutate({ status: "published" })}
+          >
+            פרסום
+          </PrimaryButton>
+          <GhostButton
+            className="!py-1.5 !text-foreground"
+            disabled={bulk.isPending}
+            onClick={() => bulk.mutate({ status: "draft" })}
+          >
+            החזרה לטיוטה
+          </GhostButton>
+          <select
+            value={bulkCat}
+            onChange={(e) => setBulkCat(e.target.value)}
+            className={`${inputClass} !w-auto !py-1.5 text-foreground`}
+          >
+            <option value="">שיוך לקטגוריה…</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {categoryLabel(categories, c.id)}
+              </option>
+            ))}
+          </select>
+          <GhostButton
+            className="!py-1.5 !text-foreground"
+            disabled={!bulkCat || bulk.isPending}
+            onClick={() => bulk.mutate({ category_id: bulkCat })}
+          >
+            החל קטגוריה
+          </GhostButton>
+          <button className="ms-auto text-sm underline" onClick={() => setSelected(new Set())}>
+            ביטול בחירה
+          </button>
+        </div>
+      )}
+
       <div className="overflow-hidden rounded-2xl border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted/60 text-start text-xs text-muted-foreground">
             <tr>
+              <th className="w-10 px-4 py-3">
+                <input
+                  type="checkbox"
+                  aria-label="בחר הכול"
+                  checked={rows.length > 0 && rows.every((r) => selected.has(r.id))}
+                  onChange={(e) =>
+                    setSelected(e.target.checked ? new Set(rows.map((r) => r.id)) : new Set())
+                  }
+                />
+              </th>
               <th className="px-4 py-3 text-start font-semibold">כותרת</th>
               <th className="px-4 py-3 text-start font-semibold">קטגוריה</th>
               <th className="px-4 py-3 text-start font-semibold">תאריך</th>
@@ -164,20 +243,33 @@ function ContentList() {
           <tbody>
             {items.isLoading && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   טוען…
                 </td>
               </tr>
             )}
             {!items.isLoading && rows.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   אין פריטים להצגה
                 </td>
               </tr>
             )}
             {rows.map((x) => (
               <tr key={x.id} className="border-t hover:bg-accent/40">
+                <td className="w-10 px-4 py-3">
+                  <input
+                    type="checkbox"
+                    aria-label="בחר פריט"
+                    checked={selected.has(x.id)}
+                    onChange={(e) => {
+                      const next = new Set(selected);
+                      if (e.target.checked) next.add(x.id);
+                      else next.delete(x.id);
+                      setSelected(next);
+                    }}
+                  />
+                </td>
                 <td className="max-w-md truncate px-4 py-3 font-semibold">{x.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">
                   {categoryLabel(categories, x.category_id) || "—"}
