@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, ImagePlus, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
+import { slugify } from "@/lib/slug";
 import { mediaUrl, type MediaRow } from "@/lib/media";
 import type { Category } from "@/lib/content";
 import { Field, GhostButton, PrimaryButton, inputClass } from "./ui";
@@ -24,7 +25,6 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
   const [featuredId, setFeaturedId] = useState(parent.featured_media_id ?? "");
   const [picker, setPicker] = useState(false);
   const [newName, setNewName] = useState("");
-  const [newSlug, setNewSlug] = useState("");
 
   const img = useQuery({
     queryKey: ["media-by-id", featuredId],
@@ -87,10 +87,10 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
 
   const addSub = useMutation({
     mutationFn: async () => {
-      if (!newName.trim() || !newSlug.trim()) throw new Error("יש למלא שם וכתובת (slug)");
+      if (!newName.trim()) throw new Error("יש למלא שם");
       const { error } = await supabase.from("categories").insert({
         name_he: newName.trim(),
-        slug: newSlug.trim(),
+        slug: slugify(newName),
         parent_id: parent.id,
         sort_order: subs.length + 1,
       });
@@ -98,7 +98,6 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
     },
     onSuccess: () => {
       setNewName("");
-      setNewSlug("");
       toast.success("תת-פעילות נוספה");
       refresh();
     },
@@ -208,13 +207,6 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
                 placeholder="שם תת-פעילות"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-              />
-              <input
-                dir="ltr"
-                className={`${inputClass} !w-40`}
-                placeholder="slug"
-                value={newSlug}
-                onChange={(e) => setNewSlug(e.target.value)}
               />
               <GhostButton
                 type="button"

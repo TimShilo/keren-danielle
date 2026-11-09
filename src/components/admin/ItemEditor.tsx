@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { categoryLabel, type Category, type ContentItem } from "@/lib/content";
 import { Field, GhostButton, PrimaryButton, inputClass } from "./ui";
 import { ActivityFields } from "./ActivityFields";
+import { RichTextEditor } from "./RichTextEditor";
 import { ItemTeam, type TeamRow } from "./ItemTeam";
 import { ItemMedia, type FeaturedRef, type GalleryRow, type VideoRow } from "./ItemMedia";
 
@@ -31,7 +32,6 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [title, setTitle] = useState(item?.title ?? "");
   const [date, setDate] = useState(item?.item_date ?? "");
   const [categoryId, setCategoryId] = useState(item?.category_id ?? "");
-  const [parentId, setParentId] = useState(item?.parent_id ?? "");
   const [status, setStatus] = useState<ContentItem["status"]>(item?.status ?? "draft");
   const [externalUrl, setExternalUrl] = useState(item?.external_url ?? "");
   const [excerpt, setExcerpt] = useState(item?.excerpt ?? "");
@@ -94,34 +94,26 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
     setTeam(existing.data.t.map((r) => ({ key: r.id, name: r.name, role: r.role ?? "" })));
   }, [existing.data]);
 
-  const showParent = typeMeta.type === "news" || typeMeta.type === "activity";
-  const parents = useQuery({
-    queryKey: ["items", "activity"],
-    enabled: showParent,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("content_items")
-        .select("id,title")
-        .eq("type", "activity")
-        .eq("language", "he")
-        .order("title");
-      return (data ?? []) as { id: string; title: string }[];
-    },
-  });
-
   const save = useMutation({
     mutationFn: async () => {
-      let data: Record<string, unknown> = {};
-      try {
-        data = dataText.trim() ? JSON.parse(dataText) : {};
-      } catch {
-        throw new Error("שדה הנתונים המתקדמים אינו JSON תקין");
+      const data = safeParse(dataText);
+      let parent: string | null = null;
+      if (typeMeta.type === "news" && categoryId) {
+        const { data: page } = await supabase
+          .from("content_items")
+          .select("id")
+          .eq("type", "activity")
+          .eq("language", "he")
+          .eq("category_id", categoryId)
+          .limit(1)
+          .maybeSingle();
+        parent = page?.id ?? null;
       }
       const payload = {
         title: title.trim(),
         item_date: date || null,
         category_id: categoryId || null,
-        parent_id: parentId || null,
+        parent_id: typeMeta.type === "news" ? parent : (item?.parent_id ?? null),
         status,
         external_url: externalUrl.trim() || null,
         excerpt: excerpt.trim() || null,
@@ -281,35 +273,21 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               ))}
             </select>
           </Field>
-          {showParent && (
-            <Field
-              label={typeMeta.type === "news" ? "משויך לפעילות" : "פעילות אב (אם זו תת-פעילות)"}
-            >
-              <select
+          {["news", "press_article", "book", "publication"].includes(typeMeta.type) && (
+            <Field label="קישור למקור חיצוני">
+              <input
+                dir="ltr"
                 className={inputClass}
-                value={parentId}
-                onChange={(e) => setParentId(e.target.value)}
-              >
-                <option value="">—</option>
-                {(parents.data ?? [])
-                  .filter((p) => p.id !== item?.id)
-                  .map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.title}
-                    </option>
-                  ))}
-              </select>
+                value={externalUrl}
+                onChange={(e) => setExternalUrl(e.target.value)}
+              />
             </Field>
           )}
-          <Field label="קישור למקור חיצוני">
-            <input
-              dir="ltr"
-              className={inputClass}
-              value={externalUrl}
-              onChange={(e) => setExternalUrl(e.target.value)}
-            />
-          </Field>
-          <Field label="תקציר">
+          <Field
+            label={
+              typeMeta.type === "activity" ? "תיאור קצר (מוצג בכרטיס בעמוד פעילות האב)" : "תקציר"
+            }
+          >
             <textarea
               rows={2}
               className={inputClass}
@@ -317,27 +295,10 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               onChange={(e) => setExcerpt(e.target.value)}
             />
           </Field>
-          <Field label="תוכן (HTML)" hint="אפשר להדביק HTML. עורך עשיר יתווסף בהמשך.">
-            <textarea
-              rows={12}
-              dir="auto"
-              className={`${inputClass} font-mono`}
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-            />
-          </Field>
-          <Field
-            label="נתונים מתקדמים (JSON)"
-            hint="שדות ייחודיים לסוג התוכן: אזורי עמוד, קישור לספר, מקור כתבה ועוד."
-          >
-            <textarea
-              rows={5}
-              dir="ltr"
-              className={`${inputClass} font-mono`}
-              value={dataText}
-              onChange={(e) => setDataText(e.target.value)}
-            />
-          </Field>
+          <div className="space-y-1.5 text-sm font-medium">
+            <span>תוכן</span>
+            <RichTextEditor value={body} onChange={setBody} />
+          </div>
           <div className="flex items-center justify-between gap-3 pt-2">
             <div className="flex gap-2">
               <PrimaryButton type="submit" disabled={save.isPending}>

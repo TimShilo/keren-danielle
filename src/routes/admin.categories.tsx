@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { slugify } from "@/lib/slug";
 import { supabase } from "@/integrations/supabase/client";
 import type { Category } from "@/lib/content";
 import { Field, GhostButton, PageTitle, PrimaryButton, inputClass } from "@/components/admin/ui";
@@ -11,7 +12,6 @@ export const Route = createFileRoute("/admin/categories")({ component: Categorie
 function Categories() {
   const qc = useQueryClient();
   const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
   const [parent, setParent] = useState("");
 
   const cats = useQuery({
@@ -28,15 +28,14 @@ function Categories() {
   });
   const add = useMutation({
     mutationFn: async () => {
-      if (!name.trim() || !slug.trim()) throw new Error("יש למלא שם וכתובת (slug)");
+      if (!name.trim()) throw new Error("יש למלא שם");
       const { error } = await supabase
         .from("categories")
-        .insert({ name_he: name.trim(), slug: slug.trim(), parent_id: parent || null });
+        .insert({ name_he: name.trim(), slug: slugify(name), parent_id: parent || null });
       if (error) throw error;
     },
     onSuccess: () => {
       setName("");
-      setSlug("");
       qc.invalidateQueries({ queryKey: ["categories"] });
       toast.success("נוסף");
     },
@@ -62,18 +61,10 @@ function Categories() {
           e.preventDefault();
           add.mutate();
         }}
-        className="mb-6 grid items-end gap-3 rounded-2xl bg-card p-5 shadow-sm sm:grid-cols-4"
+        className="mb-6 grid items-end gap-3 rounded-2xl bg-card p-5 shadow-sm sm:grid-cols-3"
       >
         <Field label="שם">
           <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} />
-        </Field>
-        <Field label="כתובת (slug)">
-          <input
-            dir="ltr"
-            className={inputClass}
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-          />
         </Field>
         <Field label="קטגוריית אב">
           <select className={inputClass} value={parent} onChange={(e) => setParent(e.target.value)}>
@@ -116,9 +107,6 @@ function Row({ c, onDelete, bold }: { c: Category; onDelete: () => void; bold?: 
     <div className="flex items-center justify-between py-1.5">
       <div>
         <span className={bold ? "font-extrabold" : "font-medium"}>{c.name_he}</span>
-        <span className="ms-3 text-xs text-muted-foreground" dir="ltr">
-          {c.slug}
-        </span>
       </div>
       <GhostButton className="!px-3 !py-1 text-destructive" onClick={onDelete}>
         מחיקה
