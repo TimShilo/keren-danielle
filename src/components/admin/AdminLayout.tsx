@@ -42,6 +42,7 @@ const CONTENT_NAV = [
   { slug: "creations", label: "יצירות של דניאלי", icon: Palette },
   { slug: "moments", label: "רגעים מחייה", icon: Camera },
   { slug: "publications", label: "פרסומים לזכרה", icon: Library },
+  { slug: "pages", label: "עמודים", icon: FileText },
 ] as const;
 
 function Count({ n }: { n: number | undefined }) {

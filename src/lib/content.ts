@@ -9,7 +9,8 @@ export type ContentType =
   | "video"
   | "creation"
   | "moment"
-  | "publication";
+  | "publication"
+  | "page";
 
 export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; single: string }[] = [
   { type: "activity", slug: "activities", label: "תתי פעילויות", single: "תת-פעילות" },
@@ -23,6 +24,7 @@ export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; si
   { type: "creation", slug: "creations", label: "יצירות של דניאלי", single: "יצירה" },
   { type: "moment", slug: "moments", label: "רגעים מחייה", single: "רגע" },
   { type: "publication", slug: "publications", label: "פרסומים לזכרה", single: "פרסום" },
+  { type: "page", slug: "pages", label: "עמודים", single: "עמוד" },
 ];
 
 export const typeBySlug = (slug: string) => CONTENT_TYPES.find((t) => t.slug === slug);
