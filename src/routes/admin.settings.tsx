@@ -9,6 +9,7 @@ export const Route = createFileRoute("/admin/settings")({ component: Settings })
 
 function Settings() {
   const { session } = useAuth();
+  const [current, setCurrent] = useState("");
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [busy, setBusy] = useState(false);
@@ -23,7 +24,21 @@ function Settings() {
       toast.error("הסיסמאות אינן זהות");
       return;
     }
+    if (!current) {
+      toast.error("יש להזין את הסיסמה הנוכחית");
+      return;
+    }
     setBusy(true);
+    // verify the current password before allowing a change
+    const { error: verifyError } = await supabase.auth.signInWithPassword({
+      email: session?.user.email ?? "",
+      password: current,
+    });
+    if (verifyError) {
+      setBusy(false);
+      toast.error("הסיסמה הנוכחית שגויה");
+      return;
+    }
     const { error } = await supabase.auth.updateUser({ password: pw });
     setBusy(false);
     if (error) {
@@ -31,6 +46,7 @@ function Settings() {
       return;
     }
     toast.success("הסיסמה הוחלפה");
+    setCurrent("");
     setPw("");
     setPw2("");
   }
@@ -46,6 +62,16 @@ function Settings() {
       </div>
       <form onSubmit={onSubmit} className="space-y-4 rounded-2xl bg-card p-6 shadow-sm">
         <h2 className="text-lg font-extrabold">החלפת סיסמה</h2>
+        <Field label="סיסמה נוכחית">
+          <input
+            type="password"
+            dir="ltr"
+            autoComplete="current-password"
+            className={inputClass}
+            value={current}
+            onChange={(e) => setCurrent(e.target.value)}
+          />
+        </Field>
         <Field label="סיסמה חדשה">
           <input
             type="password"
