@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { getRememberMe, setRememberMe, supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/admin_/login")({
@@ -19,7 +19,12 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [remember, setRemember] = useState(true);
   const [mode, setMode] = useState<"login" | "reset">("login");
+
+  useEffect(() => {
+    setRemember(getRememberMe());
+  }, []);
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/admin" });
@@ -29,6 +34,7 @@ function LoginPage() {
     e.preventDefault();
     setBusy(true);
     if (mode === "login") {
+      setRememberMe(remember);
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) toast.error("אימייל או סיסמה שגויים");
     } else {
@@ -81,6 +87,17 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full rounded-xl border bg-background px-3 py-2.5 outline-none focus:ring-2 focus:ring-ring"
             />
+          </label>
+        )}
+        {mode === "login" && (
+          <label className="flex cursor-pointer items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              className="size-4"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
+            זכור אותי
           </label>
         )}
         <button
