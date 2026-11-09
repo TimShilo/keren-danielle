@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { categoryLabel, type Category, type ContentItem } from "@/lib/content";
 import { Field, GhostButton, PrimaryButton, inputClass } from "./ui";
 import { ActivityFields } from "./ActivityFields";
+import { ItemTeam, type TeamRow } from "./ItemTeam";
 import { ItemMedia, type FeaturedRef, type GalleryRow, type VideoRow } from "./ItemMedia";
 
 interface Props {
@@ -40,6 +41,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [featured, setFeatured] = useState<FeaturedRef | null>(null);
   const [gallery, setGallery] = useState<GalleryRow[]>([]);
   const [videos, setVideos] = useState<VideoRow[]>([]);
+  const [team, setTeam] = useState<TeamRow[]>([]);
   const showMedia = typeMeta.type !== "sentence";
 
   // load the item's existing featured image, gallery and videos
@@ -49,7 +51,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
     staleTime: 0,
     queryFn: async () => {
       const id = item!.id;
-      const [g, v, f] = await Promise.all([
+      const [g, v, f, t] = await Promise.all([
         supabase
           .from("content_media")
           .select("media_id,title,caption,sort_order,media(storage_path)")
@@ -68,8 +70,13 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               .eq("id", item!.featured_media_id)
               .single()
           : Promise.resolve({ data: null }),
+        supabase
+          .from("content_team")
+          .select("id,name,role,sort_order")
+          .eq("content_id", id)
+          .order("sort_order"),
       ]);
-      return { g: g.data ?? [], v: v.data ?? [], f: f.data as FeaturedRef | null };
+      return { g: g.data ?? [], v: v.data ?? [], f: f.data as FeaturedRef | null, t: t.data ?? [] };
     },
   });
   useEffect(() => {
@@ -84,6 +91,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
       })),
     );
     setVideos(existing.data.v.map((r) => ({ key: r.id, url: r.url, title: r.title ?? "" })));
+    setTeam(existing.data.t.map((r) => ({ key: r.id, name: r.name, role: r.role ?? "" })));
   }, [existing.data]);
 
   const showParent = typeMeta.type === "news" || typeMeta.type === "activity";
@@ -155,6 +163,22 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
             })),
           );
           if (error) throw error;
+        }
+        if (typeMeta.type === "activity") {
+          const dt = await supabase.from("content_team").delete().eq("content_id", id);
+          if (dt.error) throw dt.error;
+          const members = team.filter((m) => m.name.trim());
+          if (members.length) {
+            const { error } = await supabase.from("content_team").insert(
+              members.map((m, i) => ({
+                content_id: id,
+                name: m.name.trim(),
+                role: m.role.trim() || null,
+                sort_order: i,
+              })),
+            );
+            if (error) throw error;
+          }
         }
         const d2 = await supabase.from("content_videos").delete().eq("content_id", id);
         if (d2.error) throw d2.error;

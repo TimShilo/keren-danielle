@@ -3,6 +3,9 @@ import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   LayoutGrid,
+  Palette,
+  Camera,
+  Library,
   Layers,
   Newspaper,
   CalendarDays,
@@ -36,6 +39,9 @@ const CONTENT_NAV = [
   { slug: "friends", label: "חברים מספרים", icon: Quote },
   { slug: "sentences", label: "משפטים", icon: Type },
   { slug: "videos", label: "סרטונים", icon: Video },
+  { slug: "creations", label: "יצירות של דניאלי", icon: Palette },
+  { slug: "moments", label: "רגעים מחייה", icon: Camera },
+  { slug: "publications", label: "פרסומים לזכרה", icon: Library },
 ] as const;
 
 function Count({ n }: { n: number | undefined }) {

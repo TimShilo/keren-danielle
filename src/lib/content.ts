@@ -1,5 +1,15 @@
 export type ContentType =
-  "activity" | "news" | "event" | "book" | "press_article" | "friend_story" | "sentence" | "video";
+  | "activity"
+  | "news"
+  | "event"
+  | "book"
+  | "press_article"
+  | "friend_story"
+  | "sentence"
+  | "video"
+  | "creation"
+  | "moment"
+  | "publication";
 
 export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; single: string }[] = [
   { type: "activity", slug: "activities", label: "תתי פעילויות", single: "תת-פעילות" },
@@ -10,6 +20,9 @@ export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; si
   { type: "friend_story", slug: "friends", label: "חברים מספרים", single: "סיפור" },
   { type: "sentence", slug: "sentences", label: "משפטים", single: "משפט" },
   { type: "video", slug: "videos", label: "סרטונים", single: "סרטון" },
+  { type: "creation", slug: "creations", label: "יצירות של דניאלי", single: "יצירה" },
+  { type: "moment", slug: "moments", label: "רגעים מחייה", single: "רגע" },
+  { type: "publication", slug: "publications", label: "פרסומים לזכרה", single: "פרסום" },
 ];
 
 export const typeBySlug = (slug: string) => CONTENT_TYPES.find((t) => t.slug === slug);
