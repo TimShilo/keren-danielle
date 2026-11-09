@@ -142,3 +142,25 @@
     color: var(--color-foreground);
   }
 }
+
+/* Admin area theme (Keren Danielle management system) */
+.admin-theme {
+  --background: oklch(0.955 0.014 80);
+  --foreground: oklch(0.24 0.04 262);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.04 262);
+  --primary: oklch(0.67 0.14 48);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.93 0.02 75);
+  --secondary-foreground: oklch(0.3 0.04 262);
+  --muted: oklch(0.93 0.015 80);
+  --muted-foreground: oklch(0.5 0.03 262);
+  --accent: oklch(0.92 0.03 70);
+  --accent-foreground: oklch(0.3 0.04 262);
+  --border: oklch(0.89 0.015 80);
+  --input: oklch(0.89 0.015 80);
+  --ring: oklch(0.67 0.14 48);
+  --sidebar: oklch(0.26 0.04 262);
+  --sidebar-foreground: oklch(0.95 0.01 262);
+  --sidebar-border: oklch(1 0 0 / 12%);
+}
