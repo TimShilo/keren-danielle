@@ -75,6 +75,7 @@ function Settings() {
         <Field label="סיסמה חדשה">
           <input
             type="password"
+            autoComplete="new-password"
             dir="ltr"
             className={inputClass}
             value={pw}
@@ -84,6 +85,7 @@ function Settings() {
         <Field label="אימות סיסמה">
           <input
             type="password"
+            autoComplete="new-password"
             dir="ltr"
             className={inputClass}
             value={pw2}
