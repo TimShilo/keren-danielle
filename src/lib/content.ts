@@ -84,3 +84,16 @@ export function subOf(cats: Category[], id: string | null): Category | null {
   const c = cats.find((x) => x.id === id);
   return c?.parent_id ? c : null;
 }
+
+/** Sections (pages of the site) a post can be moved between. Activities and regular pages are not movable. */
+export const MOVABLE_TYPES: ContentType[] = [
+  "news",
+  "event",
+  "press_article",
+  "book",
+  "publication",
+  "friend_story",
+  "creation",
+  "moment",
+  "video",
+];

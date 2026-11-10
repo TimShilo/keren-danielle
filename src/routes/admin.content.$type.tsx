@@ -6,6 +6,8 @@ import { Plus, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   STATUS_LABEL,
+  CONTENT_TYPES,
+  MOVABLE_TYPES,
   categoryLabel,
   mainOf,
   subOf,
@@ -45,8 +47,9 @@ function ContentList() {
   const [bulkCat, setBulkCat] = useState("");
   const qc = useQueryClient();
 
+  const [bulkType, setBulkType] = useState("");
   const bulk = useMutation({
-    mutationFn: async (patch: Partial<Pick<ContentItem, "status" | "category_id">>) => {
+    mutationFn: async (patch: Partial<Pick<ContentItem, "status" | "category_id" | "type">>) => {
       const ids = selectedIds;
       const { error } = await supabase.from("content_items").update(patch).in("id", ids);
       if (error) throw error;
@@ -56,6 +59,7 @@ function ContentList() {
       toast.success(`עודכנו ${n} פריטים`);
       setSelected(new Set());
       setBulkCat("");
+      setBulkType("");
       qc.invalidateQueries({ queryKey: ["items"] });
       qc.invalidateQueries({ queryKey: ["dashboard-counts"] });
       qc.invalidateQueries({ queryKey: ["nav-counts"] });
@@ -246,6 +250,34 @@ function ContentList() {
           >
             החל קטגוריה
           </GhostButton>
+          {meta && MOVABLE_TYPES.includes(meta.type) && (
+            <>
+              <select
+                value={bulkType}
+                onChange={(e) => setBulkType(e.target.value)}
+                className={`${inputClass} !w-auto !py-1.5 text-foreground`}
+              >
+                <option value="">העברה לעמוד…</option>
+                {CONTENT_TYPES.filter(
+                  (t) => MOVABLE_TYPES.includes(t.type) && t.type !== meta.type,
+                ).map((t) => (
+                  <option key={t.type} value={t.type}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+              <GhostButton
+                className="!py-1.5 !text-foreground"
+                disabled={!bulkType || bulk.isPending}
+                onClick={() =>
+                  window.confirm(`להעביר ${selectedIds.length} פריטים לעמוד שנבחר?`) &&
+                  bulk.mutate({ type: bulkType as ContentItem["type"] })
+                }
+              >
+                העבר
+              </GhostButton>
+            </>
+          )}
           <button className="ms-auto text-sm underline" onClick={() => setSelected(new Set())}>
             ביטול בחירה
           </button>

@@ -4,7 +4,13 @@ import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
-import { mainOf, type Category, type ContentItem } from "@/lib/content";
+import {
+  CONTENT_TYPES,
+  MOVABLE_TYPES,
+  mainOf,
+  type Category,
+  type ContentItem,
+} from "@/lib/content";
 import { Field, GhostButton, PrimaryButton, inputClass } from "./ui";
 import { ActivityFields } from "./ActivityFields";
 import { RichTextEditor } from "./RichTextEditor";
@@ -42,6 +48,8 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [featured, setFeatured] = useState<FeaturedRef | null>(null);
   const [gallery, setGallery] = useState<GalleryRow[]>([]);
   const [videos, setVideos] = useState<VideoRow[]>([]);
+  const [typeValue, setTypeValue] = useState<ContentItem["type"]>(typeMeta.type);
+  const movable = MOVABLE_TYPES.includes(typeMeta.type);
   const [team, setTeam] = useState<TeamRow[]>([]);
   const [extraCats, setExtraCats] = useState<string[]>([]);
   const [extraLoaded, setExtraLoaded] = useState(!item);
@@ -123,7 +131,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
     mutationFn: async () => {
       const data = safeParse(dataText);
       let parent: string | null = null;
-      if (typeMeta.type === "news" && categoryId) {
+      if (typeValue === "news" && categoryId) {
         const { data: page } = await supabase
           .from("content_items")
           .select("id")
@@ -138,7 +146,8 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
         title: title.trim(),
         item_date: date || null,
         category_id: categoryId || null,
-        parent_id: typeMeta.type === "news" ? parent : (item?.parent_id ?? null),
+        type: typeValue,
+        parent_id: typeValue === "news" ? parent : (item?.parent_id ?? null),
         status,
         external_url: externalUrl.trim() || null,
         excerpt: excerpt.trim() || null,
@@ -154,7 +163,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
       } else {
         const { data: created, error } = await supabase
           .from("content_items")
-          .insert({ ...payload, type: typeMeta.type, language: "he" })
+          .insert({ ...payload, language: "he" })
           .select("id")
           .single();
         if (error) throw error;
@@ -295,6 +304,24 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               </select>
             </Field>
           </div>
+          {movable && (
+            <Field
+              label="שייך לעמוד"
+              hint="אם הפוסט הוכנס לעמוד הלא נכון, בחרי כאן את העמוד הנכון."
+            >
+              <select
+                className={inputClass}
+                value={typeValue}
+                onChange={(e) => setTypeValue(e.target.value as ContentItem["type"])}
+              >
+                {CONTENT_TYPES.filter((t) => MOVABLE_TYPES.includes(t.type)).map((t) => (
+                  <option key={t.type} value={t.type}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
           <Field label="קטגוריה ראשית">
             <select
               className={inputClass}
