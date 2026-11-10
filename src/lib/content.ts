@@ -17,7 +17,7 @@ export const CONTENT_TYPES: { type: ContentType; slug: string; label: string; si
   { type: "news", slug: "news", label: "חדשות ועדכונים", single: "חדשה" },
   { type: "event", slug: "events", label: "אירועים", single: "אירוע" },
   { type: "book", slug: "books", label: "ראו אור", single: "ספר" },
-  { type: "press_article", slug: "press", label: "כתבות מהעיתונות", single: "כתבה" },
+  { type: "press_article", slug: "press", label: "בתקשורת", single: "כתבה" },
   { type: "friend_story", slug: "friends", label: "חברים מספרים", single: "סיפור" },
   { type: "sentence", slug: "sentences", label: "משפטים", single: "משפט" },
   { type: "video", slug: "videos", label: "סרטונים", single: "סרטון" },

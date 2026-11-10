@@ -43,6 +43,30 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [gallery, setGallery] = useState<GalleryRow[]>([]);
   const [videos, setVideos] = useState<VideoRow[]>([]);
   const [team, setTeam] = useState<TeamRow[]>([]);
+  const [extraCats, setExtraCats] = useState<string[]>([]);
+  const [extraLoaded, setExtraLoaded] = useState(!item);
+  const showExtra = [
+    "news",
+    "press_article",
+    "event",
+    "friend_story",
+    "book",
+    "publication",
+  ].includes(typeMeta.type);
+  useQuery({
+    queryKey: ["item-links", item?.id],
+    enabled: !!item && showExtra,
+    staleTime: 0,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("content_category_links")
+        .select("category_id")
+        .eq("content_id", item!.id);
+      setExtraCats((data ?? []).map((r) => r.category_id));
+      setExtraLoaded(true);
+      return data ?? [];
+    },
+  });
   const showMedia = typeMeta.type !== "sentence";
 
   // load the item's existing featured image, gallery and videos
@@ -135,6 +159,17 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
           .single();
         if (error) throw error;
         id = created.id;
+      }
+      if (showExtra && id && extraLoaded) {
+        const dl = await supabase.from("content_category_links").delete().eq("content_id", id);
+        if (dl.error) throw dl.error;
+        const keep = extraCats.filter((c) => c !== categoryId);
+        if (keep.length) {
+          const { error } = await supabase
+            .from("content_category_links")
+            .insert(keep.map((c) => ({ content_id: id, category_id: c, source: "manual" })));
+          if (error) throw error;
+        }
       }
       if (showMedia && id && (!item || existing.data)) {
         // replace the gallery and videos with what is on screen
@@ -295,6 +330,48 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
                 ))}
             </select>
           </Field>
+          {showExtra && (
+            <Field
+              label="קטגוריות משניות נוספות"
+              hint="הפריט יוצג גם בעמודי הפעילויות המשניות שתסמני כאן."
+            >
+              <div className="max-h-48 space-y-3 overflow-y-auto rounded-xl border bg-card p-3">
+                {categories
+                  .filter((t) => !t.parent_id)
+                  .map((top) => (
+                    <div key={top.id}>
+                      <div className="mb-1 text-xs font-bold text-muted-foreground">
+                        {top.name_he}
+                      </div>
+                      <div className="grid gap-1 sm:grid-cols-2">
+                        {categories
+                          .filter((c) => c.parent_id === top.id && c.id !== categoryId)
+                          .map((c) => (
+                            <label
+                              key={c.id}
+                              className="flex cursor-pointer items-center gap-2 text-sm font-normal"
+                            >
+                              <input
+                                type="checkbox"
+                                className="size-4"
+                                checked={extraCats.includes(c.id)}
+                                onChange={(e) =>
+                                  setExtraCats((prev) =>
+                                    e.target.checked
+                                      ? [...prev, c.id]
+                                      : prev.filter((x) => x !== c.id),
+                                  )
+                                }
+                              />
+                              {c.name_he}
+                            </label>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </Field>
+          )}
           {["news", "press_article", "book", "publication"].includes(typeMeta.type) && (
             <Field label="קישור למקור חיצוני">
               <input

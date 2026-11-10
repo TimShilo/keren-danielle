@@ -34,7 +34,7 @@ const CONTENT_NAV = [
   { slug: "news", label: "חדשות ועדכונים", icon: Newspaper },
   { slug: "events", label: "אירועים", icon: CalendarDays },
   { slug: "books", label: "ראו אור", icon: BookOpen },
-  { slug: "press", label: "כתבות מהעיתונות", icon: FileText },
+  { slug: "press", label: "בתקשורת", icon: FileText },
   { slug: "friends", label: "חברים מספרים", icon: Quote },
   { slug: "sentences", label: "משפטים", icon: Type },
   { slug: "videos", label: "סרטונים", icon: Video },
