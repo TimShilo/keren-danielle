@@ -51,6 +51,19 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
   const [typeValue, setTypeValue] = useState<ContentItem["type"]>(typeMeta.type);
   const movable = MOVABLE_TYPES.includes(typeMeta.type);
   const [team, setTeam] = useState<TeamRow[]>([]);
+  const destinations = useQuery({
+    queryKey: ["move-destinations"],
+    enabled: typeMeta.type !== "sentence",
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("content_items")
+        .select("id,title,type")
+        .in("type", ["activity", "page"])
+        .eq("language", "he")
+        .order("title");
+      return (data ?? []) as { id: string; title: string; type: string }[];
+    },
+  });
   const [extraCats, setExtraCats] = useState<string[]>([]);
   const [extraLoaded, setExtraLoaded] = useState(!item);
   const showExtra = [
@@ -121,9 +134,17 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
         storage_path: (r.media as unknown as { storage_path: string } | null)?.storage_path ?? "",
         title: r.title ?? "",
         caption: r.caption ?? "",
+        persisted: true,
       })),
     );
-    setVideos(existing.data.v.map((r) => ({ key: r.id, url: r.url, title: r.title ?? "" })));
+    setVideos(
+      existing.data.v.map((r) => ({
+        key: r.id,
+        url: r.url,
+        title: r.title ?? "",
+        persisted: true,
+      })),
+    );
     setTeam(existing.data.t.map((r) => ({ key: r.id, name: r.name, role: r.role ?? "" })));
   }, [existing.data]);
 
@@ -425,6 +446,27 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
             <span>תוכן</span>
             <RichTextEditor value={body} onChange={setBody} />
           </div>
+          {typeMeta.type === "activity" && (
+            <ActivityFields
+              data={safeParse(dataText)}
+              onChange={(next) => setDataText(JSON.stringify(next, null, 2))}
+            />
+          )}
+          {typeMeta.type === "activity" &&
+            (safeParse(dataText)["layout"] as Record<string, unknown> | undefined)?.["team"] ===
+              "true" && <ItemTeam team={team} onChange={setTeam} />}
+          {showMedia && (
+            <ItemMedia
+              itemId={item?.id}
+              destinations={(destinations.data ?? []).filter((d) => d.id !== item?.id)}
+              featured={featured}
+              gallery={gallery}
+              videos={videos}
+              onFeatured={setFeatured}
+              onGallery={setGallery}
+              onVideos={setVideos}
+            />
+          )}
           <div className="flex items-center justify-between gap-3 pt-2">
             <div className="flex gap-2">
               <PrimaryButton type="submit" disabled={save.isPending}>

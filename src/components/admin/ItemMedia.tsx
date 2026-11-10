@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowDown, ArrowUp, ImagePlus, Plus, Trash2, Video } from "lucide-react";
 import { mediaUrl, youtubeId, type MediaRow } from "@/lib/media";
 import { GhostButton, inputClass } from "./ui";
@@ -13,14 +16,23 @@ export interface GalleryRow {
   storage_path: string;
   title: string;
   caption: string;
+  persisted?: boolean;
 }
 export interface VideoRow {
   key: string;
   url: string;
   title: string;
+  persisted?: boolean;
+}
+export interface Destination {
+  id: string;
+  title: string;
+  type: string;
 }
 
 interface Props {
+  itemId?: string | undefined;
+  destinations?: Destination[];
   featured: FeaturedRef | null;
   gallery: GalleryRow[];
   videos: VideoRow[];
@@ -55,7 +67,75 @@ const Section = ({
   </section>
 );
 
-export function ItemMedia({ featured, gallery, videos, onFeatured, onGallery, onVideos }: Props) {
+function MoveSelect({
+  destinations,
+  onPick,
+}: {
+  destinations: Destination[];
+  onPick: (dest: Destination) => void;
+}) {
+  return (
+    <select
+      aria-label="העבר לעמוד"
+      className="max-w-40 rounded-lg border bg-card px-2 py-1.5 text-xs"
+      value=""
+      onChange={(e) => {
+        const d = destinations.find((x) => x.id === e.target.value);
+        if (d) onPick(d);
+      }}
+    >
+      <option value="">העבר לעמוד…</option>
+      {destinations.map((d) => (
+        <option key={d.id} value={d.id}>
+          {d.title}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export function ItemMedia({
+  itemId,
+  destinations = [],
+  featured,
+  gallery,
+  videos,
+  onFeatured,
+  onGallery,
+  onVideos,
+}: Props) {
+  const qc = useQueryClient();
+  const moveVideo = async (v: VideoRow, dest: Destination) => {
+    if (!window.confirm(`להעביר את הסרטון לעמוד "${dest.title}"?`)) return;
+    const { error } = await supabase
+      .from("content_videos")
+      .update({ content_id: dest.id })
+      .eq("id", v.key);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    onVideos(videos.filter((x) => x.key !== v.key));
+    toast.success(`הסרטון הועבר אל "${dest.title}"`);
+    qc.invalidateQueries({ queryKey: ["video-library"] });
+    qc.invalidateQueries({ queryKey: ["item-media"] });
+  };
+  const moveImage = async (g: GalleryRow, dest: Destination) => {
+    if (!itemId || !window.confirm(`להעביר את התמונה לעמוד "${dest.title}"?`)) return;
+    const { error } = await supabase
+      .from("content_media")
+      .update({ content_id: dest.id })
+      .eq("content_id", itemId)
+      .eq("media_id", g.media_id)
+      .eq("role", "gallery");
+    if (error) {
+      toast.error(error.code === "23505" ? "התמונה כבר קיימת בגלריה של עמוד היעד" : error.message);
+      return;
+    }
+    onGallery(gallery.filter((x) => x.media_id !== g.media_id));
+    toast.success(`התמונה הועברה אל "${dest.title}"`);
+    qc.invalidateQueries({ queryKey: ["item-media"] });
+  };
   const [picker, setPicker] = useState<null | "featured" | "gallery">(null);
 
   const addToGallery = (rows: MediaRow[]) => {
@@ -143,6 +223,9 @@ export function ItemMedia({ featured, gallery, videos, onFeatured, onGallery, on
                 />
               </div>
               <div className="flex flex-col gap-1">
+                {g.persisted && destinations.length > 0 && (
+                  <MoveSelect destinations={destinations} onPick={(d) => moveImage(g, d)} />
+                )}
                 <button
                   type="button"
                   aria-label="הזזה למעלה"
@@ -230,6 +313,9 @@ export function ItemMedia({ featured, gallery, videos, onFeatured, onGallery, on
                   />
                 </div>
                 <div className="flex flex-col gap-1">
+                  {v.persisted && destinations.length > 0 && (
+                    <MoveSelect destinations={destinations} onPick={(d) => moveVideo(v, d)} />
+                  )}
                   <button
                     type="button"
                     aria-label="הזזה למעלה"

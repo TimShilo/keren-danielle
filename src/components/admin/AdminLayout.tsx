@@ -65,7 +65,7 @@ export function AdminLayout() {
     queryKey: ["nav-counts"],
     enabled: !!session && isStaff,
     queryFn: async () => {
-      const [items, media, cats, users, parents] = await Promise.all([
+      const [items, media, cats, users, parents, vids] = await Promise.all([
         supabase.from("content_items").select("type").eq("language", "he"),
         supabase.from("media").select("id", { count: "exact", head: true }),
         supabase.from("categories").select("id", { count: "exact", head: true }),
@@ -74,6 +74,7 @@ export function AdminLayout() {
           .from("categories")
           .select("id", { count: "exact", head: true })
           .is("parent_id", null),
+        supabase.from("content_videos").select("id", { count: "exact", head: true }),
       ]);
       const byType: Record<string, number> = {};
       for (const r of items.data ?? []) byType[r.type] = (byType[r.type] ?? 0) + 1;
@@ -83,6 +84,7 @@ export function AdminLayout() {
         categories: cats.count ?? 0,
         users: users.count ?? 0,
         parents: parents.count ?? 0,
+        videos: vids.count ?? 0,
       };
     },
   });
@@ -165,6 +167,14 @@ export function AdminLayout() {
             </Link>
           ))}
           <div className="mb-1 mt-3 px-4 text-xs font-bold text-sidebar-foreground/45">ניהול</div>
+          <Link
+            to="/admin/videos"
+            className={linkClass}
+            activeProps={{ className: cn(linkClass, activeClass) }}
+          >
+            <Video className="size-5" /> גלריות וידאו
+            <Count n={counts.data?.videos} />
+          </Link>
           <Link
             to="/admin/media"
             className={linkClass}
