@@ -5,6 +5,7 @@ import { Loader2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PageTitle, PrimaryButton, inputClass } from "@/components/admin/ui";
+import { MediaThumb } from "@/components/admin/MediaThumb";
 
 export const Route = createFileRoute("/admin/media")({ component: MediaPage });
 
@@ -24,6 +25,8 @@ function MediaPage() {
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
+  const PAGE = 48;
 
   const media = useQuery({
     queryKey: ["media"],
@@ -32,7 +35,7 @@ function MediaPage() {
         .from("media")
         .select("id,storage_path,kind,alt_he,created_at")
         .order("created_at", { ascending: false })
-        .limit(500);
+        .limit(2000);
       if (error) throw error;
       return data as MediaRow[];
     },
@@ -70,7 +73,9 @@ function MediaPage() {
     toast.success("הועלה");
   }
 
-  const rows = (media.data ?? []).filter((m) => !search || m.storage_path.includes(search));
+  const all = (media.data ?? []).filter((m) => !search || m.storage_path.includes(search));
+  const pages = Math.max(1, Math.ceil(all.length / PAGE));
+  const rows = all.slice(page * PAGE, page * PAGE + PAGE);
 
   return (
     <div>
@@ -90,9 +95,12 @@ function MediaPage() {
           className={`${inputClass} max-w-sm`}
           placeholder="חיפוש לפי שם קובץ"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(0);
+          }}
         />
-        <span className="text-sm text-muted-foreground">{rows.length} קבצים</span>
+        <span className="text-sm text-muted-foreground">{all.length} קבצים</span>
       </div>
       {media.isLoading ? (
         <div className="text-muted-foreground">טוען…</div>
@@ -111,10 +119,9 @@ function MediaPage() {
               className="overflow-hidden rounded-xl border bg-card"
             >
               {m.kind === "image" ? (
-                <img
+                <MediaThumb
                   src={publicUrl(m.storage_path)}
                   alt={m.alt_he ?? ""}
-                  loading="lazy"
                   className="aspect-square w-full object-cover"
                 />
               ) : (
@@ -127,6 +134,29 @@ function MediaPage() {
               </div>
             </a>
           ))}
+        </div>
+      )}
+      {pages > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-3 text-sm">
+          <button
+            type="button"
+            disabled={page === 0}
+            onClick={() => setPage((p) => p - 1)}
+            className="rounded-xl border bg-card px-4 py-2 font-medium hover:bg-accent disabled:opacity-40"
+          >
+            הקודם
+          </button>
+          <span className="tabular-nums text-muted-foreground">
+            עמוד {page + 1} מתוך {pages}
+          </span>
+          <button
+            type="button"
+            disabled={page >= pages - 1}
+            onClick={() => setPage((p) => p + 1)}
+            className="rounded-xl border bg-card px-4 py-2 font-medium hover:bg-accent disabled:opacity-40"
+          >
+            הבא
+          </button>
         </div>
       )}
     </div>

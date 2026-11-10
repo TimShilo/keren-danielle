@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { mediaUrl, uploadFiles, type MediaRow } from "@/lib/media";
 import { PrimaryButton, inputClass } from "./ui";
+import { MediaThumb } from "./MediaThumb";
 
 interface Props {
   multiple?: boolean;
@@ -17,6 +18,8 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
   const qc = useQueryClient();
   const input = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
+  const PAGE = 48;
   const [chosen, setChosen] = useState<MediaRow[]>([]);
   const [busy, setBusy] = useState(false);
 
@@ -48,7 +51,9 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
     }
   }
 
-  const list = (media.data ?? []).filter((m) => !search || m.storage_path.includes(search));
+  const filtered = (media.data ?? []).filter((m) => !search || m.storage_path.includes(search));
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE));
+  const list = filtered.slice(page * PAGE, page * PAGE + PAGE);
   const isChosen = (m: MediaRow) => chosen.some((c) => c.id === m.id);
   const toggle = (m: MediaRow) => {
     if (!multiple) return setChosen([m]);
@@ -69,7 +74,10 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
             className={`${inputClass} max-w-xs`}
             placeholder="חיפוש לפי שם קובץ"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
           />
           <input
             ref={input}
@@ -88,7 +96,7 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
             {busy ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}{" "}
             העלאת תמונות חדשות
           </button>
-          <span className="ms-auto text-sm text-muted-foreground">{list.length} תמונות</span>
+          <span className="ms-auto text-sm text-muted-foreground">{filtered.length} תמונות</span>
         </div>
         <div className="grid max-h-[55vh] grid-cols-3 gap-3 overflow-y-auto sm:grid-cols-4 md:grid-cols-6">
           {media.isLoading && <div className="col-span-full text-muted-foreground">טוען…</div>}
@@ -99,10 +107,8 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
               onClick={() => toggle(m)}
               className={`relative overflow-hidden rounded-lg border-2 ${isChosen(m) ? "border-primary" : "border-transparent"}`}
             >
-              <img
+              <MediaThumb
                 src={mediaUrl(m.storage_path)}
-                alt=""
-                loading="lazy"
                 className="aspect-square w-full object-cover"
               />
               {isChosen(m) && (
@@ -113,6 +119,29 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
             </button>
           ))}
         </div>
+        {pages > 1 && (
+          <div className="flex items-center justify-center gap-3 text-sm">
+            <button
+              type="button"
+              disabled={page === 0}
+              onClick={() => setPage((p) => p - 1)}
+              className="rounded-lg border px-3 py-1 disabled:opacity-40"
+            >
+              הקודם
+            </button>
+            <span className="tabular-nums text-muted-foreground">
+              {page + 1} / {pages}
+            </span>
+            <button
+              type="button"
+              disabled={page >= pages - 1}
+              onClick={() => setPage((p) => p + 1)}
+              className="rounded-lg border px-3 py-1 disabled:opacity-40"
+            >
+              הבא
+            </button>
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">{chosen.length} נבחרו</span>
           <PrimaryButton
