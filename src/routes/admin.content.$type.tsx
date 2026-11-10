@@ -284,7 +284,7 @@ function ContentList() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border bg-card">
+      <div className="overflow-x-auto rounded-2xl border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted/60 text-start text-xs text-muted-foreground">
             <tr>
@@ -336,14 +336,19 @@ function ContentList() {
                     }}
                   />
                 </td>
-                <td className="max-w-md truncate px-4 py-3 font-semibold">{x.title}</td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td
+                  className="w-full min-w-[26rem] whitespace-nowrap px-4 py-3 font-semibold"
+                  title={x.title}
+                >
+                  {x.title}
+                </td>
+                <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
                   {mainOf(categories, x.category_id)?.name_he ?? "—"}
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
                   {subOf(categories, x.category_id)?.name_he ?? "—"}
                 </td>
-                <td className="px-4 py-3 tabular-nums text-muted-foreground">
+                <td className="whitespace-nowrap px-4 py-3 tabular-nums text-muted-foreground">
                   {x.item_date ?? "—"}
                 </td>
                 <td className="px-4 py-3">

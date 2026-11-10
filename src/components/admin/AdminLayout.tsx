@@ -230,7 +230,7 @@ export function AdminLayout() {
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1 p-8">
+      <main className="min-w-0 flex-1 p-6">
         <Outlet />
       </main>
       <Toaster position="top-center" dir="rtl" />
