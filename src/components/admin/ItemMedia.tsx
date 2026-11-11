@@ -23,6 +23,8 @@ export interface VideoRow {
   url: string;
   title: string;
   persisted?: boolean;
+  showOnHome?: boolean;
+  homeOrder?: number;
 }
 export interface Destination {
   id: string;
@@ -311,6 +313,27 @@ export function ItemMedia({
                       onVideos(videos.map((x, k) => (k === i ? { ...x, url: e.target.value } : x)))
                     }
                   />
+                  <label className="flex cursor-pointer items-center gap-2 text-xs font-medium">
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={!!v.showOnHome}
+                      onChange={(e) =>
+                        onVideos(
+                          videos.map((x, k) =>
+                            k === i
+                              ? {
+                                  ...x,
+                                  showOnHome: e.target.checked,
+                                  homeOrder: x.homeOrder || 999,
+                                }
+                              : x,
+                          ),
+                        )
+                      }
+                    />
+                    להציג בעמוד הראשי
+                  </label>
                 </div>
                 <div className="flex flex-col gap-1">
                   {v.persisted && destinations.length > 0 && (

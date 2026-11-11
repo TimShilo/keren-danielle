@@ -106,7 +106,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
           .order("sort_order"),
         supabase
           .from("content_videos")
-          .select("id,url,title,sort_order")
+          .select("id,url,title,sort_order,show_on_home,home_order")
           .eq("content_id", id)
           .order("sort_order"),
         item!.featured_media_id
@@ -143,6 +143,8 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
         url: r.url,
         title: r.title ?? "",
         persisted: true,
+        showOnHome: r.show_on_home,
+        homeOrder: r.home_order,
       })),
     );
     setTeam(existing.data.t.map((r) => ({ key: r.id, name: r.name, role: r.role ?? "" })));
@@ -248,6 +250,8 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
               url: v.url.trim(),
               title: v.title.trim() || null,
               sort_order: i,
+              show_on_home: !!v.showOnHome,
+              home_order: v.showOnHome ? (v.homeOrder ?? 0) : 0,
             })),
           );
           if (error) throw error;

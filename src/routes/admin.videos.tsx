@@ -14,6 +14,8 @@ interface VideoRowData {
   url: string;
   title: string | null;
   sort_order: number;
+  show_on_home: boolean;
+  home_order: number;
   content_id: string;
   content_items: { title: string; type: string } | null;
 }
@@ -24,13 +26,16 @@ function VideoLibrary() {
   const [pageFilter, setPageFilter] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [dest, setDest] = useState("");
+  const [onlyHome, setOnlyHome] = useState(false);
 
   const videos = useQuery({
     queryKey: ["video-library"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("content_videos")
-        .select("id,url,title,sort_order,content_id,content_items(title,type)")
+        .select(
+          "id,url,title,sort_order,show_on_home,home_order,content_id,content_items(title,type)",
+        )
         .order("created_at", { ascending: false })
         .limit(1000);
       if (error) throw error;
@@ -55,8 +60,9 @@ function VideoLibrary() {
     const q = search.trim();
     if (q) r = r.filter((v) => (v.title ?? "").includes(q) || v.url.includes(q));
     if (pageFilter) r = r.filter((v) => v.content_id === pageFilter);
-    return r;
-  }, [videos.data, search, pageFilter]);
+    if (onlyHome) r = r.filter((v) => v.show_on_home);
+    return onlyHome ? [...r].sort((a, b) => a.home_order - b.home_order) : r;
+  }, [videos.data, search, pageFilter, onlyHome]);
   const visibleSelected = rows.filter((r) => selected.has(r.id)).map((r) => r.id);
 
   const pagesWithVideos = useMemo(() => {
@@ -81,6 +87,40 @@ function VideoLibrary() {
       qc.invalidateQueries({ queryKey: ["video-library"] });
       qc.invalidateQueries({ queryKey: ["item-media"] });
     },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const toggleHome = useMutation({
+    mutationFn: async ({ id, on }: { id: string; on: boolean }) => {
+      const max = Math.max(
+        0,
+        ...(videos.data ?? []).filter((v) => v.show_on_home).map((v) => v.home_order),
+      );
+      const { error } = await supabase
+        .from("content_videos")
+        .update({ show_on_home: on, home_order: on ? max + 1 : 0 })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["video-library"] }),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const reorderHome = useMutation({
+    mutationFn: async ({ a, b }: { a: VideoRowData; b: VideoRowData }) => {
+      // swap the two positions (renumbered so equal values cannot collide)
+      const r1 = await supabase
+        .from("content_videos")
+        .update({ home_order: b.home_order })
+        .eq("id", a.id);
+      if (r1.error) throw r1.error;
+      const r2 = await supabase
+        .from("content_videos")
+        .update({ home_order: a.home_order })
+        .eq("id", b.id);
+      if (r2.error) throw r2.error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["video-library"] }),
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -126,6 +166,15 @@ function VideoLibrary() {
             </option>
           ))}
         </select>
+        <label className="flex cursor-pointer items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            className="size-4"
+            checked={onlyHome}
+            onChange={(e) => setOnlyHome(e.target.checked)}
+          />
+          רק סרטוני העמוד הראשי ({(videos.data ?? []).filter((v) => v.show_on_home).length})
+        </label>
         <span className="text-sm text-muted-foreground">{rows.length} סרטונים</span>
       </div>
 
@@ -177,13 +226,14 @@ function VideoLibrary() {
               <th className="w-28 px-2 py-3" />
               <th className="px-4 py-3 text-start font-semibold">כותרת</th>
               <th className="px-4 py-3 text-start font-semibold">עמוד</th>
+              <th className="px-4 py-3 text-start font-semibold">בעמוד הראשי</th>
               <th className="px-4 py-3 text-start font-semibold">העברה</th>
             </tr>
           </thead>
           <tbody>
             {videos.isLoading && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   טוען…
                 </td>
               </tr>
@@ -233,6 +283,45 @@ function VideoLibrary() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {v.content_items?.title ?? "—"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        aria-label="להציג בעמוד הראשי"
+                        className="size-4"
+                        checked={v.show_on_home}
+                        onChange={(e) => toggleHome.mutate({ id: v.id, on: e.target.checked })}
+                      />
+                      {onlyHome && (
+                        <>
+                          <button
+                            type="button"
+                            aria-label="הזזה למעלה"
+                            disabled={rows.indexOf(v) === 0}
+                            onClick={() => {
+                              const prev = rows[rows.indexOf(v) - 1];
+                              if (prev) reorderHome.mutate({ a: v, b: prev });
+                            }}
+                            className="rounded-md border px-1.5 py-0.5 text-xs disabled:opacity-30"
+                          >
+                            ▲
+                          </button>
+                          <button
+                            type="button"
+                            aria-label="הזזה למטה"
+                            disabled={rows.indexOf(v) === rows.length - 1}
+                            onClick={() => {
+                              const next = rows[rows.indexOf(v) + 1];
+                              if (next) reorderHome.mutate({ a: v, b: next });
+                            }}
+                            className="rounded-md border px-1.5 py-0.5 text-xs disabled:opacity-30"
+                          >
+                            ▼
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <select
