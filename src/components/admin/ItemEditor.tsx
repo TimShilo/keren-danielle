@@ -293,7 +293,7 @@ export function ItemEditor({ typeMeta, item, categories, onClose }: Props) {
         dir="rtl"
       >
         <SheetHeader>
-          <SheetTitle className="text-xl font-extrabold">
+          <SheetTitle className="text-xl font-bold">
             {item ? `עריכת ${typeMeta.single}` : `${typeMeta.single} חדש/ה`}
           </SheetTitle>
         </SheetHeader>

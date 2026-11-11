@@ -72,10 +72,10 @@ function LoginPage() {
         className="w-full max-w-sm space-y-4 rounded-2xl bg-card p-8 shadow-sm"
       >
         <div className="mb-2 text-center">
-          <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-sidebar text-xl font-extrabold text-primary">
+          <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-sidebar text-xl font-bold text-primary">
             קד
           </div>
-          <h1 className="text-xl font-extrabold">קרן דניאלי</h1>
+          <h1 className="text-xl font-bold">קרן דניאלי</h1>
           <p className="text-sm text-muted-foreground">
             {mode === "login" ? "כניסה למערכת הניהול" : "איפוס סיסמה"}
           </p>
@@ -121,7 +121,7 @@ function LoginPage() {
         )}
         <button
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 font-bold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground hover:opacity-90 disabled:opacity-60"
         >
           {busy && <Loader2 className="size-4 animate-spin" />}
           {mode === "login" ? "כניסה" : "שלח קישור לאיפוס"}
@@ -144,7 +144,7 @@ function LoginPage() {
               type="button"
               onClick={signInWithGoogle}
               disabled={busy}
-              className="flex w-full items-center justify-center gap-3 rounded-xl border bg-card px-4 py-2.5 font-semibold transition-colors hover:bg-accent disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-3 rounded-xl border bg-card px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-accent disabled:opacity-60"
             >
               <svg viewBox="0 0 48 48" className="size-5" aria-hidden="true">
                 <path

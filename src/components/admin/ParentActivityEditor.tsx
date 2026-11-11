@@ -112,7 +112,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
         dir="rtl"
       >
         <SheetHeader>
-          <SheetTitle className="text-xl font-extrabold">פעילות ראשית: {parent.name_he}</SheetTitle>
+          <SheetTitle className="text-xl font-bold">פעילות ראשית: {parent.name_he}</SheetTitle>
         </SheetHeader>
         <form
           onSubmit={(e: FormEvent) => {
@@ -134,7 +134,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
           </Field>
 
           <section className="space-y-3 rounded-2xl border bg-card p-4">
-            <h3 className="text-base font-extrabold">תמונה ראשית</h3>
+            <h3 className="text-base font-bold">תמונה ראשית</h3>
             {featuredId && img.data ? (
               <img src={mediaUrl(img.data)} alt="" className="h-32 w-48 rounded-xl object-cover" />
             ) : (
@@ -157,7 +157,7 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
           </section>
 
           <section className="space-y-3 rounded-2xl border bg-card p-4">
-            <h3 className="text-base font-extrabold">הפעילויות המשניות · {subs.length}</h3>
+            <h3 className="text-base font-bold">הפעילויות המשניות · {subs.length}</h3>
             <div className="space-y-2">
               {subs.map((s, i) => {
                 const page = pages.filter((p) => p.category_id === s.id);

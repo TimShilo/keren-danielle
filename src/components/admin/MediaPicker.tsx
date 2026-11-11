@@ -67,7 +67,7 @@ export function MediaPicker({ multiple, onClose, onPick }: Props) {
         dir="rtl"
       >
         <DialogHeader>
-          <DialogTitle className="text-xl font-extrabold">בחירת תמונה מהספרייה</DialogTitle>
+          <DialogTitle className="text-xl font-bold">בחירת תמונה מהספרייה</DialogTitle>
         </DialogHeader>
         <div className="flex items-center gap-3">
           <input

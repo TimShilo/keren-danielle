@@ -61,7 +61,7 @@ function Settings() {
         </div>
       </div>
       <form onSubmit={onSubmit} className="space-y-4 rounded-2xl bg-card p-6 shadow-sm">
-        <h2 className="text-lg font-extrabold">החלפת סיסמה</h2>
+        <h2 className="text-lg font-bold">החלפת סיסמה</h2>
         <Field label="סיסמה נוכחית">
           <input
             type="password"

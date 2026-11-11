@@ -24,7 +24,7 @@ export function ItemTeam({ team, onChange }: Props) {
   return (
     <section className="space-y-3 rounded-2xl border bg-card p-4">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-base font-extrabold">צוות ({team.length})</h3>
+        <h3 className="text-base font-bold">צוות ({team.length})</h3>
         <GhostButton
           type="button"
           onClick={() => onChange([...team, { key: crypto.randomUUID(), name: "", role: "" }])}

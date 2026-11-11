@@ -60,7 +60,7 @@ const Section = ({
 }) => (
   <section className="space-y-3 rounded-2xl border bg-card p-4">
     <div className="flex items-center justify-between gap-3">
-      <h3 className="text-base font-extrabold">{title}</h3>
+      <h3 className="text-base font-bold">{title}</h3>
       {action}
     </div>
     {children}

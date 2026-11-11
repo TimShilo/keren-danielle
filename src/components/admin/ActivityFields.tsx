@@ -107,7 +107,7 @@ export function ActivityFields({ data, onChange }: Props) {
 
   return (
     <section className="space-y-4 rounded-2xl border bg-card p-4">
-      <h3 className="text-base font-extrabold">מבנה עמוד הפעילות</h3>
+      <h3 className="text-base font-bold">מבנה עמוד הפעילות</h3>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="כותרת האזור הראשון">

@@ -53,7 +53,7 @@ function Count({ n }: { n: number | undefined }) {
 }
 
 const linkClass =
-  "flex items-center gap-3 rounded-xl px-4 py-2.5 text-[15px] font-semibold text-sidebar-foreground/80 transition-colors hover:bg-white/10 hover:text-sidebar-foreground";
+  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-white/10 hover:text-sidebar-foreground";
 const activeClass = "!bg-primary !text-primary-foreground shadow-sm";
 
 export function AdminLayout() {
@@ -123,13 +123,13 @@ export function AdminLayout() {
 
   return (
     <div className="admin-theme flex min-h-screen bg-background text-foreground" dir="rtl">
-      <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col overflow-y-auto bg-sidebar p-4 text-sidebar-foreground">
+      <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col overflow-y-auto bg-sidebar p-4 text-sidebar-foreground">
         <div className="mb-5 flex items-center gap-3 px-1 pt-1">
-          <div className="grid size-12 place-items-center rounded-xl bg-white/10 text-lg font-extrabold text-primary">
+          <div className="grid size-12 place-items-center rounded-xl bg-white/10 text-lg font-bold text-primary">
             קד
           </div>
           <div className="leading-tight">
-            <div className="text-lg font-extrabold">קרן דניאלי</div>
+            <div className="text-lg font-bold">קרן דניאלי</div>
             <div className="text-xs text-sidebar-foreground/60">ניהול האתר</div>
           </div>
         </div>

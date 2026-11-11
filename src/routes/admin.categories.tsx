@@ -106,7 +106,7 @@ function Row({ c, onDelete, bold }: { c: Category; onDelete: () => void; bold?: 
   return (
     <div className="flex items-center justify-between py-1.5">
       <div>
-        <span className={bold ? "font-extrabold" : "font-medium"}>{c.name_he}</span>
+        <span className={bold ? "font-bold" : "font-medium"}>{c.name_he}</span>
       </div>
       <GhostButton className="!px-3 !py-1 text-destructive" onClick={onDelete}>
         מחיקה

@@ -84,7 +84,7 @@ function ParentActivities() {
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <h2 className="text-xl font-extrabold">{p.name_he}</h2>
+                <h2 className="text-xl font-bold">{p.name_he}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {subs.length} פעילויות משניות · {pageCount} עמודים
                 </p>

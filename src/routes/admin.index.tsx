@@ -45,7 +45,7 @@ function Dashboard() {
               className="rounded-2xl bg-card p-6 text-center shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="text-sm text-muted-foreground">{t.label}</div>
-              <div className="my-1 text-5xl font-extrabold">{isLoading ? "…" : rows.length}</div>
+              <div className="my-1 text-4xl font-bold">{isLoading ? "…" : rows.length}</div>
               <div className="text-sm text-muted-foreground">{published} מפורסמים</div>
             </Link>
           );
@@ -55,7 +55,7 @@ function Dashboard() {
           className="rounded-2xl bg-card p-6 text-center shadow-sm transition-shadow hover:shadow-md"
         >
           <div className="text-sm text-muted-foreground">קבצי מדיה</div>
-          <div className="my-1 text-5xl font-extrabold">{media ?? "…"}</div>
+          <div className="my-1 text-4xl font-bold">{media ?? "…"}</div>
           <div className="text-sm text-muted-foreground">תמונות ומסמכים</div>
         </Link>
       </div>

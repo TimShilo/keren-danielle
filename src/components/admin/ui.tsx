@@ -6,7 +6,7 @@ export const inputClass =
 export function PageTitle({ children, actions }: { children: ReactNode; actions?: ReactNode }) {
   return (
     <div className="mb-6 flex items-center justify-between gap-4">
-      <h1 className="text-3xl font-extrabold tracking-tight">{children}</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{children}</h1>
       {actions}
     </div>
   );
