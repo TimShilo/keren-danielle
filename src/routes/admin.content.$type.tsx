@@ -303,7 +303,7 @@ function ContentList() {
               <th className="px-4 py-3 text-start font-semibold">קטגוריה משנית</th>
               <th className="px-4 py-3 text-start font-semibold">תאריך</th>
               <th className="px-4 py-3 text-start font-semibold">סטטוס</th>
-              <th className="w-24 px-4 py-3" />
+              <th className="sticky end-0 w-24 bg-muted px-4 py-3" />
             </tr>
           </thead>
           <tbody>
@@ -337,7 +337,7 @@ function ContentList() {
                   />
                 </td>
                 <td
-                  className="w-full min-w-[26rem] whitespace-nowrap px-4 py-3 font-semibold"
+                  className="max-w-[24rem] min-w-[14rem] truncate px-4 py-3 font-semibold"
                   title={x.title}
                 >
                   {x.title}
@@ -362,7 +362,7 @@ function ContentList() {
                     {STATUS_LABEL[x.status]}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-end">
+                <td className="sticky end-0 bg-card px-4 py-3 text-end shadow-[inset_1px_0_0_var(--border)]">
                   <GhostButton className="!px-3 !py-1.5" onClick={() => setEditing(x)}>
                     עריכה
                   </GhostButton>
