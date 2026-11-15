@@ -85,7 +85,6 @@ export function AboutDanielle() {
         <defs>
           <linearGradient id="about-next-bg" x1="0" x2="1" y1="0" y2="0">
             <stop offset="0" stopColor="#eef8ff" />
-            <stop offset="0.5" stopColor="#f1f5ed" />
             <stop offset="1" stopColor="#eef8ff" />
           </linearGradient>
         </defs>
