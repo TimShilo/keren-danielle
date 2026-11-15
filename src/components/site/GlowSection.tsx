@@ -1,5 +1,12 @@
 import { useEffect, useRef, type ElementType, type ReactNode } from "react";
 
+// Soft arch (design: 1920 x 92). The glow is clipped by this shape, so it never shows a straight edge.
+const CURVE_MASK =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92" preserveAspectRatio="none"><path d="M0 89C0 89 1314.32 9.3 1920 89V92H0Z" fill="#000"/></svg>',
+  );
+
 /**
  * Light-blue section with a large, blurred yellow circle that glides after the mouse
  * (eased, so it trails slightly). Without a mouse (touch / reduced motion) it drifts slowly on its own.
@@ -9,6 +16,7 @@ export function GlowSection({
   as: Tag = "section",
   className = "",
   glowClassName = "",
+  curveTop = false,
   children,
   ...rest
 }: {
@@ -16,6 +24,8 @@ export function GlowSection({
   className?: string;
   /** Override size/colour of the circle if a section needs a different glow */
   glowClassName?: string;
+  /** Section top edge is the soft arch that opens it (overlaps the previous section by 92 design-px) */
+  curveTop?: boolean;
   children: ReactNode;
 } & Record<string, unknown>) {
   const root = useRef<HTMLElement>(null);
@@ -86,13 +96,32 @@ export function GlowSection({
     };
   }, []);
 
+  const maskStyle = curveTop
+    ? {
+        WebkitMaskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
+        maskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
+        WebkitMaskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92)",
+        maskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92)",
+        WebkitMaskPosition: "0 0, 0 calc(var(--u) * 92)",
+        maskPosition: "0 0, 0 calc(var(--u) * 92)",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+      }
+    : undefined;
+
   return (
-    <Tag ref={root} className={`relative isolate overflow-hidden bg-[#eef8ff] ${className}`} {...rest}>
+    <Tag
+      ref={root}
+      className={`relative isolate overflow-hidden bg-[#eef8ff] ${curveTop ? "-mt-[calc(var(--u)*92)]" : ""} ${className}`}
+      style={maskStyle}
+      {...rest}
+    >
       <div
         ref={glow}
         aria-hidden
         className={`pointer-events-none absolute left-0 top-0 -z-10 size-[min(70vw,calc(var(--u)*640))] rounded-full bg-[#ffd800] opacity-[0.38] blur-[90px] will-change-transform ${glowClassName}`.trim()}
       />
+      {curveTop && <div aria-hidden className="h-[calc(var(--u)*92)]" />}
       {children}
     </Tag>
   );

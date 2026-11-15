@@ -75,21 +75,6 @@ export function AboutDanielle() {
         className="relative z-[1] order-2 mx-auto mt-10 block w-[80%] max-w-[420px] lg:absolute lg:left-[calc(var(--u)*1127)] lg:top-[calc(var(--u)*10)] lg:mx-0 lg:mt-0 lg:w-[calc(var(--u)*660)] lg:max-w-none lg:rotate-[1.84deg] lg:origin-top"
       />
 
-      {/* Light curve that opens the next section; drawn over the portrait's bottom */}
-      <svg
-        aria-hidden
-        viewBox="0 1770 1920 92"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] hidden w-full lg:block lg:h-[calc(var(--u)*92)]"
-      >
-        <defs>
-          <linearGradient id="about-next-bg" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#eef8ff" />
-            <stop offset="1" stopColor="#eef8ff" />
-          </linearGradient>
-        </defs>
-        <path d="M0 1859C0 1859 1314.32 1779.3 1920 1859V1862H0Z" fill="url(#about-next-bg)" />
-      </svg>
       <div className="pointer-events-none relative z-[2] order-3 -mt-px h-10 bg-[#eef8ff] lg:hidden" />
     </section>
   );

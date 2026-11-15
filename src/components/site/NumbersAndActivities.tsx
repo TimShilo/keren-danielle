@@ -15,7 +15,7 @@ const STATS = [
 /** "המספרים שמאחורי הקרן" + "ממשיכים את הטוב" on the light-blue glow background. */
 export function NumbersAndActivities() {
   return (
-    <GlowSection id="numbers" aria-label="המספרים שמאחורי הקרן" className="py-[100px]">
+    <GlowSection curveTop id="numbers" aria-label="המספרים שמאחורי הקרן" className="py-[100px]">
       <BirdFlock />
 
       {/* Numbers */}

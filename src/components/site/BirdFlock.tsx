@@ -77,7 +77,7 @@ export function BirdFlock() {
   }, []);
 
   return (
-    <div ref={root} aria-hidden className="pointer-events-none absolute inset-0 z-0 hidden lg:block">
+    <div ref={root} aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 top-[calc(var(--u)*92)] z-0 hidden lg:block">
       {BIRDS.map((b) => (
         <div
           key={b.src}
