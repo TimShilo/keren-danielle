@@ -47,8 +47,8 @@ export function DanielleAndPrize() {
   return (
     <div className="w-full">
       <div className="relative flex w-full flex-col gap-12 bg-navy px-[5%] py-12 text-white lg:block lg:h-[calc(var(--u)*613)] lg:bg-transparent lg:p-0">
-        {/* the navy band: three quarters of the screen, with a round left end (as in the design) */}
-        <div aria-hidden className="absolute hidden bg-navy lg:left-[calc(var(--u)*371)] lg:top-0 lg:block lg:h-full lg:w-[calc(var(--u)*1412)] lg:rounded-l-[calc(var(--u)*306.5)]" />
+        {/* the navy band: round left end at 371, runs to the right edge of the screen */}
+        <div aria-hidden className="absolute hidden bg-navy lg:left-[calc(var(--u)*371)] lg:right-0 lg:top-0 lg:block lg:h-full lg:rounded-l-[calc(var(--u)*306.5)]" />
         {CARDS.map((c, idx) => (
           <a
             key={c.href}
