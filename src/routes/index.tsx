@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AboutDanielle } from "@/components/site/AboutDanielle";
 import { HomeHero } from "@/components/site/HomeHero";
 import { SiteHeader } from "@/components/site/SiteHeader";
 
@@ -22,6 +23,7 @@ function Index() {
     <main className="site-theme min-h-screen">
       <SiteHeader />
       <HomeHero />
+      <AboutDanielle />
     </main>
   );
 }
