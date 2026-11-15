@@ -4,6 +4,7 @@ import { DanielleAndPrize } from "./DanielleAndPrize";
 import { CountUp } from "./CountUp";
 import { FoldHeading } from "./FoldHeading";
 import { GlowSection } from "./GlowSection";
+import { NewsLens, PressLoop, VideoLoop } from "./HomeFeedSections";
 import { Eyebrow } from "./HomeHero";
 
 const STATS = [
@@ -51,6 +52,13 @@ export function NumbersAndActivities() {
       {/* Danielle always + the Danielle Prize */}
       <div className="relative z-10 mt-[100px]">
         <DanielleAndPrize />
+      </div>
+
+      {/* News (dark lens), videos and press: endless carousels */}
+      <div className="relative z-10">
+        <NewsLens />
+        <VideoLoop />
+        <PressLoop />
       </div>
     </GlowSection>
   );
