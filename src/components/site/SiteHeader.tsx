@@ -16,7 +16,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
     <header className="absolute inset-x-4 top-4 z-30 lg:inset-x-[5%] lg:top-[calc(var(--u)*48)]">
-      <div className="flex h-16 items-center justify-between rounded-full bg-white/65 pe-3 ps-5 backdrop-blur-sm lg:h-[calc(var(--u)*98)] lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)]">
+      <div className="flex h-16 items-center justify-between rounded-full border border-white/70 bg-gradient-to-b from-white/55 to-white/25 shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 lg:h-[calc(var(--u)*98)] lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)]">
         {/* Logo (heart + wordmark) */}
         <a
           href="/"
@@ -75,7 +75,7 @@ export function SiteHeader() {
       {open && (
         <nav
           aria-label="תפריט נייד"
-          className="mt-2 flex flex-col rounded-3xl bg-white/90 px-6 py-3 text-xl backdrop-blur-sm lg:hidden"
+          className="mt-2 flex flex-col rounded-3xl border border-white/70 bg-white/60 px-6 py-3 text-xl shadow-lg backdrop-blur-xl lg:hidden"
         >
           {NAV.map((n) => (
             <a key={n.label} href={n.href} className="border-b border-navy/10 py-3 last:border-0">
