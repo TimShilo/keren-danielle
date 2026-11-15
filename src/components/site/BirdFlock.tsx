@@ -3,7 +3,7 @@ import { loadGsap } from "@/lib/gsap";
 
 /**
  * Three birds that enter from the left edge of the screen, flapping, and rise slowly
- * to their resting spot; then they hover there with a slow, gentle flap.
+ * to their resting spot, where they settle and stay still.
  * Positions are in "design pixels" (1920 wide) relative to the section top.
  */
 const BIRDS = [
@@ -51,9 +51,12 @@ export function BirdFlock() {
           const tl = gsap.timeline({ delay: b.delay });
           tl.to(bird, { x: 0, duration: b.dur, ease: "sine.out" }, 0);
           tl.to(bird, { y: 0, duration: b.dur, ease: "power2.out" }, 0);
-          tl.to(flap, { timeScale: 0.4, duration: 3, ease: "none" }, b.dur - 2.5);
-          // then hover
-          tl.to(bird, { y: -10 * unit, duration: 2.8 + i * 0.4, yoyo: true, repeat: -1, ease: "sine.inOut" });
+          tl.to(flap, { timeScale: 0.4, duration: 2.5, ease: "none" }, b.dur - 2.5);
+          // landed: wings settle and the bird stays put
+          tl.add(() => {
+            flap.kill();
+            gsap.to(img, { scaleY: 1, rotation: 0, duration: 0.6, ease: "sine.out" });
+          }, b.dur);
         });
       }, el);
     };
