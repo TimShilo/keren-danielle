@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FxIconButton } from "./FxButton";
 
 const NAV = [
@@ -15,14 +15,36 @@ const NAV = [
 /** Floating white pill: logo on the right, menu in the middle, yellow search button on the left. */
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Stays pinned to the top while scrolling and shrinks a little to take less room.
+  useEffect(() => {
+    const onScroll = () => setScrolled((was) => (was ? window.scrollY > 12 : window.scrollY > 60));
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="absolute inset-x-4 top-4 z-30 lg:inset-x-[5%] lg:top-[calc(var(--u)*48)]">
-      <div className="flex h-16 items-center justify-between rounded-full border border-white/70 bg-gradient-to-b from-white/55 to-white/25 shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 lg:h-[calc(var(--u)*98)] lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)]">
+    <header
+      className={`fixed inset-x-4 z-50 transition-[top] duration-300 lg:inset-x-[5%] ${
+        scrolled ? "top-2 lg:top-[calc(var(--u)*14)]" : "top-4 lg:top-[calc(var(--u)*48)]"
+      }`}
+    >
+      <div
+        className={`flex items-center justify-between rounded-full border border-white/70 bg-gradient-to-b from-white/55 to-white/25 shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 transition-[height] duration-300 lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)] ${
+          scrolled ? "h-14 lg:h-[calc(var(--u)*68)]" : "h-16 lg:h-[calc(var(--u)*98)]"
+        }`}
+      >
         {/* Logo (heart + wordmark) */}
         <a
           href="/"
           aria-label="קרן דניאלי – דף הבית"
-          className="relative order-1 block h-9 w-[140px] shrink-0 lg:h-[calc(var(--u)*64.28)] lg:w-[calc(var(--u)*249)]"
+          className={`relative order-1 block shrink-0 transition-[width,height] duration-300 ${
+            scrolled
+              ? "h-8 w-[120px] lg:h-[calc(var(--u)*45)] lg:w-[calc(var(--u)*174)]"
+              : "h-9 w-[140px] lg:h-[calc(var(--u)*64.28)] lg:w-[calc(var(--u)*249)]"
+          }`}
         >
           <img
             src="/images/home/svg/logo-text.svg"
@@ -53,7 +75,9 @@ export function SiteHeader() {
           <FxIconButton
             variant="yellow"
             aria-label="חיפוש"
-            className="size-12 shrink-0 lg:size-[calc(var(--u)*69)]"
+            className={`shrink-0 transition-[width,height] duration-300 ${
+              scrolled ? "size-10 lg:size-[calc(var(--u)*48)]" : "size-12 lg:size-[calc(var(--u)*69)]"
+            }`}
           >
             <img src="/images/home/svg/search-icon.svg" alt="" className="size-full" />
           </FxIconButton>

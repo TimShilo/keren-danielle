@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { FoldHeading } from "./FoldHeading";
 import { FxButton } from "./FxButton";
 import { ScrollText } from "./ScrollText";
-import { SiteHeader } from "./SiteHeader";
 import { VideoModal } from "./VideoModal";
 
 const FILM_YOUTUBE_ID = "IDX0I_8vipw";
@@ -48,7 +47,7 @@ export function HomeHero() {
   return (
     <section
       aria-label="פתיחה"
-      className="relative isolate flex flex-col overflow-hidden bg-[radial-gradient(ellipse_at_50%_50%,#f6eec9_28%,#eef8ff_100%)] [--u:calc(100vw/1920)] lg:block lg:h-[calc(var(--u)*1056)]"
+      className="relative isolate flex flex-col overflow-hidden bg-[radial-gradient(ellipse_at_50%_50%,#f6eec9_28%,#eef8ff_100%)] lg:block lg:h-[calc(var(--u)*1056)]"
     >
       {/* Background: still painting first, the looping (silent) video fades in over it */}
       <img
@@ -70,8 +69,6 @@ export function HomeHero() {
         aria-hidden="true"
         onPlaying={() => setVideoReady(true)}
       />
-
-      <SiteHeader />
 
       {/* Portrait */}
       <img

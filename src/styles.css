@@ -245,6 +245,7 @@
 }
 
 .site-theme {
+  --u: calc(100vw / 1920);
   font-family: "Discovery Fs", system-ui, sans-serif;
   color: var(--color-navy);
   background: var(--color-beige);

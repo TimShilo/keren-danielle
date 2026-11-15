@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HomeHero } from "@/components/site/HomeHero";
+import { SiteHeader } from "@/components/site/SiteHeader";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <main className="site-theme min-h-screen">
+      <SiteHeader />
       <HomeHero />
     </main>
   );
