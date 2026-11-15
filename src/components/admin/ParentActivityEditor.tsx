@@ -85,6 +85,26 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const [renameId, setRenameId] = useState<string | null>(null);
+  const [renameVal, setRenameVal] = useState("");
+  const renameSub = useMutation({
+    mutationFn: async () => {
+      if (!renameId) return;
+      if (!renameVal.trim()) throw new Error("יש למלא שם");
+      const { error } = await supabase
+        .from("categories")
+        .update({ name_he: renameVal.trim() })
+        .eq("id", renameId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      setRenameId(null);
+      toast.success("השם עודכן");
+      refresh();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const addSub = useMutation({
     mutationFn: async () => {
       if (!newName.trim()) throw new Error("יש למלא שם");
@@ -167,7 +187,52 @@ export function ParentActivityEditor({ parent, subs, pages, onClose }: Props) {
                     className="flex items-center gap-3 rounded-xl border bg-background p-3"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="font-bold">{s.name_he}</div>
+                      {renameId === s.id ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            className={`${inputClass} !py-1.5`}
+                            value={renameVal}
+                            autoFocus
+                            onChange={(e) => setRenameVal(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                renameSub.mutate();
+                              }
+                              if (e.key === "Escape") setRenameId(null);
+                            }}
+                          />
+                          <GhostButton
+                            type="button"
+                            className="!px-3 !py-1.5"
+                            disabled={renameSub.isPending}
+                            onClick={() => renameSub.mutate()}
+                          >
+                            שמירה
+                          </GhostButton>
+                          <GhostButton
+                            type="button"
+                            className="!px-3 !py-1.5"
+                            onClick={() => setRenameId(null)}
+                          >
+                            ביטול
+                          </GhostButton>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold">{s.name_he}</span>
+                          <button
+                            type="button"
+                            className="text-xs font-bold text-primary hover:underline"
+                            onClick={() => {
+                              setRenameId(s.id);
+                              setRenameVal(s.name_he);
+                            }}
+                          >
+                            שינוי שם
+                          </button>
+                        </div>
+                      )}
                       <div className="text-xs text-muted-foreground">
                         {page.length
                           ? page
