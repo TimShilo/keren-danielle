@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { FoldHeading } from "./FoldHeading";
 import { ScrollText } from "./ScrollText";
 import { SiteHeader } from "./SiteHeader";
+import { VideoModal } from "./VideoModal";
+
+const FILM_YOUTUBE_ID = "IDX0I_8vipw";
 
 const TITLE_LINES = ["לאהוב.", "לתת.", "להתחבר."];
 const INTRO = [
@@ -22,6 +25,7 @@ export function Eyebrow({ children, className = "" }: { children: string; classN
 export function HomeHero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
+  const [filmOpen, setFilmOpen] = useState(false);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -122,6 +126,7 @@ export function HomeHero() {
         <img src="/images/home/hero-corner.svg" alt="" aria-hidden className="block h-auto w-full" />
         <button
           type="button"
+          onClick={() => setFilmOpen(true)}
           className="absolute top-[38.6%] flex w-[calc(var(--u)*100)] flex-col items-center gap-[calc(var(--u)*24)] text-white"
           style={{ left: "29.28%" }}
           aria-label="לסרט על דניאלי"
@@ -141,6 +146,15 @@ export function HomeHero() {
         <path d="M0 0C599.5 96.5 1358.74 77.1 1920 14.5V100H0Z" fill="#072845" />
       </svg>
       <div className="absolute inset-x-0 bottom-0 z-20 h-10 bg-navy lg:hidden" />
+      <button
+        type="button"
+        onClick={() => setFilmOpen(true)}
+        className="absolute bottom-14 start-4 z-30 flex items-center gap-2 rounded-full bg-navy px-4 py-2 text-sm text-white lg:hidden"
+      >
+        <img src="/images/home/svg/play.svg" alt="" className="size-6" />
+        לסרט על דניאלי
+      </button>
+      <VideoModal youtubeId={FILM_YOUTUBE_ID} title="סרט על דניאלי" open={filmOpen} onOpenChange={setFilmOpen} />
     </section>
   );
 }
