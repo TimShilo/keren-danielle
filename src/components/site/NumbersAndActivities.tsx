@@ -1,5 +1,6 @@
 import { ActivityPanels } from "./ActivityPanels";
 import { BirdFlock } from "./BirdFlock";
+import { DanielleAndPrize } from "./DanielleAndPrize";
 import { CountUp } from "./CountUp";
 import { FoldHeading } from "./FoldHeading";
 import { GlowSection } from "./GlowSection";
@@ -45,6 +46,11 @@ export function NumbersAndActivities() {
         <div className="mt-10 lg:mt-[calc(var(--u)*73)]">
           <ActivityPanels />
         </div>
+      </div>
+
+      {/* Danielle always + the Danielle Prize */}
+      <div className="relative z-10 mt-[100px]">
+        <DanielleAndPrize />
       </div>
     </GlowSection>
   );
