@@ -22,10 +22,10 @@ const CARDS: Card[] = [
     text: "דניאלי, נולדה בריו דה ז'ניירו שבברזיל בב' באדר א' תשנ“ה (02/02/1995). כבר מקטנות ניתן היה להבחין בייחודיות שלה. בחיוכה, באהבת האדם שבה ובשמחת החיים המיוחדת –שבתה את ליבם של כל רואיה.",
     img: "/images/home/danielle-child.webp",
     alt: "דניאלי בילדותה",
-    photo: { left: 1499, top: 54 },
+    photo: { left: 1499, top: 121 },
     bracket: { left: 165, top: 223 },
     textRight: 1475,
-    textTop: 105,
+    textTop: 172,
   },
   {
     href: "/prize",
@@ -33,10 +33,10 @@ const CARDS: Card[] = [
     text: "הפרס בא להעריך ולהוקיר את האנושיות והשותפות האמיתית של הצוות הרפואי, עם המטופלים ובני משפחתם. ולהגביר את המודעות לחשיבות האהבה והאנושיות בשירותי הרפואה.",
     img: "/images/home/prize-award.webp",
     alt: "טקס פרס דניאלי לרפואה עם לב",
-    photo: { left: 560, top: 130 },
-    bracket: { left: 303, top: 147 },
+    photo: { left: 560, top: 121 },
+    bracket: { left: 165, top: 223 },
     textRight: 523,
-    textTop: 188,
+    textTop: 172,
   },
 ];
 
