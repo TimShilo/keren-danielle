@@ -122,7 +122,7 @@ export function HomeHero() {
       />
 
       {/* One continuous navy shape (corner + wave): no seam where the two curves used to meet */}
-      <svg aria-hidden viewBox="0 598 1920 458" preserveAspectRatio="none" className="absolute left-0 z-20 hidden w-full lg:block lg:top-[calc(var(--u)*598)] lg:h-[calc(var(--u)*458)]"><path
+      <svg aria-hidden viewBox="0 598 1920 458" preserveAspectRatio="none" className="pointer-events-none absolute left-0 z-20 hidden w-full lg:block lg:top-[calc(var(--u)*598)] lg:h-[calc(var(--u)*458)]"><path
           d="M0 595C48 667 103 673 190 673C287 673 327 693 327 784V895C327.00 990.00 550.06 1015.82 760.00 1021.01C1166.29 1031.05 1579.56 1008.97 1920.00 971.00V1056H0Z"
           fill="#072845" /></svg>
 
@@ -139,7 +139,7 @@ export function HomeHero() {
           <span className="whitespace-nowrap text-[calc(var(--u)*16)] leading-[1.3] underline-offset-4 group-hover:underline">לסרט על דניאלי</span>
         </button>
       </div>
-      <div className="absolute inset-x-0 bottom-0 z-20 h-10 bg-navy lg:hidden" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-10 bg-navy lg:hidden" />
       <button
         type="button"
         onClick={() => setFilmOpen(true)}

@@ -331,10 +331,11 @@
   inherits: true;
   initial-value: 0px;
 }
-.site-theme button,
-.site-theme a,
-.site-theme [role="button"] {
+.site-theme :is(button, a[href], [role="button"], [role="link"], summary, select, label[for], input[type="submit"], input[type="checkbox"], input[type="radio"]) {
   cursor: pointer;
+}
+.site-theme :is(button, input, select):disabled {
+  cursor: not-allowed;
 }
 @layer components {
 .fx-btn {
@@ -387,8 +388,8 @@
   --fx-bg: transparent;
   --fx-fg: #072845;
   --fx-border: #072845;
-  --fx-circle: #072845;
-  --fx-fg-in: #fff;
+  --fx-circle: #fff;
+  --fx-fg-in: #072845;
 }
 .fx-outline-light {
   --fx-bg: transparent;
