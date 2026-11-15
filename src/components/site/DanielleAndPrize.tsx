@@ -7,7 +7,7 @@ interface Card {
   text: string;
   img: string;
   alt: string;
-  /** design coordinates across the full-width navy band (1920 x 613) */
+  /** design coordinates on the 1920-wide canvas (the navy band is 371 → 1783) */
   photo: { left: number; top: number };
   /** yellow corner position relative to the photo */
   bracket: { left: number; top: number };
@@ -33,9 +33,9 @@ const CARDS: Card[] = [
     text: "הפרס בא להעריך ולהוקיר את האנושיות והשותפות האמיתית של הצוות הרפואי, עם המטופלים ובני משפחתם. ולהגביר את המודעות לחשיבות האהבה והאנושיות בשירותי הרפואה.",
     img: "/images/home/prize-award.webp",
     alt: "טקס פרס דניאלי לרפואה עם לב",
-    photo: { left: 560, top: 121 },
+    photo: { left: 752, top: 121 },
     bracket: { left: 165, top: 223 },
-    textRight: 523,
+    textRight: 715,
     textTop: 172,
   },
 ];
@@ -46,7 +46,9 @@ const u = (n: number) => `calc(var(--u) * ${n})`;
 export function DanielleAndPrize() {
   return (
     <div className="w-full">
-      <div className="relative flex w-full flex-col gap-12 bg-navy px-[5%] py-12 text-white lg:block lg:h-[calc(var(--u)*613)] lg:rounded-l-[calc(var(--u)*306.5)] lg:p-0">
+      <div className="relative flex w-full flex-col gap-12 bg-navy px-[5%] py-12 text-white lg:block lg:h-[calc(var(--u)*613)] lg:bg-transparent lg:p-0">
+        {/* the navy band: three quarters of the screen, with a round left end (as in the design) */}
+        <div aria-hidden className="absolute hidden bg-navy lg:left-[calc(var(--u)*371)] lg:top-0 lg:block lg:h-full lg:w-[calc(var(--u)*1412)] lg:rounded-l-[calc(var(--u)*306.5)]" />
         {CARDS.map((c, idx) => (
           <a
             key={c.href}
