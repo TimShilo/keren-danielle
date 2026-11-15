@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FxIconButton } from "./FxButton";
 
 const NAV = [
   { label: "אודות", href: "/about" },
@@ -49,26 +50,26 @@ export function SiteHeader() {
         </nav>
 
         <div className="order-3 flex items-center gap-2 ms-auto lg:ms-0">
-          <button
-            type="button"
+          <FxIconButton
+            variant="yellow"
             aria-label="חיפוש"
-            className="block size-12 shrink-0 lg:size-[calc(var(--u)*69)]"
+            className="size-12 shrink-0 lg:size-[calc(var(--u)*69)]"
           >
-            <img src="/images/home/svg/search-button.svg" alt="" className="size-full" />
-          </button>
-          <button
-            type="button"
+            <img src="/images/home/svg/search-icon.svg" alt="" className="size-full" />
+          </FxIconButton>
+          <FxIconButton
+            variant="ghost"
             aria-label="תפריט"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="grid size-12 place-items-center rounded-full lg:hidden"
+            className="size-12 lg:hidden"
           >
             <span className="space-y-1.5">
               <span className="block h-0.5 w-6 bg-navy" />
               <span className="block h-0.5 w-6 bg-navy" />
               <span className="block h-0.5 w-6 bg-navy" />
             </span>
-          </button>
+          </FxIconButton>
         </div>
       </div>
 

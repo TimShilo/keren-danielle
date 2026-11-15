@@ -1,5 +1,6 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { trackPointer } from "./FxButton";
 
 /** Lightbox that plays a YouTube video (with sound) only while open. */
 export function VideoModal({
@@ -36,7 +37,9 @@ export function VideoModal({
           </div>
           <DialogPrimitive.Close
             aria-label="סגירה"
-            className="absolute -top-12 end-0 grid size-10 place-items-center rounded-full bg-white text-navy transition-transform hover:scale-105"
+            onPointerEnter={trackPointer}
+            onPointerMove={trackPointer}
+            className="fx-btn fx-white absolute -top-12 end-0 size-10 items-center justify-center"
           >
             <X className="size-5" />
           </DialogPrimitive.Close>

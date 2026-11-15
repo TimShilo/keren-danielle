@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FoldHeading } from "./FoldHeading";
+import { FxButton } from "./FxButton";
 import { ScrollText } from "./ScrollText";
 import { SiteHeader } from "./SiteHeader";
 import { VideoModal } from "./VideoModal";
@@ -98,18 +99,20 @@ export function HomeHero() {
           ))}
         </div>
         <div className="mt-6 flex flex-wrap gap-4 lg:mt-[calc(var(--u)*23)] lg:gap-[calc(var(--u)*13)]">
-          <a
+          <FxButton
             href="/about"
-            className="inline-flex h-[50px] items-center justify-center rounded-full bg-brand-yellow px-8 text-xl font-bold leading-none transition-transform hover:-translate-y-0.5 lg:h-[calc(var(--u)*50)] lg:w-[calc(var(--u)*179)] lg:px-0 lg:text-[calc(var(--u)*20)]"
+            variant="yellow"
+            className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:w-[calc(var(--u)*179)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-0"
           >
             אודות הקרן ←
-          </a>
-          <a
+          </FxButton>
+          <FxButton
             href="/danielle"
-            className="inline-flex h-[50px] items-center justify-center rounded-full border-2 border-navy px-8 text-xl font-bold leading-none transition-colors hover:bg-navy hover:text-white lg:h-[calc(var(--u)*50)] lg:w-[calc(var(--u)*222)] lg:px-0 lg:text-[calc(var(--u)*20)]"
+            variant="outline"
+            className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:w-[calc(var(--u)*222)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-0"
           >
             הסיפור של דניאלי ←
-          </a>
+          </FxButton>
         </div>
       </div>
 
@@ -127,12 +130,12 @@ export function HomeHero() {
         <button
           type="button"
           onClick={() => setFilmOpen(true)}
-          className="absolute top-[38.6%] flex w-[calc(var(--u)*100)] flex-col items-center gap-[calc(var(--u)*24)] text-white"
+          className="group absolute top-[38.6%] flex w-[calc(var(--u)*100)] cursor-pointer flex-col items-center gap-[calc(var(--u)*24)] text-white"
           style={{ left: "29.28%" }}
           aria-label="לסרט על דניאלי"
         >
-          <img src="/images/home/svg/play.svg" alt="" className="size-[calc(var(--u)*64)]" />
-          <span className="whitespace-nowrap text-[calc(var(--u)*16)] leading-[1.3]">לסרט על דניאלי</span>
+          <img src="/images/home/svg/play.svg" alt="" className="size-[calc(var(--u)*64)] transition-transform duration-300 group-hover:scale-110" />
+          <span className="whitespace-nowrap text-[calc(var(--u)*16)] leading-[1.3] underline-offset-4 group-hover:underline">לסרט על דניאלי</span>
         </button>
       </div>
 
@@ -149,7 +152,7 @@ export function HomeHero() {
       <button
         type="button"
         onClick={() => setFilmOpen(true)}
-        className="absolute bottom-14 start-4 z-30 flex items-center gap-2 rounded-full bg-navy px-4 py-2 text-sm text-white lg:hidden"
+        className="absolute bottom-14 start-4 z-30 flex cursor-pointer items-center gap-2 rounded-full bg-navy px-4 py-2 text-sm text-white lg:hidden"
       >
         <img src="/images/home/svg/play.svg" alt="" className="size-6" />
         לסרט על דניאלי
