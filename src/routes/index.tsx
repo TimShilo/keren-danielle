@@ -1,19 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { HomeHero } from "@/components/site/HomeHero";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "timnati-web-design-new" },
-      { name: "description", content: "timnati-web-design-new" },
-      { property: "og:title", content: "timnati-web-design-new" },
-      { property: "og:description", content: "timnati-web-design-new" },
+      { title: "קרן דניאלי – לזכר דניאלי זוננפלד ע״ה" },
+      {
+        name: "description",
+        content: "קרן דניאלי – עמותה להנצחת דניאלי זוננפלד ע״ה: מפעלים של עשיה ונתינה, אור, אכפתיות ואהבה.",
+      },
+      { property: "og:title", content: "קרן דניאלי – לזכר דניאלי זוננפלד ע״ה" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,
 });
 
 function Index() {
-  return <div className="min-h-screen bg-background" />;
+  return (
+    <main className="site-theme min-h-screen">
+      <HomeHero />
+    </main>
+  );
 }

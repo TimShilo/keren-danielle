@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="64" height="64.2199" viewBox="0 0 64 64.2199" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 626292">
+<mask id="stroke0_0_24" fill="white">
+<path d="M32 0C49.673 0 63.9998 14.3757 64 32.1094C64 49.8432 49.6731 64.2197 32 64.2197C14.3269 64.2197 0 49.8432 0 32.1094C0.000244491 14.3757 14.327 0 32 0Z"/>
+</mask>
+<path id="Exclude" d="M32 0C49.673 0 63.9998 14.3757 64 32.1094C64 49.8432 49.6731 64.2197 32 64.2197C14.3269 64.2197 0 49.8432 0 32.1094C0.000244491 14.3757 14.327 0 32 0Z" stroke-width="13.0142" stroke="white" stroke-opacity="0.5" mask="url(#stroke0_0_24)"/>
+<path id="Rectangle 2715" d="M22.2717 15.4775L48.8331 31.9411L22.2717 47.9048L22.2717 15.4775Z" fill="white" fill-opacity="0.5"/>
+</g>
+</svg>

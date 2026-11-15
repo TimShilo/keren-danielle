@@ -224,3 +224,102 @@
   pointer-events: none;
   color: var(--color-muted-foreground);
 }
+
+/* ───────── Public site (home page etc.) ───────── */
+@font-face {
+  font-family: "Discovery Fs";
+  src:
+    url("/fonts/Discovery_Fs-VF.woff2") format("woff2"),
+    url("/fonts/Discovery_Fs-VF.woff") format("woff");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-navy: #072845;
+  --color-brand-blue: #0c448a;
+  --color-brand-yellow: #ffd800;
+  --color-beige: #f9f9ef;
+  --color-ink: #2b2823;
+}
+
+.site-theme {
+  font-family: "Discovery Fs", system-ui, sans-serif;
+  color: var(--color-navy);
+  background: var(--color-beige);
+  overflow-x: clip;
+}
+
+/* Scroll-scrubbed running text */
+.scroll-text {
+  word-break: keep-all;
+  hyphens: none;
+}
+.scroll-text .word-unit {
+  display: inline-block;
+  white-space: nowrap;
+}
+.scroll-text .ltr-unit {
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* "Paper fold" heading reveal */
+.fold-text {
+  display: inline-block;
+  white-space: pre-wrap;
+  user-select: text;
+}
+.fold-text-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.fold-text-visual {
+  display: inline;
+}
+.fold-text-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.fold-text-segment {
+  display: inline-block;
+  vertical-align: baseline;
+  perspective: 700px;
+}
+.fold-text-piece {
+  --fold-shade: linear-gradient(180deg, #00000094 0%, #00000038 42%, #ffffff42 100%);
+  position: relative;
+  display: inline-block;
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+}
+.fold-text-piece::after {
+  content: attr(data-fold-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: var(--fold-shade);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: var(--fold-crease, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fold-text-piece {
+    transform: none !important;
+  }
+  .fold-text-piece::after {
+    opacity: 0 !important;
+  }
+}
