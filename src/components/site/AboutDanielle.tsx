@@ -32,8 +32,15 @@ export function AboutDanielle() {
         src="/images/home/heart-fill-a.png"
         depth={1.5}
         phase={2}
-        className="absolute hidden lg:block lg:left-[calc(var(--u)*1500)] lg:top-[calc(var(--u)*414)] lg:w-[calc(var(--u)*219)]"
-        imgClassName="opacity-[0.32]"
+        className="absolute hidden lg:block lg:left-[calc(var(--u)*1565)] lg:top-[calc(var(--u)*372)] lg:w-[calc(var(--u)*219)]"
+        imgClassName="opacity-[0.6]"
+      />
+      <ParallaxDecor
+        src="/images/home/heart-fill-b.png"
+        depth={-1.7}
+        phase={4}
+        className="absolute hidden lg:block lg:left-[calc(var(--u)*1715)] lg:top-[calc(var(--u)*560)] lg:w-[calc(var(--u)*181)]"
+        imgClassName="opacity-[0.5]"
       />
 
       {/* Text */}
