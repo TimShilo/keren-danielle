@@ -1,4 +1,4 @@
-import { GraduationCap, Hospital, ScrollText, User, Users } from "lucide-react";
+import { ArrowLeft, GraduationCap, Hospital, ScrollText, User, Users } from "lucide-react";
 import { useState } from "react";
 import {
   DEMO_NEWS,
@@ -20,6 +20,22 @@ import { VideoModal } from "./VideoModal";
 const ITEM = "w-[clamp(300px,calc(var(--u)*432),590px)] px-[clamp(8px,calc(var(--u)*9),14px)]";
 const CARD_SHADOW = "shadow-[4px_4px_9px_rgba(0,0,0,0.25)]";
 
+/** "לפרטים": round arrow; on card hover a yellow disc grows inside it and the arrow turns white */
+function MoreArrow({ className = "" }: { className?: string }) {
+  return (
+    <span className={`flex ${className}`}>
+      <span
+        aria-hidden
+        className="relative grid size-11 place-items-center overflow-hidden rounded-full border-2 border-navy text-navy transition-colors duration-500 group-hover/card:border-brand-yellow group-hover/card:text-white group-focus-visible/card:border-brand-yellow group-focus-visible/card:text-white"
+      >
+        <span className="absolute inset-0 scale-0 rounded-full bg-brand-yellow transition-transform duration-500 ease-out group-hover/card:scale-100 group-focus-visible/card:scale-100" />
+        <ArrowLeft className="relative size-5" />
+      </span>
+      <span className="sr-only">לפרטים</span>
+    </span>
+  );
+}
+
 const CHIP = {
   education: { Icon: GraduationCap, color: "#F37021" },
   health: { Icon: Hospital, color: "#8AC640" },
@@ -30,16 +46,16 @@ const CHIP = {
 function NewsCard({ n }: { n: NewsCardData }) {
   const { Icon, color } = CHIP[n.icon];
   return (
-    <a href={n.href} className={`flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}>
+    <a href={n.href} className={`group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}>
       <img src={n.image} alt="" loading="lazy" className="aspect-[414/267] w-full object-cover" />
       <div className="flex flex-1 flex-col p-6">
         <p className="flex items-center gap-2 text-lg leading-[1.3] text-[#1d2838]">
           <Icon className="size-5" style={{ color }} aria-hidden />
           {n.category}
         </p>
-        <h3 className="mt-2 text-[24px] font-bold leading-[1.3] text-[#1d2838] lg:text-[28px]">{n.title}</h3>
-        <p className="mt-1 line-clamp-3 text-lg leading-[1.3] text-[#1d2838] lg:text-2xl">{n.excerpt}</p>
-        <span className="mt-auto pt-3 text-xl font-bold text-navy lg:text-2xl">לפרטים ←</span>
+        <h3 className="mt-2 line-clamp-2 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{n.title}</h3>
+        <p className="mt-1 line-clamp-3 text-[18px] font-normal leading-[1.4] text-[#1d2838]">{n.excerpt}</p>
+        <MoreArrow className="mt-auto pt-3" />
       </div>
     </a>
   );
@@ -61,7 +77,7 @@ function VideoCard({ v, onOpen }: { v: VideoCardData; onOpen: () => void }) {
           className="absolute left-1/2 top-1/2 size-14 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 group-hover:scale-110 lg:size-[calc(var(--u)*64)]"
         />
       </span>
-      <span className="mt-5 block pe-4 text-lg leading-[1.3] text-[#1d2838] lg:text-2xl">{v.title}</span>
+      <span className="mt-5 line-clamp-3 block pe-4 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{v.title}</span>
     </button>
   );
 }
@@ -71,18 +87,18 @@ function PressCard({ p }: { p: PressCardData }) {
     <a
       href={p.href}
       {...(p.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}
+      className={`group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}
     >
       <span className="block aspect-[414/267] border-b-2 border-black/40 bg-white">
         <img src={p.image} alt="" loading="lazy" className="size-full object-cover" />
       </span>
       <span className="flex flex-1 flex-col p-6">
-        <span className="line-clamp-3 text-[22px] font-bold leading-[1.3] text-[#1d2838] lg:text-2xl">{p.title}</span>
+        <span className="line-clamp-3 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{p.title}</span>
         <span className="mt-auto flex items-center gap-2 pt-4 text-lg text-navy">
           <User className="size-4 fill-brand-blue text-brand-blue" aria-hidden />
           {p.source}
         </span>
-        <span className="pt-4 text-lg text-navy lg:text-xl">לפרטים ←</span>
+        <MoreArrow className="pt-4" />
       </span>
     </a>
   );

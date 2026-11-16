@@ -32,7 +32,7 @@ export const DEMO_NEWS: NewsCardData[] = [
   { id: "d1", title: "הוסטל ניגונים", excerpt: "ניגונים הינו ההוסטל היחידי מסוגו לנערות בסיכון ממשפחות דתיות וחרדיות, הפועל כבר 26 שנים ...", category: "רווחה וכלכלה", icon: "welfare", image: "/images/home/demo/news-1.webp", href: "/news" },
   { id: "d2", title: "קרן רעננה לזכר דניאלי זוננפלד", excerpt: "\"קרן רעננה\" (ע\"ר) פועלת בשיתוף פעולה הדוק עם קרן דניאלי בתמיכתה. הפעילות של קרן ...", category: "מסורת וחברה", icon: "tradition", image: "/images/home/demo/news-2.webp", href: "/news" },
   { id: "d3", title: "בכירי הרופאים בארץ בועידה...", excerpt: "הצלחה חסרת תקדים והדים רבים ל \"ועידה הרפואית השנתית ה-2 של בוני עולם ישראל\" ...", category: "בריאות ורפואה", icon: "health", image: "/images/home/demo/news-3.webp", href: "/news" },
-  { id: "d4", title: "\"תקות דניאלי\" תכנית לתיגבור...", excerpt: "תקווה מספקת בית חם, רחום, שירותים חברתיים וחיי יהודות תוססים ובעיקר, חינוך איכותי ....", category: "חינוך ולמידה", icon: "education", image: "/images/home/demo/news-4.webp", href: "/news" },
+  { id: "d4", title: "\"תקות דניאלי\" תכנית לתיגבור...", excerpt: "תקווה מספקת בית חם, רחום, שירותים חברתיים וחיי יהודות תוססים ובעיקר, חינוך איכותי ...", category: "חינוך ולמידה", icon: "education", image: "/images/home/demo/news-4.webp", href: "/news" },
 ];
 export const DEMO_PRESS: PressCardData[] = [
   { id: "p1", title: "הוסטל ניגונים", source: "", image: "/images/home/demo/press-1.webp", href: "/press", external: false },
@@ -102,11 +102,11 @@ export function useHomeNews() {
       };
       return rows.map((r) => {
         const category = mainName(r.category_id as string | null);
-        const text = ((r.excerpt as string) || strip((r.body_html as string) || "")).slice(0, 150);
+        const text = ((r.excerpt as string) || strip((r.body_html as string) || "")).slice(0, 260);
         return {
           id: r.id as string,
           title: r.title as string,
-          excerpt: text ? `${text} ...` : "",
+          excerpt: text,
           category,
           icon: ICONS[category] ?? "tradition",
           image: media.get(r.featured_media_id as string) ?? "",
