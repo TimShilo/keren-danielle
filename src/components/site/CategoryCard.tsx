@@ -8,6 +8,11 @@ export const SUB_PHOTOS: Record<string, string> = {
   "פרס דניאלי": "/images/home/activities/sub-prize.webp",
   "קליניקת דניאלי": "/images/home/activities/sub-clinic.webp",
 };
+/** Crop focus (CSS object-position) for photos that need it inside tall panels. */
+export const SUB_PHOTO_POS: Record<string, string> = {
+  "בדרכה של דניאלי": "50% 100%", // show the girls, less of the wall above
+  "למענם": "6% 50%", // keep the elderly man in frame
+};
 export const MAIN_ICONS: Record<string, LucideIcon> = {
   "בריאות ורפואה": Hospital,
   "חינוך ולמידה": GraduationCap,

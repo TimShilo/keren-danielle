@@ -9,6 +9,8 @@ export interface PanelItem {
   href: string;
   img?: string | undefined;
   icon?: LucideIcon | undefined;
+  /** CSS object-position of the photo (default: centre) */
+  pos?: string | undefined;
 }
 
 const PANELS: PanelItem[] = [
@@ -61,6 +63,7 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
                 src={p.img}
                 alt=""
                 loading="lazy"
+                style={p.pos ? { objectPosition: p.pos } : undefined}
                 className="absolute inset-0 size-full object-cover transition-transform duration-[1500ms] ease-out lg:group-hover:scale-[1.04] lg:group-focus-visible:scale-[1.04]"
               />
             ) : (

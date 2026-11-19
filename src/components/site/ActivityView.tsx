@@ -9,7 +9,7 @@ import {
 import type { VideoCardData } from "@/lib/home-feed";
 import { Band } from "./Band";
 import { ActivityPanels } from "./ActivityPanels";
-import { MAIN_ICONS, SUB_PHOTOS } from "./CategoryCard";
+import { MAIN_ICONS, SUB_PHOTO_POS, SUB_PHOTOS } from "./CategoryCard";
 import { FoldHeading } from "./FoldHeading";
 import { FxButton } from "./FxButton";
 import { GlowSection } from "./GlowSection";
@@ -231,6 +231,7 @@ export function MainActivityView({ page }: { page: MainActivityPage }) {
               href: sub.href ?? "#",
               img: SUB_PHOTOS[sub.name] ?? (sub.image || undefined),
               icon: MAIN_ICONS[page.title],
+              pos: SUB_PHOTO_POS[sub.name],
             }))}
           />
         </div>
