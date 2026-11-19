@@ -8,6 +8,7 @@ import {
 } from "@/lib/activities";
 import type { VideoCardData } from "@/lib/home-feed";
 import { Band } from "./Band";
+import { CategoryCard, MAIN_ICONS, SUB_PHOTOS } from "./CategoryCard";
 import { FoldHeading } from "./FoldHeading";
 import { GlowSection } from "./GlowSection";
 import { NewsCard, VideoCard } from "./HomeFeedSections";
@@ -179,11 +180,11 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
 
       {order.map((key, i) =>
         i % 2 === 0 ? (
-          <GlowSection key={key} curveTop aria-label={key} className={PAD}>
+          <GlowSection key={key} aria-label={key} className={PAD}>
             {render[key]()}
           </GlowSection>
         ) : (
-          <Band key={key} tone="white" curveTop aria-label={key} className={PAD}>
+          <Band key={key} tone="white" aria-label={key} className={PAD}>
             {render[key]()}
           </Band>
         ),
@@ -220,36 +221,19 @@ export function MainActivityView({ page }: { page: MainActivityPage }) {
           {page.image && <img src={page.image} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-[25px] object-cover shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" />}
         </div>
       </Band>
-      <GlowSection curveTop aria-label="הפעילויות" className={PAD}>
+      <GlowSection aria-label="הפעילויות" className={PAD}>
         <SectionHead eyebrow="הפעילויות" title={`פעילויות ב${page.title}`} />
-        <ul className="mx-auto mt-10 grid max-w-[1500px] grid-cols-1 gap-6 px-[5%] sm:grid-cols-2 lg:grid-cols-3">
-          {page.subs.map((s) => {
-            const body = (
-              <>
-                {s.image ? (
-                  <img src={s.image} alt="" loading="lazy" className="aspect-[414/267] w-full object-cover" />
-                ) : (
-                  <span aria-hidden className="block aspect-[414/267] w-full bg-[linear-gradient(135deg,#082944,#0c448a)]" />
-                )}
-                <span className="block p-6">
-                  <span className="block text-[24px] font-bold leading-[1.3] text-[#1d2838]">{s.name}</span>
-                  {s.excerpt && <span className="mt-1 line-clamp-3 block text-[18px] leading-[1.4] text-[#1d2838]">{s.excerpt}</span>}
-                </span>
-              </>
-            );
-            const cls = `flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD}`;
-            return (
-              <li key={s.slug} className="flex">
-                {s.href ? (
-                  <a href={s.href} className={`${cls} transition-transform duration-300 hover:-translate-y-1`}>
-                    {body}
-                  </a>
-                ) : (
-                  <div className={cls}>{body}</div>
-                )}
-              </li>
-            );
-          })}
+        <ul className="mx-auto mt-10 grid max-w-[1500px] grid-cols-1 gap-5 px-[5%] sm:grid-cols-2 lg:grid-cols-3">
+          {page.subs.map((sub) => (
+            <li key={sub.slug}>
+              <CategoryCard
+                name={sub.name}
+                href={sub.href ?? "#"}
+                image={SUB_PHOTOS[sub.name] ?? (sub.image || undefined)}
+                icon={MAIN_ICONS[page.title]}
+              />
+            </li>
+          ))}
         </ul>
       </GlowSection>
     </>
