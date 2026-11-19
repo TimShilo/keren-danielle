@@ -5,6 +5,12 @@ export const SUB_PHOTOS: Record<string, string> = {
   "למענם": "/images/home/activities/sub-lemaanam.webp",
   "לב דניאלי בוני עולם": "/images/home/activities/sub-lev-bonei-olam.webp",
   "בת מלך": "/images/home/activities/sub-batmelech.webp",
+  "מדרשת דניאלי": "/images/home/activities/sub-midreshet.webp",
+  "JLE בית דניאלי": "/images/home/activities/sub-jle.webp",
+  "קרן רעננה": "/images/home/activities/sub-raanana.webp",
+  "בנועם דניאלי": "/images/home/activities/sub-noam.webp",
+  "מיזמי קורונה": "/images/home/activities/sub-corona.webp",
+  "בעקבות דניאלי": "/images/home/activities/sub-bekvot.webp",
   "בשביל דניאלי": "/images/home/activities/sub-bishvil.webp",
   "עשיה והנצחה": "/images/home/activities/sub-asiya.webp",
   "בדרכה של דניאלי": "/images/home/activities/sub-baderech.webp",
@@ -14,6 +20,12 @@ export const SUB_PHOTOS: Record<string, string> = {
 /** Crop focus (CSS object-position) for photos that need it inside tall panels. */
 export const SUB_PHOTO_POS: Record<string, string> = {
   "בת מלך": "40% 50%",
+  "מדרשת דניאלי": "70% 50%",
+  "JLE בית דניאלי": "55% 50%",
+  "קרן רעננה": "50% 50%",
+  "בנועם דניאלי": "78% 50%", // the speaker and the rabbis are on the right
+  "מיזמי קורונה": "35% 50%", // the two men with the box
+  "בעקבות דניאלי": "55% 50%", // the young woman
   "בשביל דניאלי": "40% 50%",
   "עשיה והנצחה": "70% 50%", // the teacher is on the right
   "בדרכה של דניאלי": "50% 100%", // show the girls, less of the wall above
@@ -23,6 +35,12 @@ export const SUB_PHOTO_POS: Record<string, string> = {
 /** Crop focus once the panel is expanded: favour the people (bottom of the photo), less background above. */
 export const SUB_PHOTO_POS_OPEN: Record<string, string> = {
   "בת מלך": "50% 0%",
+  "מדרשת דניאלי": "50% 25%",
+  "JLE בית דניאלי": "50% 40%",
+  "קרן רעננה": "50% 70%",
+  "בנועם דניאלי": "50% 20%",
+  "מיזמי קורונה": "50% 30%",
+  "בעקבות דניאלי": "50% 15%",
   "בשביל דניאלי": "50% 0%",
   "עשיה והנצחה": "50% 25%",
   "קליניקת דניאלי": "50% 80%",
