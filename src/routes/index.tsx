@@ -3,7 +3,7 @@ import { AboutDanielle } from "@/components/site/AboutDanielle";
 import { HomeHero } from "@/components/site/HomeHero";
 import { NumbersAndActivities } from "@/components/site/NumbersAndActivities";
 import { QuoteCarousel } from "@/components/site/QuoteCarousel";
-import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteShell } from "@/components/site/SiteShell";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,12 +22,11 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="site-theme min-h-screen">
-      <SiteHeader />
+    <SiteShell>
       <HomeHero />
       <AboutDanielle />
       <NumbersAndActivities />
       <QuoteCarousel />
-    </main>
+    </SiteShell>
   );
 }

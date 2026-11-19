@@ -26,7 +26,7 @@ function MoreArrow({ className = "" }: { className?: string }) {
     <span className={`flex ${className}`}>
       <span
         aria-hidden
-        className="relative grid size-11 place-items-center overflow-hidden rounded-full border-2 border-navy text-navy transition-colors duration-500 group-hover/card:border-brand-yellow group-hover/card:text-white group-focus-visible/card:border-brand-yellow group-focus-visible/card:text-white"
+        className="relative grid size-11 place-items-center overflow-hidden rounded-full border-2 border-navy text-navy transition-colors duration-500 group-hover/card:border-brand-yellow group-focus-visible/card:border-brand-yellow"
       >
         <span className="absolute inset-0 scale-0 rounded-full bg-brand-yellow transition-transform duration-500 ease-out group-hover/card:scale-100 group-focus-visible/card:scale-100" />
         <ArrowLeft className="relative size-5" />
@@ -77,7 +77,7 @@ function VideoCard({ v, onOpen }: { v: VideoCardData; onOpen: () => void }) {
           className="absolute left-1/2 top-1/2 size-14 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 group-hover:scale-110 lg:size-[calc(var(--u)*64)]"
         />
       </span>
-      <span className="mt-5 line-clamp-3 block pe-4 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{v.title}</span>
+      <span className="mt-5 line-clamp-3 block px-2 text-center text-[24px] font-bold leading-[1.3] text-[#1d2838]">{v.title}</span>
     </button>
   );
 }
@@ -93,7 +93,7 @@ function PressCard({ p }: { p: PressCardData }) {
         <img src={p.image} alt="" loading="lazy" className="size-full object-cover" />
       </span>
       <span className="flex flex-1 flex-col p-6">
-        <span className="line-clamp-3 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{p.title}</span>
+        <span className="line-clamp-2 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{p.title}</span>
         <span className="mt-auto flex items-center gap-2 pt-4 text-lg text-navy">
           <User className="size-4 fill-brand-blue text-brand-blue" aria-hidden />
           {p.source}
