@@ -14,6 +14,12 @@ export const SUB_PHOTO_POS: Record<string, string> = {
   "למענם": "6% 50%", // keep the elderly man in frame
   "פרס דניאלי": "50% 100%", // show the people, less of the painting above
 };
+/** Crop focus once the panel is expanded: favour the people (bottom of the photo), less background above. */
+export const SUB_PHOTO_POS_OPEN: Record<string, string> = {
+  "קליניקת דניאלי": "50% 80%",
+  "לב דניאלי בוני עולם": "50% 55%", // keep the standing speaker's head in frame
+  "למענם": "50% 30%", // keep the elderly man's head in frame
+};
 export const MAIN_ICONS: Record<string, LucideIcon> = {
   "בריאות ורפואה": Hospital,
   "חינוך ולמידה": GraduationCap,

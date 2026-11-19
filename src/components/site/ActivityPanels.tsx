@@ -11,6 +11,8 @@ export interface PanelItem {
   icon?: LucideIcon | undefined;
   /** CSS object-position of the photo (default: centre) */
   pos?: string | undefined;
+  /** object-position once the panel is expanded */
+  posOpen?: string | undefined;
 }
 
 const PANELS: PanelItem[] = [
@@ -50,9 +52,9 @@ const PANELS: PanelItem[] = [
  */
 export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
   return (
-    <ul className="flex w-full flex-col gap-4 lg:h-[70vh] lg:min-h-[480px] lg:flex-row lg:gap-[calc(var(--u)*18)]">
+    <ul className="flex w-full flex-col gap-4 lg:[--ph:max(70vh,480px)] lg:h-[var(--ph)] lg:flex-row lg:gap-[calc(var(--u)*18)]">
       {items.map((p) => (
-        <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-[3.2] lg:has-[a:focus-visible]:grow-[3.2]">
+        <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow,flex-basis] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-0 lg:hover:basis-[calc(var(--ph)*1.364)] lg:has-[a:focus-visible]:grow-0 lg:has-[a:focus-visible]:basis-[calc(var(--ph)*1.364)]">
           <a
             href={p.href}
             aria-label={p.title}
@@ -63,8 +65,8 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
                 src={p.img}
                 alt=""
                 loading="lazy"
-                style={p.pos ? { objectPosition: p.pos } : undefined}
-                className="absolute inset-0 size-full object-cover transition-transform duration-[1500ms] ease-out lg:group-hover:scale-[1.04] lg:group-focus-visible:scale-[1.04]"
+                style={{ "--pos": p.pos ?? "50% 50%", "--pos-open": p.posOpen ?? "50% 100%" } as React.CSSProperties}
+                className="absolute inset-x-0 top-0 h-full w-full object-cover [object-position:var(--pos)] transition-[height,object-position,transform] duration-[1200ms] ease-out lg:group-hover:h-[calc(100%-var(--u)*164)] lg:group-hover:[object-position:var(--pos-open)] lg:group-focus-visible:h-[calc(100%-var(--u)*164)] lg:group-focus-visible:[object-position:var(--pos-open)]"
               />
             ) : (
               <span aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,#082944,#0c448a)]" />
