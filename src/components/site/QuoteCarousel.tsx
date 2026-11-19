@@ -35,7 +35,7 @@ export function QuoteCarousel() {
   return (
     <section
       aria-label="משפטים של דניאלי"
-      className="relative isolate overflow-hidden bg-[#eef8ff] lg:h-[calc(var(--u)*580)]"
+      className="relative isolate overflow-hidden bg-[#eef8ff] lg:h-[calc(var(--u)*390)]"
       onPointerEnter={() => {
         paused.current = true;
       }}
@@ -68,13 +68,13 @@ export function QuoteCarousel() {
         src="/images/home/svg/heart-shape.svg"
         depth={-1}
         phase={3}
-        className="absolute hidden lg:block lg:left-[calc(var(--u)*74)] lg:top-[calc(var(--u)*30)] lg:w-[calc(var(--u)*254)]"
+        className="absolute hidden lg:block lg:left-[calc(var(--u)*74)] lg:top-[calc(var(--u)*20)] lg:w-[calc(var(--u)*200)]"
       />
       <ParallaxDecor
         src="/images/home/svg/birds-flock.svg"
         depth={1.4}
         phase={1}
-        className="absolute hidden lg:block lg:left-[calc(var(--u)*284)] lg:top-[calc(var(--u)*117)] lg:w-[calc(var(--u)*163)]"
+        className="absolute hidden lg:block lg:left-[calc(var(--u)*284)] lg:top-[calc(var(--u)*80)] lg:w-[calc(var(--u)*140)]"
       />
 
       {/* portrait, glued to the bottom edge */}
@@ -83,12 +83,12 @@ export function QuoteCarousel() {
         alt=""
         aria-hidden
         loading="lazy"
-        className="absolute bottom-0 right-0 hidden w-[calc(var(--u)*300)] lg:block lg:right-[calc(var(--u)*51)]"
+        className="absolute bottom-0 right-0 hidden w-[calc(var(--u)*250)] lg:block lg:right-[calc(var(--u)*51)]"
       />
 
       {/* sentences */}
-      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1560))] flex-col items-center justify-center px-[5%] py-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*60)]">
-        <img src="/images/home/svg/quote-mark.svg" alt="" aria-hidden className="mb-4 w-8 lg:mb-[calc(var(--u)*24)] lg:w-[calc(var(--u)*40)]" />
+      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1560))] flex-col items-center justify-center px-[5%] py-[100px] text-center lg:min-h-0 lg:h-full lg:px-0 lg:py-0">
+        <img src="/images/home/svg/quote-mark.svg" alt="" aria-hidden className="mb-4 w-8 lg:mb-[calc(var(--u)*14)] lg:w-[calc(var(--u)*34)]" />
         <div className="grid w-full" aria-live="polite">
           {sentences.map((s, idx) => (
             <figure
@@ -106,7 +106,7 @@ export function QuoteCarousel() {
                 ))}
               </blockquote>
               {s.attribution && (
-                <figcaption className="mt-5 text-lg text-navy lg:mt-[calc(var(--u)*28)] lg:text-[calc(var(--u)*24)]">
+                <figcaption className="mt-5 text-lg text-navy lg:mt-[calc(var(--u)*18)] lg:text-[calc(var(--u)*22)]">
                   {s.attribution}
                 </figcaption>
               )}
@@ -114,7 +114,7 @@ export function QuoteCarousel() {
           ))}
         </div>
 
-        <div className="mt-6 flex items-center gap-3 lg:mt-[calc(var(--u)*30)]">
+        <div className="mt-6 flex items-center gap-3 lg:mt-[calc(var(--u)*22)]">
           <FxIconButton variant="white" aria-label="המשפט הקודם" onClick={() => go(-1)} className="size-10 text-navy shadow-md lg:size-[calc(var(--u)*48)]">
             <ArrowRight className="size-4 lg:size-[calc(var(--u)*20)]" />
           </FxIconButton>
