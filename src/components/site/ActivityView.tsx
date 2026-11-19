@@ -207,30 +207,22 @@ export function MainActivityView({ page }: { page: MainActivityPage }) {
   return (
     <>
       <PageHero title={page.title} crumbs={crumbs} />
-      <Band tone="white" curveTop>
-        <div className="grid items-start gap-10 px-[5%] pb-[100px] pt-[calc(var(--u)*40)] lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
-          <div>
-            <Eyebrow>על התחום</Eyebrow>
-            <h2 className={H2}>
-              <FoldHeading text={page.title} />
-            </h2>
-            {page.descriptionHtml ? (
-              <div className="rte-content mt-6 text-lg text-navy lg:text-[calc(var(--u)*24)]" dangerouslySetInnerHTML={{ __html: page.descriptionHtml }} />
-            ) : (
-              <ScrollText as="p" text="הפעילויות של קרן דניאלי בתחום זה:" className="mt-6 text-lg text-navy lg:text-[calc(var(--u)*24)]" />
-            )}
-          </div>
-          {page.image && <img src={page.image} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-[25px] object-cover shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" />}
-        </div>
-      </Band>
-      <GlowSection aria-label="הפעילויות" className="pb-[100px] pt-[calc(var(--u)*30)]">
+      <GlowSection curveTop aria-label="הפעילויות" className="pb-[100px] pt-[calc(var(--u)*40)]">
         <div className="px-[5%]">
-          <Eyebrow>הפעילויות</Eyebrow>
+          <Eyebrow>על התחום</Eyebrow>
           <h2 className={H2}>
-            <FoldHeading text={`פעילויות ב${page.title}`} />
+            <FoldHeading text={page.title} />
           </h2>
+          {page.descriptionHtml ? (
+            <div
+              className="rte-content mt-6 max-w-[900px] text-lg leading-[1.5] text-navy lg:mt-[calc(var(--u)*28)] lg:text-[calc(var(--u)*24)]"
+              dangerouslySetInnerHTML={{ __html: page.descriptionHtml }}
+            />
+          ) : (
+            <ScrollText as="p" text="הפעילויות של קרן דניאלי בתחום זה:" className="mt-6 text-lg text-navy lg:mt-[calc(var(--u)*28)] lg:text-[calc(var(--u)*24)]" />
+          )}
         </div>
-        <div className="mt-10 lg:mt-[calc(var(--u)*73)]">
+        <div className="mt-10 lg:mt-[calc(var(--u)*50)]">
           <ActivityPanels
             items={page.subs.map((sub) => ({
               key: sub.slug,
