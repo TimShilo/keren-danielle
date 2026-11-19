@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { DEMO_SENTENCES, useHomeSentences } from "@/lib/home-feed";
 import { FxIconButton } from "./FxButton";
 import { ParallaxDecor } from "./ParallaxDecor";
-import { curveTopStyle, OVERLAP } from "./section-edges";
 
 const INTERVAL = 7000;
 
@@ -36,8 +35,7 @@ export function QuoteCarousel() {
   return (
     <section
       aria-label="משפטים של דניאלי"
-      className={`relative isolate overflow-hidden bg-[#eef8ff] ${OVERLAP} lg:h-[calc(var(--u)*744)]`}
-      style={curveTopStyle()}
+      className="relative isolate overflow-hidden bg-[#eef8ff] lg:h-[calc(var(--u)*580)]"
       onPointerEnter={() => {
         paused.current = true;
       }}
@@ -89,7 +87,7 @@ export function QuoteCarousel() {
       />
 
       {/* sentences */}
-      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1000))] flex-col items-center justify-center px-[5%] pb-[140px] pt-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*164)] lg:pb-[calc(var(--u)*92)]">
+      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1000))] flex-col items-center justify-center px-[5%] py-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*60)]">
         <img src="/images/home/svg/quote-mark.svg" alt="" aria-hidden className="mb-4 w-8 lg:mb-[calc(var(--u)*24)] lg:w-[calc(var(--u)*40)]" />
         <div className="grid w-full" aria-live="polite">
           {sentences.map((s, idx) => (

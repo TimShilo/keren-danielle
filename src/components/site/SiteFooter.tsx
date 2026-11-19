@@ -1,7 +1,6 @@
 import { Facebook, Instagram, Mail, Phone, Youtube } from "lucide-react";
 import type { ReactNode } from "react";
 import { QuoteCarousel } from "./QuoteCarousel";
-import { curveTopStyle, EDGE_PAD, OVERLAP } from "./section-edges";
 
 const COLUMNS = [
   {
@@ -63,11 +62,7 @@ export function SiteFooter() {
     <footer dir="rtl" className="relative text-white">
       {/* Danielle's sentences over the video: part of the footer, so they appear on every page */}
       <QuoteCarousel />
-      <div
-        className={`relative ${OVERLAP} bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-14 lg:pb-0`}
-        style={curveTopStyle()}
-      >
-        <div aria-hidden className={EDGE_PAD} />
+      <div className="relative bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-14 lg:pb-0">
         <div className="pt-[54px] lg:pt-[calc(var(--u)*54)]"></div>
         <div className="mx-auto grid grid-cols-2 gap-x-6 gap-y-12 lg:h-[calc(var(--u)*350)] lg:max-w-none lg:grid-cols-[446fr_488fr_424fr_562fr] lg:gap-x-0">
           {COLUMNS.map((c) => (
