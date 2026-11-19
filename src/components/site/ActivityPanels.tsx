@@ -22,6 +22,7 @@ const PANELS: PanelItem[] = [
     text: "שותפות קרובה במיזמים בתחומי הבריאות והרפואה. העלאה על נס של התנדבות, התמסרות, ורפואה עם לב.",
     href: "/activities/%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA-%D7%95%D7%A8%D7%A4%D7%95%D7%90%D7%94",
     img: "/images/home/activities/health.webp",
+    posOpen: "50% 0%", // keep the heads in frame when expanded
   },
   {
     key: "education",
@@ -43,6 +44,7 @@ const PANELS: PanelItem[] = [
     text: "העמקת הלימוד והמסורת: ערבי לימוד, שיעורים ומיזמים ברוח תורתה של דניאלי.",
     href: "/activities/%D7%9E%D7%A1%D7%95%D7%A8%D7%AA-%D7%95%D7%97%D7%91%D7%A8%D7%94",
     img: "/images/home/activities/judaism.webp",
+    posOpen: "50% 0%",
   },
 ];
 
