@@ -15,6 +15,7 @@ import { FxButton } from "./FxButton";
 import { GlowSection } from "./GlowSection";
 import { NewsCard, VideoCard } from "./HomeFeedSections";
 import { PageHero } from "./PageHero";
+import { PageSections, TONES, type Tone } from "./PageSections";
 import { Eyebrow } from "./HomeHero";
 import { LoopCarousel } from "./LoopCarousel";
 import { ScrollText } from "./ScrollText";
@@ -153,44 +154,40 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
     <>
       <PageHero title={page.title} crumbs={crumbs} />
 
-      {/* intro: white */}
-      <Band tone="white" curveTop aria-label={title}>
-        <div className="grid items-center gap-10 px-[5%] pb-[100px] pt-[calc(var(--u)*40)] lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
-          <div>
-            <Eyebrow>{page.sub.name}</Eyebrow>
-            <h2 className={H2}>
-              <FoldHeading text={title} />
-            </h2>
-            <div
-              className="rte-content mt-6 text-lg leading-[1.5] text-navy lg:mt-[calc(var(--u)*32)] lg:text-[calc(var(--u)*24)] lg:leading-[1.45]"
-              dangerouslySetInnerHTML={{ __html: page.bodyHtml || (page.excerpt ? `<p>${page.excerpt}</p>` : "") }}
-            />
-          </div>
-          {page.sideImage && (
-            <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none">
-              <img src={page.sideImage} alt={page.title} loading="lazy" className="aspect-[4/3] w-full rounded-[25px] object-cover shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" />
-              <img
-                src="/images/home/svg/bracket-yellow.svg"
-                alt=""
-                aria-hidden
-                className="pointer-events-none absolute -bottom-4 -right-4 hidden w-28 lg:block"
-              />
-            </div>
-          )}
-        </div>
-      </Band>
-
-      {order.map((key, i) =>
-        i % 2 === 0 ? (
-          <GlowSection key={key} aria-label={key} className={PAD}>
-            {render[key]()}
-          </GlowSection>
-        ) : (
-          <Band key={key} tone="white" aria-label={key} className={PAD}>
-            {render[key]()}
-          </Band>
-        ),
-      )}
+      <PageSections
+        sections={[
+          {
+            key: "intro",
+            label: title,
+            tone: "glow",
+            children: (
+              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
+                <div>
+                  <Eyebrow>{page.sub.name}</Eyebrow>
+                  <h2 className={H2}>
+                    <FoldHeading text={title} />
+                  </h2>
+                  <div
+                    className="rte-content mt-6 text-lg leading-[1.5] text-navy lg:mt-[calc(var(--u)*32)] lg:text-[calc(var(--u)*24)] lg:leading-[1.45]"
+                    dangerouslySetInnerHTML={{ __html: page.bodyHtml || (page.excerpt ? `<p>${page.excerpt}</p>` : "") }}
+                  />
+                </div>
+                {page.sideImage && (
+                  <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none">
+                    <img src={page.sideImage} alt={page.title} loading="lazy" className="aspect-[4/3] w-full rounded-[25px] object-cover shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" />
+                    <img src="/images/home/svg/bracket-yellow.svg" alt="" aria-hidden className="pointer-events-none absolute -bottom-4 -right-4 hidden w-28 lg:block" />
+                  </div>
+                )}
+              </div>
+            ),
+          },
+          ...order.map((key, i) => ({
+            key,
+            tone: (TONES as string[]).includes(page.tones[i + 1] ?? "") ? (page.tones[i + 1] as Tone) : undefined,
+            children: render[key](),
+          })),
+        ]}
+      />
 
       <VideoModal
         youtubeId={open?.youtubeId ?? ""}

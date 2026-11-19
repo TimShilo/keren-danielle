@@ -78,7 +78,7 @@ export function VideoCard({ v, onOpen }: { v: VideoCardData; onOpen: () => void 
           className="absolute left-1/2 top-1/2 size-14 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 group-hover:scale-110 lg:size-[calc(var(--u)*64)]"
         />
       </span>
-      <span className="mt-5 line-clamp-3 block px-2 text-center text-[24px] font-bold leading-[1.3] text-[#1d2838]">{v.title}</span>
+      <span className="mt-5 line-clamp-3 block px-2 text-center text-[24px] font-bold leading-[1.3] text-[var(--card-ink,#1d2838)]">{v.title}</span>
     </button>
   );
 }
