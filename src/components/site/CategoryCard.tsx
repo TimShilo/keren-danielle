@@ -4,18 +4,27 @@ import { GraduationCap, Hospital, ScrollText, Users, type LucideIcon } from "luc
 export const SUB_PHOTOS: Record<string, string> = {
   "למענם": "/images/home/activities/sub-lemaanam.webp",
   "לב דניאלי בוני עולם": "/images/home/activities/sub-lev-bonei-olam.webp",
+  "בת מלך": "/images/home/activities/sub-batmelech.webp",
+  "בשביל דניאלי": "/images/home/activities/sub-bishvil.webp",
+  "עשיה והנצחה": "/images/home/activities/sub-asiya.webp",
   "בדרכה של דניאלי": "/images/home/activities/sub-baderech.webp",
   "פרס דניאלי": "/images/home/activities/sub-prize.webp",
   "קליניקת דניאלי": "/images/home/activities/sub-clinic.webp",
 };
 /** Crop focus (CSS object-position) for photos that need it inside tall panels. */
 export const SUB_PHOTO_POS: Record<string, string> = {
+  "בת מלך": "40% 50%",
+  "בשביל דניאלי": "40% 50%",
+  "עשיה והנצחה": "70% 50%", // the teacher is on the right
   "בדרכה של דניאלי": "50% 100%", // show the girls, less of the wall above
   "למענם": "6% 50%", // keep the elderly man in frame
   "פרס דניאלי": "50% 100%", // show the people, less of the painting above
 };
 /** Crop focus once the panel is expanded: favour the people (bottom of the photo), less background above. */
 export const SUB_PHOTO_POS_OPEN: Record<string, string> = {
+  "בת מלך": "50% 0%",
+  "בשביל דניאלי": "50% 0%",
+  "עשיה והנצחה": "50% 25%",
   "קליניקת דניאלי": "50% 80%",
   "לב דניאלי בוני עולם": "50% 55%", // keep the standing speaker's head in frame
   "למענם": "50% 30%", // keep the elderly man's head in frame
