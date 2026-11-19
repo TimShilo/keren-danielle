@@ -46,7 +46,7 @@ export function QuoteCarousel() {
       {/* same looping (silent) video as the hero, softly faded in at the top */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,transparent,#000_14%)]"
+        className="absolute inset-0 -z-10"
       >
         <img src="/images/home/hero-poster.webp" alt="" loading="lazy" className="size-full object-cover opacity-[0.73]" />
         <video
