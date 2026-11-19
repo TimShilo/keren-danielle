@@ -16,7 +16,7 @@ function ActivitiesIndex() {
     <SiteShell>
       <PageHero title="פעילויות" crumbs={[{ label: "בית", href: "/" }, { label: "פעילויות" }]} />
       <Band tone="white" curveTop>
-        <ul className="mx-auto grid max-w-[1400px] gap-5 px-[5%] pb-[100px] pt-[calc(var(--u)*40)] sm:grid-cols-2">
+        <ul className="mx-auto grid max-w-[1400px] gap-5 px-[5%] pb-[100px] pt-[calc(var(--u)*110)] sm:grid-cols-2">
           {(q.data ?? []).map((m) => (
             <li key={m.href}>
               <CategoryCard name={m.name} href={m.href} subs={m.subs} />
