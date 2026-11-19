@@ -2,6 +2,7 @@ import { GraduationCap, Hospital, ScrollText, Users, type LucideIcon } from "luc
 
 /** Photos for sub-activities (by name); anything else falls back to the activity page's own image. */
 export const SUB_PHOTOS: Record<string, string> = {
+  "למענם": "/images/home/activities/sub-lemaanam.webp",
   "לב דניאלי בוני עולם": "/images/home/activities/sub-lev-bonei-olam.webp",
   "בדרכה של דניאלי": "/images/home/activities/sub-baderech.webp",
   "פרס דניאלי": "/images/home/activities/sub-prize.webp",
