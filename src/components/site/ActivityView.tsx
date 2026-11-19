@@ -8,7 +8,8 @@ import {
 } from "@/lib/activities";
 import type { VideoCardData } from "@/lib/home-feed";
 import { Band } from "./Band";
-import { CategoryCard, MAIN_ICONS, SUB_PHOTOS } from "./CategoryCard";
+import { ActivityPanels } from "./ActivityPanels";
+import { MAIN_ICONS, SUB_PHOTOS } from "./CategoryCard";
 import { FoldHeading } from "./FoldHeading";
 import { FxButton } from "./FxButton";
 import { GlowSection } from "./GlowSection";
@@ -222,20 +223,25 @@ export function MainActivityView({ page }: { page: MainActivityPage }) {
           {page.image && <img src={page.image} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-[25px] object-cover shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" />}
         </div>
       </Band>
-      <GlowSection aria-label="הפעילויות" className={PAD}>
-        <SectionHead eyebrow="הפעילויות" title={`פעילויות ב${page.title}`} />
-        <ul className="mx-auto mt-10 grid max-w-[1500px] grid-cols-1 gap-5 px-[5%] sm:grid-cols-2 lg:grid-cols-3">
-          {page.subs.map((sub) => (
-            <li key={sub.slug}>
-              <CategoryCard
-                name={sub.name}
-                href={sub.href ?? "#"}
-                image={SUB_PHOTOS[sub.name] ?? (sub.image || undefined)}
-                icon={MAIN_ICONS[page.title]}
-              />
-            </li>
-          ))}
-        </ul>
+      <GlowSection aria-label="הפעילויות" className="pb-[100px] pt-[calc(var(--u)*30)]">
+        <div className="px-[5%]">
+          <Eyebrow>הפעילויות</Eyebrow>
+          <h2 className={H2}>
+            <FoldHeading text={`פעילויות ב${page.title}`} />
+          </h2>
+        </div>
+        <div className="mt-10 lg:mt-[calc(var(--u)*73)]">
+          <ActivityPanels
+            items={page.subs.map((sub) => ({
+              key: sub.slug,
+              title: sub.name,
+              text: sub.excerpt,
+              href: sub.href ?? "#",
+              img: SUB_PHOTOS[sub.name] ?? (sub.image || undefined),
+              icon: MAIN_ICONS[page.title],
+            }))}
+          />
+        </div>
       </GlowSection>
     </>
   );
