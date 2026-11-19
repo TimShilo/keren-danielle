@@ -12,6 +12,7 @@ export const SUB_PHOTOS: Record<string, string> = {
 export const SUB_PHOTO_POS: Record<string, string> = {
   "בדרכה של דניאלי": "50% 100%", // show the girls, less of the wall above
   "למענם": "6% 50%", // keep the elderly man in frame
+  "פרס דניאלי": "50% 100%", // show the people, less of the painting above
 };
 export const MAIN_ICONS: Record<string, LucideIcon> = {
   "בריאות ורפואה": Hospital,

@@ -52,7 +52,7 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
   return (
     <ul className="flex w-full flex-col gap-4 lg:h-[70vh] lg:min-h-[480px] lg:flex-row lg:gap-[calc(var(--u)*18)]">
       {items.map((p) => (
-        <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-[2.25] lg:has-[a:focus-visible]:grow-[2.25]">
+        <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-[3.2] lg:has-[a:focus-visible]:grow-[3.2]">
           <a
             href={p.href}
             aria-label={p.title}
