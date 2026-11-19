@@ -92,7 +92,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
             label="גלריית תמונות"
             direction="right"
             items={page.gallery.map((g) => (
-              <div key={g.id} className="h-full">
+              <div key={g.id} className="h-full w-full">
                 <GalleryCard g={g} />
               </div>
             ))}

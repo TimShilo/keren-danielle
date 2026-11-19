@@ -89,8 +89,8 @@ function PressCard({ p }: { p: PressCardData }) {
       {...(p.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={`group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}
     >
-      <span className="block aspect-[414/267] border-b-2 border-black/40 bg-white">
-        <img src={p.image} alt="" loading="lazy" className="size-full object-cover" />
+      <span className="relative block aspect-[414/267] shrink-0 border-b-2 border-black/40 bg-white">
+        <img src={p.image} alt="" loading="lazy" className="absolute inset-0 size-full object-contain p-[14%]" />
       </span>
       <span className="flex flex-1 flex-col p-6">
         <span className="line-clamp-2 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{p.title}</span>
@@ -133,7 +133,7 @@ export function NewsLens() {
           label="חדשות ועדכונים"
           direction="right"
           items={news.map((n) => (
-            <div key={n.id} className="h-full">
+            <div key={n.id} className="h-full w-full">
               <NewsCard n={n} />
             </div>
           ))}
@@ -194,7 +194,7 @@ export function PressLoop() {
           direction="right"
           speed={34}
           items={press.map((p) => (
-            <div key={p.id} className="h-full">
+            <div key={p.id} className="h-full w-full">
               <PressCard p={p} />
             </div>
           ))}
