@@ -10,6 +10,7 @@ import type { VideoCardData } from "@/lib/home-feed";
 import { Band } from "./Band";
 import { CategoryCard, MAIN_ICONS, SUB_PHOTOS } from "./CategoryCard";
 import { FoldHeading } from "./FoldHeading";
+import { FxButton } from "./FxButton";
 import { GlowSection } from "./GlowSection";
 import { NewsCard, VideoCard } from "./HomeFeedSections";
 import { PageHero } from "./PageHero";
@@ -138,10 +139,10 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
             </li>
           ))}
         </ul>
-        <p className="mt-10 text-center">
-          <a href={page.newsHref} className="text-xl font-bold text-navy underline-offset-8 hover:underline lg:text-2xl">
+        <p className="mt-10 flex justify-center text-center">
+          <FxButton href={page.newsHref} variant="yellow" className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
             לכל החדשות והעדכונים ←
-          </a>
+          </FxButton>
         </p>
       </>
     ),

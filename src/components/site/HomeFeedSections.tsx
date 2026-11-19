@@ -11,6 +11,7 @@ import {
   type VideoCardData,
 } from "@/lib/home-feed";
 import { FoldHeading } from "./FoldHeading";
+import { FxButton } from "./FxButton";
 import { Eyebrow } from "./HomeHero";
 import { LoopCarousel } from "./LoopCarousel";
 import { ParallaxDecor } from "./ParallaxDecor";
@@ -140,10 +141,10 @@ export function NewsLens() {
           itemClassName={`${ITEM} flex`}
         />
       </div>
-      <p className="pb-24 pt-6 text-center lg:pb-[calc(var(--u)*130)] lg:pt-[calc(var(--u)*54)]">
-        <a href="/news" className="text-xl font-bold text-white underline-offset-8 hover:underline lg:text-2xl">
+      <p className="flex justify-center pb-24 pt-6 text-center lg:pb-[calc(var(--u)*130)] lg:pt-[calc(var(--u)*54)]">
+        <FxButton href="/news" variant="yellow" className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
           לכל החדשות והעדכונים ←
-        </a>
+        </FxButton>
       </p>
     </section>
   );
@@ -201,10 +202,10 @@ export function PressLoop() {
           itemClassName={`${ITEM} flex`}
         />
       </div>
-      <p className="pt-6 text-center">
-        <a href="/press" className="text-xl font-bold text-navy underline-offset-8 hover:underline lg:text-2xl">
+      <p className="flex justify-center pt-6 text-center">
+        <FxButton href="/press" variant="yellow" className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
           לכל הכתבות ←
-        </a>
+        </FxButton>
       </p>
     </section>
   );
