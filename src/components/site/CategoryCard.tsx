@@ -6,6 +6,9 @@ export const SUB_PHOTOS: Record<string, string> = {
   "לב דניאלי בוני עולם": "/images/home/activities/sub-lev-bonei-olam.webp",
   "בת מלך": "/images/home/activities/sub-batmelech.webp",
   "מדרשת דניאלי": "/images/home/activities/sub-midreshet.webp",
+  "בינת דניאלי": "/images/home/activities/sub-binat.webp",
+  "שירת דניאלי": "/images/home/activities/sub-shirat.webp",
+  "לזכר דניאלי": "/images/home/activities/sub-lizkor.webp",
   "JLE בית דניאלי": "/images/home/activities/sub-jle.webp",
   "קרן רעננה": "/images/home/activities/sub-raanana.webp",
   "בנועם דניאלי": "/images/home/activities/sub-noam.webp",
@@ -21,6 +24,9 @@ export const SUB_PHOTOS: Record<string, string> = {
 export const SUB_PHOTO_POS: Record<string, string> = {
   "בת מלך": "40% 50%",
   "מדרשת דניאלי": "70% 50%",
+  "בינת דניאלי": "45% 50%", // the two men reading
+  "שירת דניאלי": "50% 50%",
+  "לזכר דניאלי": "50% 50%",
   "JLE בית דניאלי": "55% 50%",
   "קרן רעננה": "50% 50%",
   "בנועם דניאלי": "78% 50%", // the speaker and the rabbis are on the right
@@ -36,6 +42,9 @@ export const SUB_PHOTO_POS: Record<string, string> = {
 export const SUB_PHOTO_POS_OPEN: Record<string, string> = {
   "בת מלך": "50% 0%",
   "מדרשת דניאלי": "50% 25%",
+  "בינת דניאלי": "50% 8%",
+  "שירת דניאלי": "50% 10%", // keep the heads and the plaque
+  "לזכר דניאלי": "50% 60%", // the girls are in the lower half
   "JLE בית דניאלי": "50% 40%",
   "קרן רעננה": "50% 70%",
   "בנועם דניאלי": "50% 20%",
