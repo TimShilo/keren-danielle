@@ -11,6 +11,7 @@ import { Band } from "./Band";
 import { FoldHeading } from "./FoldHeading";
 import { GlowSection } from "./GlowSection";
 import { NewsCard, VideoCard } from "./HomeFeedSections";
+import { PageHero } from "./PageHero";
 import { Eyebrow } from "./HomeHero";
 import { LoopCarousel } from "./LoopCarousel";
 import { ScrollText } from "./ScrollText";
@@ -29,65 +30,6 @@ function SectionHead({ eyebrow, title, center = true }: { eyebrow: string; title
         <FoldHeading text={title} />
       </h2>
     </div>
-  );
-}
-
-function Crumbs({ items }: { items: { label: string; href?: string }[] }) {
-  return (
-    <nav aria-label="פירורי לחם" className="text-base text-white/85 lg:text-xl">
-      <ol className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        {items.map((c, i) => (
-          <li key={c.label} className="flex items-center gap-3">
-            {i > 0 && <span aria-hidden className="text-brand-yellow">/</span>}
-            {c.href ? (
-              <a href={c.href} className="underline-offset-4 hover:underline">
-                {c.label}
-              </a>
-            ) : (
-              <span aria-current="page" className="font-bold text-white">
-                {c.label}
-              </span>
-            )}
-          </li>
-        ))}
-      </ol>
-    </nav>
-  );
-}
-
-/** Dark hero of an inner page (same gradient as "חדשות ועדכונים"), flat on top under the header. */
-function PageHero({
-  eyebrow,
-  title,
-  crumbs,
-  image,
-}: {
-  eyebrow: string;
-  title: string;
-  crumbs: { label: string; href?: string }[];
-  image?: string;
-}) {
-  return (
-    <section
-      aria-label={title}
-      className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-[calc(var(--u)*150)] pt-36 text-white lg:pt-[calc(var(--u)*230)]"
-    >
-      {image && (
-        <img
-          src={image}
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 start-0 -z-10 hidden h-full w-[48%] object-cover opacity-30 [mask-image:linear-gradient(to_right,#000_30%,transparent)] lg:block rtl:[mask-image:linear-gradient(to_right,#000_30%,transparent)]"
-        />
-      )}
-      <Crumbs items={crumbs} />
-      <div className="mt-8 lg:mt-[calc(var(--u)*44)]">
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="mt-4 text-[clamp(40px,10vw,64px)] font-bold leading-[1.05] lg:mt-[calc(var(--u)*24)] lg:text-[calc(var(--u)*64)]">
-          <FoldHeading text={title} trigger="mount" />
-        </h1>
-      </div>
-    </section>
   );
 }
 
@@ -126,7 +68,7 @@ type SectionKey = "gallery" | "video" | "team" | "news";
 export function SubActivityView({ page }: { page: SubActivityPage }) {
   const [open, setOpen] = useState<VideoCardData | null>(null);
   const crumbs = [
-    { label: "דף הבית", href: "/" },
+    { label: "בית", href: "/" },
     { label: "פעילויות", href: "/activities" },
     ...(page.main ? [{ label: page.main.name, href: page.main.href }] : []),
     { label: page.title },
@@ -206,7 +148,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
 
   return (
     <>
-      <PageHero eyebrow={page.main?.name ?? "פעילות הקרן"} title={page.title} crumbs={crumbs} image={page.heroImage} />
+      <PageHero title={page.title} crumbs={crumbs} />
 
       {/* intro: white */}
       <Band tone="white" curveTop aria-label={title}>
@@ -258,10 +200,10 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
 }
 
 export function MainActivityView({ page }: { page: MainActivityPage }) {
-  const crumbs = [{ label: "דף הבית", href: "/" }, { label: "פעילויות", href: "/activities" }, { label: page.title }];
+  const crumbs = [{ label: "בית", href: "/" }, { label: "פעילויות", href: "/activities" }, { label: page.title }];
   return (
     <>
-      <PageHero eyebrow="פעילות הקרן" title={page.title} crumbs={crumbs} image={page.image} />
+      <PageHero title={page.title} crumbs={crumbs} />
       <Band tone="white" curveTop>
         <div className="grid items-start gap-10 px-[5%] pb-[100px] pt-[calc(var(--u)*40)] lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
           <div>

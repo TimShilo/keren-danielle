@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Band } from "@/components/site/Band";
-import { FoldHeading } from "@/components/site/FoldHeading";
-import { Eyebrow } from "@/components/site/HomeHero";
+import { PageHero } from "@/components/site/PageHero";
 import { SiteShell } from "@/components/site/SiteShell";
 import { useActivitiesOverview } from "@/lib/activities";
 
@@ -14,12 +13,7 @@ function ActivitiesIndex() {
   const q = useActivitiesOverview();
   return (
     <SiteShell>
-      <section className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-[calc(var(--u)*150)] pt-36 text-white lg:pt-[calc(var(--u)*230)]">
-        <Eyebrow>פעילות הקרן</Eyebrow>
-        <h1 className="mt-4 text-[clamp(40px,10vw,64px)] font-bold leading-[1.05] lg:mt-[calc(var(--u)*24)] lg:text-[calc(var(--u)*64)]">
-          <FoldHeading text="פעילויות" trigger="mount" />
-        </h1>
-      </section>
+      <PageHero title="פעילויות" crumbs={[{ label: "בית", href: "/" }, { label: "פעילויות" }]} />
       <Band tone="white" curveTop>
         <ul className="grid gap-8 px-[5%] pb-[100px] pt-[calc(var(--u)*40)] sm:grid-cols-2">
           {(q.data ?? []).map((m) => (
