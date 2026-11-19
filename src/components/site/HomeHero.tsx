@@ -74,8 +74,8 @@ export function HomeHero() {
       <img
         src="/images/home/danielle-hero.webp"
         alt="דניאלי זוננפלד ע״ה"
-        width={873}
-        height={822}
+        width={1280}
+        height={1229}
         fetchPriority="high"
         className="relative z-10 order-2 mx-auto mt-6 block w-[88%] max-w-[520px] lg:absolute lg:left-[calc(var(--u)*401)] lg:top-[calc(var(--u)*204)] lg:mt-0 lg:w-[calc(var(--u)*873)] lg:max-w-none"
       />
