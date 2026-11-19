@@ -172,11 +172,17 @@ const SENTENCE_RAW: [string, string][] = [
   ["בעוד כמה ימים / כשנעגון בחוף,<br>הקור והרטיבות / יהפכו לעוד סתם סוף", "דניאלי בת 17 וחצי"],
 ];
 
-const toLines = (body: string) =>
-  body
-    .split(/<br\s*\/?>|\s\/\s/)
-    .map((l) => l.replace(/<[^>]*>/g, "").trim())
-    .filter(Boolean);
+/** Two lines at most: split on the verse break (<br>), the inner " / " separators become plain spaces. */
+const toLines = (body: string) => {
+  const clean = (t: string) => t.replace(/<[^>]*>/g, "").replace(/\s\/\s/g, " ").replace(/\s+/g, " ").trim();
+  const parts = body.split(/<br\s*\/?>/).map(clean).filter(Boolean);
+  if (parts.length >= 2) return [parts[0] as string, parts.slice(1).join(" ")];
+  // no explicit break: split the single line in two at the " / " closest to the middle
+  const bits = body.replace(/<[^>]*>/g, "").split(/\s\/\s/).map((x) => x.trim()).filter(Boolean);
+  if (bits.length < 2) return bits;
+  const half = Math.ceil(bits.length / 2);
+  return [bits.slice(0, half).join(" "), bits.slice(half).join(" ")];
+};
 
 // Used until the sentences are published from the admin.
 export const DEMO_SENTENCES: SentenceData[] = SENTENCE_RAW.map(([body, attribution], i) => ({

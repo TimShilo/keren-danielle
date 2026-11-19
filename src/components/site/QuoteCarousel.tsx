@@ -87,7 +87,7 @@ export function QuoteCarousel() {
       />
 
       {/* sentences */}
-      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1000))] flex-col items-center justify-center px-[5%] py-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*60)]">
+      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1560))] flex-col items-center justify-center px-[5%] py-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*60)]">
         <img src="/images/home/svg/quote-mark.svg" alt="" aria-hidden className="mb-4 w-8 lg:mb-[calc(var(--u)*24)] lg:w-[calc(var(--u)*40)]" />
         <div className="grid w-full" aria-live="polite">
           {sentences.map((s, idx) => (
@@ -98,7 +98,7 @@ export function QuoteCarousel() {
                 idx === i ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
               }`}
             >
-              <blockquote className="text-[clamp(22px,5.2vw,36px)] font-bold leading-[1.25] text-navy lg:text-[calc(var(--u)*40)]">
+              <blockquote className="text-[clamp(20px,5vw,34px)] font-bold leading-[1.25] text-navy lg:text-[calc(var(--u)*38)]">
                 {s.lines.map((l, k) => (
                   <span key={k} className="block">
                     {l}
