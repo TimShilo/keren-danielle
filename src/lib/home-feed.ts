@@ -41,7 +41,7 @@ export const DEMO_PRESS: PressCardData[] = [
   { id: "p4", title: "מאות ילדים לקויי ראיה ובני משפחותיהם חגגו בר ובת מצווה", source: "גדי דויטש", image: "/images/home/demo/press-4.webp", href: "/press", external: false },
 ];
 
-const ICONS: Record<string, NewsCardData["icon"]> = {
+export const ICONS: Record<string, NewsCardData["icon"]> = {
   "בריאות ורפואה": "health",
   "חינוך ולמידה": "education",
   "מסורת וחברה": "tradition",
@@ -49,10 +49,10 @@ const ICONS: Record<string, NewsCardData["icon"]> = {
   "רווחה וכלכלה": "welfare",
 };
 
-const ytId = (url: string) => /(?:v=|youtu\.be\/|embed\/)([\w-]{11})/.exec(url)?.[1] ?? "";
-const strip = (html: string) => html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+export const ytId = (url: string) => /(?:v=|youtu\.be\/|embed\/)([\w-]{11})/.exec(url)?.[1] ?? "";
+export const strip = (html: string) => html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
-async function mediaMap(ids: string[]) {
+export async function mediaMap(ids: string[]) {
   if (!ids.length) return new Map<string, string>();
   const { data } = await supabase.from("media").select("id,storage_path").in("id", ids);
   return new Map((data ?? []).map((m) => [m.id as string, mediaUrl(m.storage_path as string)]));

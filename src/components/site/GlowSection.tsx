@@ -1,11 +1,6 @@
 import { useEffect, useRef, type ElementType, type ReactNode } from "react";
 
-// Soft arch (design: 1920 x 92). The glow is clipped by this shape, so it never shows a straight edge.
-const CURVE_MASK =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92" preserveAspectRatio="none"><path d="M0 89C0 89 1314.32 9.3 1920 89V92H0Z" fill="#000"/></svg>',
-  );
+import { curveTopStyle } from "./section-edges";
 
 /**
  * Light-blue section with a large, blurred yellow circle that glides after the mouse
@@ -96,18 +91,7 @@ export function GlowSection({
     };
   }, []);
 
-  const maskStyle = curveTop
-    ? {
-        WebkitMaskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
-        maskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
-        WebkitMaskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92)",
-        maskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92)",
-        WebkitMaskPosition: "0 0, 0 calc(var(--u) * 92)",
-        maskPosition: "0 0, 0 calc(var(--u) * 92)",
-        WebkitMaskRepeat: "no-repeat",
-        maskRepeat: "no-repeat",
-      }
-    : undefined;
+  const maskStyle = curveTop ? curveTopStyle() : undefined;
 
   return (
     <Tag

@@ -1,14 +1,16 @@
 import { Facebook, Instagram, Mail, Phone, Youtube } from "lucide-react";
 import type { ReactNode } from "react";
+import { QuoteCarousel } from "./QuoteCarousel";
+import { curveTopStyle, EDGE_PAD, OVERLAP } from "./section-edges";
 
 const COLUMNS = [
   {
     title: "פעילות",
     links: [
-      { label: "בריאות ורפואה", href: "/activities/health" },
-      { label: "חינוך ולמידה", href: "/activities/education" },
-      { label: "מסורת וחברה", href: "/activities/society" },
-      { label: "רווחה וקהילה", href: "/activities/judaism" },
+      { label: "בריאות ורפואה", href: "/activities/%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA-%D7%95%D7%A8%D7%A4%D7%95%D7%90%D7%94" },
+      { label: "חינוך ולמידה", href: "/activities/%D7%97%D7%99%D7%A0%D7%95%D7%9A-%D7%95%D7%9C%D7%9E%D7%99%D7%93%D7%94" },
+      { label: "מסורת וחברה", href: "/activities/%D7%9E%D7%A1%D7%95%D7%A8%D7%AA-%D7%95%D7%97%D7%91%D7%A8%D7%94" },
+      { label: "רווחה וקהילה", href: "/activities/%D7%A8%D7%95%D7%95%D7%97%D7%94-%D7%95%D7%A7%D7%94%D7%99%D7%9C%D7%94" },
     ],
   },
   {
@@ -58,8 +60,15 @@ function ContactRow({ href, icon, children, external }: { href: string; icon: Re
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer dir="rtl" className="relative z-10 text-white">
-      <div className="bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-14 pt-[54px] lg:pb-0 lg:pt-[calc(var(--u)*54)]">
+    <footer dir="rtl" className="relative text-white">
+      {/* Danielle's sentences over the video: part of the footer, so they appear on every page */}
+      <QuoteCarousel />
+      <div
+        className={`relative ${OVERLAP} bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-14 lg:pb-0`}
+        style={curveTopStyle()}
+      >
+        <div aria-hidden className={EDGE_PAD} />
+        <div className="pt-[54px] lg:pt-[calc(var(--u)*54)]"></div>
         <div className="mx-auto grid grid-cols-2 gap-x-6 gap-y-12 lg:h-[calc(var(--u)*350)] lg:max-w-none lg:grid-cols-[446fr_488fr_424fr_562fr] lg:gap-x-0">
           {COLUMNS.map((c) => (
             <nav key={c.title} aria-label={c.title}>
@@ -95,7 +104,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="bg-black px-[5%] py-8 lg:h-[calc(var(--u)*142)] lg:py-0 lg:pt-[calc(var(--u)*34)]">
+      <div className="relative bg-black px-[5%] py-8 lg:h-[calc(var(--u)*142)] lg:py-0 lg:pt-[calc(var(--u)*34)]">
         <ul className="flex items-center justify-center gap-4" aria-label="רשתות חברתיות">
           {SOCIAL.map(({ label, href, Icon }) => (
             <li key={label}>

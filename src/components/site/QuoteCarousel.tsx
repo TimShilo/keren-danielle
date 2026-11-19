@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { DEMO_SENTENCES, useHomeSentences } from "@/lib/home-feed";
 import { FxIconButton } from "./FxButton";
 import { ParallaxDecor } from "./ParallaxDecor";
+import { curveTopStyle, OVERLAP } from "./section-edges";
 
 const INTERVAL = 7000;
 
@@ -35,7 +36,8 @@ export function QuoteCarousel() {
   return (
     <section
       aria-label="משפטים של דניאלי"
-      className="relative isolate overflow-hidden bg-[#eef8ff] lg:h-[calc(var(--u)*560)]"
+      className={`relative isolate overflow-hidden bg-[#eef8ff] ${OVERLAP} lg:h-[calc(var(--u)*744)]`}
+      style={curveTopStyle()}
       onPointerEnter={() => {
         paused.current = true;
       }}
@@ -46,7 +48,7 @@ export function QuoteCarousel() {
       {/* same looping (silent) video as the hero, softly faded in at the top */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,transparent,#000_22%)]"
+        className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,transparent,#000_14%)]"
       >
         <img src="/images/home/hero-poster.webp" alt="" loading="lazy" className="size-full object-cover opacity-[0.73]" />
         <video
@@ -87,7 +89,7 @@ export function QuoteCarousel() {
       />
 
       {/* sentences */}
-      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1000))] flex-col items-center justify-center px-[5%] py-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*72)]">
+      <div className="relative z-10 mx-auto flex min-h-[420px] max-w-[min(100%,calc(var(--u)*1000))] flex-col items-center justify-center px-[5%] pb-[140px] pt-[100px] text-center lg:min-h-0 lg:px-0 lg:py-0 lg:pt-[calc(var(--u)*164)] lg:pb-[calc(var(--u)*92)]">
         <img src="/images/home/svg/quote-mark.svg" alt="" aria-hidden className="mb-4 w-8 lg:mb-[calc(var(--u)*24)] lg:w-[calc(var(--u)*40)]" />
         <div className="grid w-full" aria-live="polite">
           {sentences.map((s, idx) => (
@@ -115,7 +117,7 @@ export function QuoteCarousel() {
         </div>
 
         <div className="mt-6 flex items-center gap-3 lg:mt-[calc(var(--u)*30)]">
-          <FxIconButton variant="white" aria-label="המשפט הקודם" onClick={() => go(-1)} className="size-10 shadow-md lg:size-[calc(var(--u)*48)]">
+          <FxIconButton variant="white" aria-label="המשפט הקודם" onClick={() => go(-1)} className="size-10 text-navy shadow-md lg:size-[calc(var(--u)*48)]">
             <ArrowRight className="size-4 lg:size-[calc(var(--u)*20)]" />
           </FxIconButton>
           <div className="flex items-center gap-2" role="tablist" aria-label="בחירת משפט">
@@ -131,7 +133,7 @@ export function QuoteCarousel() {
               />
             ))}
           </div>
-          <FxIconButton variant="white" aria-label="המשפט הבא" onClick={() => go(1)} className="size-10 shadow-md lg:size-[calc(var(--u)*48)]">
+          <FxIconButton variant="white" aria-label="המשפט הבא" onClick={() => go(1)} className="size-10 text-navy shadow-md lg:size-[calc(var(--u)*48)]">
             <ArrowLeft className="size-4 lg:size-[calc(var(--u)*20)]" />
           </FxIconButton>
         </div>

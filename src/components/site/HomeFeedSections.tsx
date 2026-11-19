@@ -43,7 +43,7 @@ const CHIP = {
   welfare: { Icon: Users, color: "#C41D24" },
 } as const;
 
-function NewsCard({ n }: { n: NewsCardData }) {
+export function NewsCard({ n }: { n: NewsCardData }) {
   const { Icon, color } = CHIP[n.icon];
   return (
     <a href={n.href} className={`group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}>
@@ -61,7 +61,7 @@ function NewsCard({ n }: { n: NewsCardData }) {
   );
 }
 
-function VideoCard({ v, onOpen }: { v: VideoCardData; onOpen: () => void }) {
+export function VideoCard({ v, onOpen }: { v: VideoCardData; onOpen: () => void }) {
   return (
     <button type="button" onClick={onOpen} className="group block w-full text-start" aria-label={`נגן: ${v.title}`}>
       <span className="relative block aspect-[414/267] overflow-hidden rounded-[27px] bg-navy">
