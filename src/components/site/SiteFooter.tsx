@@ -43,7 +43,7 @@ function ContactRow({ href, icon, children, external }: { href: string; icon: Re
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="group flex items-center gap-4 text-xl leading-none lg:text-2xl lg:leading-none"
+      className="group flex items-center gap-4 text-[20px] leading-none"
     >
       <span className="grid size-[33px] shrink-0 place-items-center rounded-full bg-white/15 text-white transition-colors duration-300 group-hover:bg-brand-yellow group-hover:text-navy">
         {icon}
@@ -71,7 +71,7 @@ export function SiteFooter() {
               <ul className="mt-6 space-y-2 lg:mt-[calc(var(--u)*26)] lg:space-y-[calc(var(--u)*7)]">
                 {c.links.map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="inline-block text-xl leading-[1.5] underline-offset-4 hover:underline lg:text-2xl">
+                    <a href={l.href} className="inline-block text-[20px] leading-[1.5] underline-offset-4 hover:underline">
                       {l.label}
                     </a>
                   </li>
@@ -99,7 +99,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="relative bg-black px-[5%] py-8 lg:h-[calc(var(--u)*142)] lg:py-0 lg:pt-[calc(var(--u)*34)]">
+      <div className="relative bg-black px-[5%] pb-5 pt-8 lg:pt-[calc(var(--u)*34)]">
         <ul className="flex items-center justify-center gap-4" aria-label="רשתות חברתיות">
           {SOCIAL.map(({ label, href, Icon }) => (
             <li key={label}>
