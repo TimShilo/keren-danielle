@@ -33,6 +33,8 @@ export interface SubActivityPage {
   sideImage: string;
   heroImage: string;
   layout: { gallery: boolean; video: boolean; posts: boolean; team: boolean };
+  /** optional second block of the page ("more"): its own heading and rich text */
+  more: { title: string; html: string } | null;
   /** optional per-page choice of the body backgrounds, in order: "glow" | "white" | "dark" */
   tones: string[];
   gallery: GalleryItem[];
@@ -146,6 +148,12 @@ export function useActivityPage(slug: string) {
           headerImage: media.get(str(d["header_media_id"])) ?? "",
           sideImage: media.get(str(d["side_media_id"])) ?? featured,
           heroImage: media.get(str(d["header_media_id"])) ?? featured,
+          more: str(d["intro_more_html"]).trim() && (on("more_switcher") || str(d["intro_more_html"]).trim())
+            ? {
+                title: `${str(d["section_title_more"])} ${str(d["handwriting_title_more"])}`.trim(),
+                html: cleanBody(str(d["intro_more_html"])),
+              }
+            : null,
           tones: Array.isArray(d["section_tones"]) ? (d["section_tones"] as unknown[]).map(String) : [],
           layout: { gallery: on("gallery_switcher"), video: on("video_switcher"), posts: on("posts_switcher"), team: on("team") },
           gallery: (g.data ?? []).flatMap((x) => {

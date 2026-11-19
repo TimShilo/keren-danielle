@@ -37,13 +37,14 @@ function SectionHead({ eyebrow, title, center = true }: { eyebrow: string; title
   );
 }
 
-function GalleryCard({ g }: { g: GalleryItem }) {
+function GalleryCard({ g, pageTitle }: { g: GalleryItem; pageTitle: string }) {
+  const showTitle = !!g.title && g.title.trim() !== pageTitle.trim();
   return (
     <div className={`flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD}`}>
       <img src={g.image} alt={g.title} loading="lazy" className="aspect-[414/290] w-full object-cover" />
-      {(g.title || g.caption) && (
+      {(showTitle || g.caption) && (
         <div className="p-6">
-          {g.title && <h3 className="line-clamp-2 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{g.title}</h3>}
+          {showTitle && <h3 className="line-clamp-2 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{g.title}</h3>}
           {g.caption && <p className="mt-1 line-clamp-3 text-[18px] leading-[1.4] text-[#1d2838]">{g.caption}</p>}
         </div>
       )}
@@ -67,7 +68,7 @@ function TeamCard({ m }: { m: TeamMember }) {
   );
 }
 
-type SectionKey = "gallery" | "video" | "team" | "news";
+type SectionKey = "more" | "gallery" | "video" | "team" | "news";
 
 export function SubActivityView({ page }: { page: SubActivityPage }) {
   const [open, setOpen] = useState<VideoCardData | null>(null);
@@ -82,12 +83,23 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
 
   // present sections, in order; tones alternate glow / white so two equal areas never touch
   const order: SectionKey[] = [];
+  if (page.more) order.push("more");
   if (page.layout.gallery && page.gallery.length) order.push("gallery");
   if (page.layout.video && page.videos.length) order.push("video");
   if (page.layout.team && page.team.length) order.push("team");
   if (page.layout.posts && page.news.length) order.push("news");
 
   const render: Record<SectionKey, () => React.ReactNode> = {
+    more: () =>
+      page.more ? (
+        <>
+          <SectionHead eyebrow="עוד על הפעילות" title={page.more.title || "עוד"} center={false} />
+          <div
+            className="rte-content mt-8 max-w-[1200px] text-lg leading-[1.5] lg:mt-[calc(var(--u)*40)] lg:text-[calc(var(--u)*24)] [&_ol]:columns-1 [&_ol]:gap-x-12 sm:[&_ol]:columns-2 lg:[&_ol]:columns-3 [&_li]:break-inside-avoid [&_li]:py-0.5"
+            dangerouslySetInnerHTML={{ __html: page.more.html }}
+          />
+        </>
+      ) : null,
     gallery: () => (
       <>
         <SectionHead eyebrow="גלריה" title="תמונות" />
@@ -97,7 +109,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
             direction="right"
             items={page.gallery.map((g) => (
               <div key={g.id} className="h-full w-full">
-                <GalleryCard g={g} />
+                <GalleryCard g={g} pageTitle={page.title} />
               </div>
             ))}
             itemClassName={`${ITEM} flex`}
