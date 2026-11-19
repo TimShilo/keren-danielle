@@ -37,7 +37,7 @@ const PANELS = [
  */
 export function ActivityPanels() {
   return (
-    <ul className="flex w-full flex-col gap-4 lg:h-[750px] lg:flex-row lg:gap-[calc(var(--u)*18)]">
+    <ul className="flex w-full flex-col gap-4 lg:h-[clamp(520px,calc(100vh-230px),830px)] lg:flex-row lg:gap-[calc(var(--u)*18)]">
       {PANELS.map((p) => (
         <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-[2.25] lg:has-[a:focus-visible]:grow-[2.25]">
           <a
