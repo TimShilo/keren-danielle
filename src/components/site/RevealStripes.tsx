@@ -5,7 +5,8 @@ import { loadGsap } from "@/lib/gsap";
  * Entrance animation for photos that stand on their own (not inside a card):
  * the picture is cut into vertical stripes that rise one after another (from the right, like the reading
  * direction), each settling from a slight zoom; the yellow corner then slides in.
- * Square corners; works with any aspect ratio. Plays once when it scrolls into view.
+ * Square corners; works with any aspect ratio. Plays when it scrolls into view, runs in reverse when it leaves
+ * the screen and plays again when it comes back.
  */
 export function RevealStripes({
   src,
@@ -53,14 +54,17 @@ export function RevealStripes({
 
     loadGsap().then(({ gsap, ScrollTrigger }) => {
       if (cancelled) return;
+      // swap to the single whole picture at the end (no hairlines between the stripes);
+      // on the way back the stripes are restored first so the animation can run in reverse
+      const showWhole = (whole: boolean) => {
+        if (finalImg) finalImg.style.opacity = whole ? "1" : "0";
+        if (layer) layer.style.visibility = whole ? "hidden" : "visible";
+        if (box) box.style.boxShadow = whole ? "4px 4px 9px rgba(0,0,0,0.25)" : "0 0 0 0 rgba(0,0,0,0)";
+      };
       const tl = gsap.timeline({
         paused: true,
-        // swap to the single whole picture at the end: no hairlines between the stripes
-        onComplete: () => {
-          if (finalImg) finalImg.style.opacity = "1";
-          if (layer) layer.style.visibility = "hidden";
-          if (box) box.style.boxShadow = "4px 4px 9px rgba(0,0,0,0.25)";
-        },
+        onComplete: () => showWhole(true),
+        onReverseComplete: () => showWhole(false),
       });
       tl.to(strips, {
         clipPath: "inset(0% 0 0 0)",
@@ -76,7 +80,22 @@ export function RevealStripes({
         0,
       );
       if (deco.length) tl.to(deco, { opacity: 1, x: 0, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.1 }, "-=0.5");
-      const st = ScrollTrigger.create({ trigger: el, start: "top 90%", once: true, onEnter: () => tl.play() });
+      // plays when it comes into view, runs backwards when it leaves, and plays again on the way back
+      const st = ScrollTrigger.create({
+        trigger: el,
+        start: "top 90%",
+        end: "bottom 8%",
+        onEnter: () => tl.play(),
+        onEnterBack: () => tl.play(),
+        onLeave: () => {
+          showWhole(false);
+          tl.reverse();
+        },
+        onLeaveBack: () => {
+          showWhole(false);
+          tl.reverse();
+        },
+      });
       kill = () => {
         st.kill();
         tl.kill();

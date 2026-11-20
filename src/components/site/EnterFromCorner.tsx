@@ -3,7 +3,8 @@ import { loadGsap } from "@/lib/gsap";
 
 /**
  * A cut-out portrait that glides in from the bottom-left corner of its area to its place
- * (with a soft fade and a tiny scale), instead of just sitting there. Plays once.
+ * (with a soft fade and a tiny scale), instead of just sitting there. It flies back out when it leaves the
+ * screen and flies in again when it returns.
  * `when="mount"` for things at the top of the page, "scroll" for everything below.
  */
 export function EnterFromCorner({
@@ -25,18 +26,30 @@ export function EnterFromCorner({
     let kill: (() => void) | undefined;
     loadGsap().then(({ gsap, ScrollTrigger }) => {
       if (cancelled) return;
-      const play = () =>
-        gsap.fromTo(
-          el,
-          { xPercent: -28, yPercent: 32, opacity: 0, scale: 0.94 },
-          { xPercent: 0, yPercent: 0, opacity: 1, scale: 1, duration: 1.3, delay, ease: "power3.out", clearProps: "transform,opacity" },
-        );
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(
+        el,
+        { xPercent: -28, yPercent: 32, opacity: 0, scale: 0.94 },
+        { xPercent: 0, yPercent: 0, opacity: 1, scale: 1, duration: 1.3, delay, ease: "power3.out" },
+      );
       if (when === "mount") {
-        const t = play();
-        kill = () => t.kill();
+        tl.play();
+        kill = () => tl.kill();
       } else {
-        const st = ScrollTrigger.create({ trigger: el, start: "top 92%", once: true, onEnter: () => void play() });
-        kill = () => st.kill();
+        // plays when it comes into view, flies back out when it leaves, plays again on return
+        const st = ScrollTrigger.create({
+          trigger: el,
+          start: "top 92%",
+          end: "bottom 6%",
+          onEnter: () => tl.play(),
+          onEnterBack: () => tl.play(),
+          onLeave: () => tl.reverse(),
+          onLeaveBack: () => tl.reverse(),
+        });
+        kill = () => {
+          st.kill();
+          tl.kill();
+        };
       }
     });
     return () => {
