@@ -88,9 +88,12 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
   const order: SectionKey[] = [];
   if (page.layout.team && page.team.length) order.push("team"); // the team comes right after the intro
   if (page.more) order.push("more");
+  if (page.layout.gallery && page.gallery.length) order.push("gallery"); // photos come before videos and news
   if (page.layout.video && page.videos.length) order.push("video");
   if (page.news.length) order.push("news");
-  if (page.layout.gallery && page.gallery.length) order.push("gallery"); // the gallery sits on the light-blue/yellow background
+  // right after the intro, the gallery continues the same light-blue/yellow area instead of becoming a neighbour of the same colour
+  const galleryInIntro = order[0] === "gallery";
+  if (galleryInIntro) order.shift();
 
   const render: Record<SectionKey, () => React.ReactNode> = {
     more: () =>
@@ -195,6 +198,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
             label: title,
             tone: "glow",
             children: (
+              <>
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
                 <div>
                   <Eyebrow>{page.sub.name}</Eyebrow>
@@ -221,6 +225,8 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
                   </RevealStripes>
                 )}
               </div>
+              {galleryInIntro && <div className="mt-[100px]">{render.gallery()}</div>}
+              </>
             ),
           },
           ...order.map((key, i) => ({

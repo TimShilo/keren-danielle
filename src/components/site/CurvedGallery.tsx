@@ -1,4 +1,6 @@
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * Endless photo gallery drawn with WebGL: round-cornered cards drift along, and the cards near the left and
@@ -63,6 +65,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const [failed, setFailed] = useState(false);
+  const [open, setOpen] = useState<number | null>(null);
   // the parent builds a new array on every render; only a change of the pictures themselves restarts the gallery
   const key = photos.map((p) => p.src).join("|");
   const photosRef = useRef(photos);
@@ -148,18 +151,21 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
     let curve = 0.8;
     let radius = 22;
     let textures: WebGLTexture[] = [];
-    const images: HTMLImageElement[] = [];
+    const images: { img: HTMLImageElement; idx: number }[] = [];
+    let texPhoto: number[] = [];
 
     const freeTextures = () => {
       textures.forEach((t) => gl.deleteTexture(t));
       textures = [];
+      texPhoto = [];
     };
 
     const buildTextures = () => {
       freeTextures();
       const tw = Math.max(64, Math.round(cardW * dpr * 1.2));
       const th = Math.max(64, Math.round(cardH * dpr * 1.2));
-      images.forEach((img) => {
+      images.sort((a, b) => a.idx - b.idx);
+      images.forEach(({ img, idx }) => {
         const c = document.createElement("canvas");
         c.width = tw;
         c.height = th;
@@ -184,6 +190,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         textures.push(tex);
+        texPhoto.push(idx);
       });
       count = textures.length;
     };
@@ -257,12 +264,12 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         raf = requestAnimationFrame(draw);
       }
     };
-    list.forEach((p) => {
+    list.forEach((p, idx) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.decoding = "async";
       img.onload = () => {
-        if (img.naturalWidth) images.push(img);
+        if (img.naturalWidth) images.push({ img, idx });
         done();
       };
       img.onerror = done;
@@ -289,16 +296,34 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       moved += Math.abs(dx);
       offset += dx;
     };
-    const onUp = () => {
+    const onUp = (e: PointerEvent) => {
+      const wasDragging = dragging;
       dragging = false;
       host.classList.remove("cursor-grabbing");
+      if (!wasDragging || moved > 6 || !count) return;
+      // a tap on a photo opens it big
+      const r = host.getBoundingClientRect();
+      const cx = e.clientX - r.left - r.width / 2;
+      const per = count;
+      const n = per * Math.round(total / (step * per));
+      for (let i = 0; i < n; i++) {
+        const x = ((((i * step + offset) % total) + total) % total) - total / 2;
+        if (Math.abs(cx - x) <= cardW / 2) {
+          const ph = texPhoto[i % per];
+          if (ph !== undefined) setOpen(ph);
+          break;
+        }
+      }
     };
     host.addEventListener("pointerenter", onEnter);
     host.addEventListener("pointerleave", onLeave);
     host.addEventListener("pointerdown", onDown);
     host.addEventListener("pointermove", onMove);
     host.addEventListener("pointerup", onUp);
-    host.addEventListener("pointercancel", onUp);
+    host.addEventListener("pointercancel", () => {
+      dragging = false;
+      host.classList.remove("cursor-grabbing");
+    });
 
     const io = new IntersectionObserver((e) => {
       visible = !!e[0]?.isIntersecting;
@@ -325,18 +350,67 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       host.removeEventListener("pointerdown", onDown);
       host.removeEventListener("pointermove", onMove);
       host.removeEventListener("pointerup", onUp);
-      host.removeEventListener("pointercancel", onUp);
       freeTextures();
     };
   }, [key]);
 
+  useEffect(() => {
+    if (open === null) return;
+    const n = photosRef.current.length;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(null);
+      // the page is right-to-left: the arrow pointing right goes back
+      if (e.key === "ArrowLeft") setOpen((o) => (o === null ? o : (o + 1) % n));
+      if (e.key === "ArrowRight") setOpen((o) => (o === null ? o : (o - 1 + n) % n));
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  const n = photos.length;
+  const cur = open !== null ? photos[open] : undefined;
+  const lightbox =
+    cur && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={cur.alt}
+            className="fixed inset-0 z-[200] grid place-items-center bg-[#05090b]/85 p-4 backdrop-blur-sm"
+            onClick={(e) => e.target === e.currentTarget && setOpen(null)}
+          >
+            <img src={cur.src} alt={cur.alt} className="max-h-[88vh] max-w-[92vw] rounded-2xl object-contain shadow-2xl" />
+            <button type="button" aria-label="סגירה" onClick={() => setOpen(null)} className="absolute right-4 top-4 grid size-11 cursor-pointer place-items-center rounded-full bg-white text-navy transition-transform hover:scale-105">
+              <X className="size-5" />
+            </button>
+            {n > 1 && (
+              <>
+                <button type="button" aria-label="התמונה הקודמת" onClick={() => setOpen((o) => (o === null ? o : (o - 1 + n) % n))} className="absolute right-4 top-1/2 grid size-12 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-white text-navy transition-transform hover:scale-105 sm:right-8">
+                  <ChevronRight className="size-6" />
+                </button>
+                <button type="button" aria-label="התמונה הבאה" onClick={() => setOpen((o) => (o === null ? o : (o + 1) % n))} className="absolute left-4 top-1/2 grid size-12 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-white text-navy transition-transform hover:scale-105 sm:left-8">
+                  <ChevronLeft className="size-6" />
+                </button>
+              </>
+            )}
+          </div>,
+          document.body,
+        )
+      : null;
+
   if (failed) return <>{fallback}</>;
   return (
+    <>
     <div
       ref={wrap}
       role="group"
       aria-label={label}
-      className="relative -mx-[5%] cursor-grab select-none touch-pan-y [mask-image:linear-gradient(90deg,transparent_0,#000_8%,#000_92%,transparent_100%)]"
+      className="relative -mx-[5%] cursor-pointer select-none touch-pan-y [mask-image:linear-gradient(90deg,transparent_0,#000_8%,#000_92%,transparent_100%)]"
       style={{ minHeight: 280 }}
     >
       <canvas ref={canvas} aria-hidden className="block" />
@@ -346,5 +420,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         ))}
       </ul>
     </div>
+    {lightbox}
+    </>
   );
 }
