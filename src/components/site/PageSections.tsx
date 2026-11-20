@@ -49,13 +49,13 @@ export function PageSections({ sections }: { sections: SectionDef[] }) {
         const common = { key: s.key, "aria-label": s.label ?? s.key, className: `${PAD} ${s.className ?? ""}`.trim() };
         if (tone === "glow") {
           return (
-            <GlowSection {...common} curveTop={curve}>
+            <GlowSection {...common} curveTop={curve} edge={prev === "dark" ? "mirror" : "arch"}>
               {s.children}
             </GlowSection>
           );
         }
         return (
-          <Band {...common} tone={tone} curveTop={curve} edge={s.edge ?? (tone === "dark" ? "sag" : "arch")}>
+          <Band {...common} tone={tone} curveTop={curve} edge={s.edge ?? (tone === "dark" ? "sag" : prev === "dark" ? "mirror" : "arch")}>
             {s.children}
           </Band>
         );

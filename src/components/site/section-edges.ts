@@ -18,8 +18,17 @@ const SAG_MASK =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92" preserveAspectRatio="none"><path d="M0 0C640 84 1280 84 1920 0V92H0Z" fill="#000"/></svg>',
   );
 
-export function curveTopStyle(edge: "arch" | "sag" = "arch"): CSSProperties {
-  const mask = edge === "sag" ? SAG_MASK : CURVE_MASK;
+/** Mirror of the sag: the section after a dark one rises in the middle by exactly the same depth. */
+const MIRROR_MASK =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92" preserveAspectRatio="none"><path d="M0 92C640 8 1280 8 1920 92V92H0Z" fill="#000"/></svg>',
+  );
+
+export type Edge = "arch" | "sag" | "mirror";
+
+export function curveTopStyle(edge: Edge = "arch"): CSSProperties {
+  const mask = edge === "sag" ? SAG_MASK : edge === "mirror" ? MIRROR_MASK : CURVE_MASK;
   return {
     WebkitMaskImage: `url("${mask}"), linear-gradient(#000, #000)`,
     maskImage: `url("${mask}"), linear-gradient(#000, #000)`,

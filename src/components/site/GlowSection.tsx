@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ElementType, type ReactNode } from "react";
 
-import { curveTopStyle } from "./section-edges";
+import { curveTopStyle, type Edge } from "./section-edges";
 
 /**
  * Light-blue section with a large, blurred yellow circle that glides after the mouse
@@ -12,6 +12,7 @@ export function GlowSection({
   className = "",
   glowClassName = "",
   curveTop = false,
+  edge = "arch",
   children,
   ...rest
 }: {
@@ -21,6 +22,7 @@ export function GlowSection({
   glowClassName?: string;
   /** Section top edge is the soft arch that opens it (overlaps the previous section by 92 design-px) */
   curveTop?: boolean;
+  edge?: Edge;
   children: ReactNode;
 } & Record<string, unknown>) {
   const root = useRef<HTMLElement>(null);
@@ -91,7 +93,7 @@ export function GlowSection({
     };
   }, []);
 
-  const maskStyle = curveTop ? curveTopStyle() : undefined;
+  const maskStyle = curveTop ? curveTopStyle(edge) : undefined;
 
   return (
     <Tag

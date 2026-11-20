@@ -1,5 +1,5 @@
 import type { ElementType, ReactNode } from "react";
-import { curveTopStyle, EDGE_PAD, OVERLAP } from "./section-edges";
+import { curveTopStyle, EDGE_PAD, OVERLAP, type Edge } from "./section-edges";
 
 /**
  * Plain full-width band for the areas that are not light-blue/yellow:
@@ -18,7 +18,7 @@ export function Band({
 }: {
   tone: "white" | "dark";
   curveTop?: boolean;
-  edge?: "arch" | "sag";
+  edge?: Edge;
   as?: ElementType;
   className?: string;
   children: ReactNode;
