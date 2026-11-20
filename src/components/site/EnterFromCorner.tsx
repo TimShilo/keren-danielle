@@ -2,9 +2,8 @@ import { useEffect, useRef, type ImgHTMLAttributes } from "react";
 import { loadGsap } from "@/lib/gsap";
 
 /**
- * A cut-out portrait that glides in from the bottom-left corner of its area to its place
- * (with a soft fade and a tiny scale), instead of just sitting there. It flies back out when it leaves the
- * screen and flies in again when it returns.
+ * A cut-out portrait that appears like Venetian blinds: horizontal slats open from top to bottom until the
+ * whole picture shows. It closes again when it leaves the screen and opens again when it returns.
  * `when="mount"` for things at the top of the page, "scroll" for everything below.
  */
 export function EnterFromCorner({
@@ -19,7 +18,7 @@ export function EnterFromCorner({
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      el.style.opacity = "";
+      el.style.setProperty("--o", "1");
       return;
     }
     let cancelled = false;
@@ -29,8 +28,8 @@ export function EnterFromCorner({
       const tl = gsap.timeline({ paused: true });
       tl.fromTo(
         el,
-        { xPercent: -20, yPercent: 24, opacity: 0, scale: 0.96 },
-        { xPercent: 0, yPercent: 0, opacity: 1, scale: 1, duration: 2, delay: delay + 0.1, ease: "power2.out" },
+        { "--o": 0, yPercent: 3 },
+        { "--o": 1, yPercent: 0, duration: 1.7, delay: delay + 0.1, ease: "power2.inOut" },
       );
       if (when === "mount") {
         tl.play();
@@ -60,6 +59,24 @@ export function EnterFromCorner({
     };
   }, [when, delay]);
 
-  // hidden from the first paint (so it never flashes in place before it flies in); the effect reveals it
-  return <img ref={ref} className={className} {...img} style={{ opacity: 0, ...img.style }} />;
+  // slats fully closed from the first paint (so it never flashes in place); the effect opens them
+  const slats = 14;
+  const mask = "linear-gradient(to bottom, #000 calc(var(--o) * 100%), transparent calc(var(--o) * 100%))";
+  return (
+    <img
+      ref={ref}
+      className={className}
+      {...img}
+      style={{
+        ["--o" as string]: 0,
+        WebkitMaskImage: mask,
+        maskImage: mask,
+        WebkitMaskSize: `100% calc(100% / ${slats})`,
+        maskSize: `100% calc(100% / ${slats})`,
+        WebkitMaskRepeat: "repeat-y",
+        maskRepeat: "repeat-y",
+        ...img.style,
+      }}
+    />
+  );
 }
