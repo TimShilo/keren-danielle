@@ -60,6 +60,7 @@ const str = (v: unknown) => (typeof v === "string" ? v : "");
 /** Hand-picked picture (and optional small partner logo under the title) for specific pages, by page slug. */
 export const PAGE_OVERRIDES: Record<string, { image?: string; logo?: { src: string; alt: string } }> = {
   "לב-דניאלי": { image: "/images/home/activities/page-lev-daniel.webp" },
+  "פרס-דניאלי": { image: "/images/home/activities/page-prize.webp" },
 };
 
 export const activityHref = (slug: string) => `/activities/${encodeURIComponent(slug)}`;
