@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DEMO_SENTENCES, useHomeSentences } from "@/lib/home-feed";
+import { EnterFromCorner } from "./EnterFromCorner";
 import { FxIconButton } from "./FxButton";
 import { ParallaxDecor } from "./ParallaxDecor";
 
@@ -78,7 +79,7 @@ export function QuoteCarousel() {
       />
 
       {/* portrait, glued to the bottom edge */}
-      <img
+      <EnterFromCorner
         src="/images/home/danielle-stand.webp"
         alt=""
         aria-hidden

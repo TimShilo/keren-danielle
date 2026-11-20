@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { EnterFromCorner } from "./EnterFromCorner";
 import { FoldHeading } from "./FoldHeading";
 import { FxButton } from "./FxButton";
 import { ScrollText } from "./ScrollText";
@@ -71,7 +72,7 @@ export function HomeHero() {
       />
 
       {/* Portrait */}
-      <img
+      <EnterFromCorner when="mount" delay={0.2}
         src="/images/home/danielle-hero.webp"
         alt="דניאלי זוננפלד ע״ה"
         width={1280}

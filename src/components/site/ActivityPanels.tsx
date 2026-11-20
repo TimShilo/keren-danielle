@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { activityPageQuery } from "@/lib/activities";
+import { loadGsap } from "@/lib/gsap";
 import { ArrowLeft, GraduationCap, Hospital, ScrollText, Users, type LucideIcon } from "lucide-react";
 
 const ICONS = { health: Hospital, education: GraduationCap, society: ScrollText, judaism: Users } as const;
@@ -50,6 +51,41 @@ const PANELS: PanelItem[] = [
   },
 ];
 
+const STRIPES = 6;
+const runs = new WeakMap<Element, { kill: () => void }>();
+
+/** Hover: the full-colour photo rises in vertical stripes (right to left) over the veiled picture. */
+async function playStripes(root: Element) {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  const layer = root.querySelector<HTMLElement>("[data-player]");
+  const strips = Array.from(root.querySelectorAll<HTMLElement>("[data-pstripe]"));
+  if (!layer || !strips.length) return;
+  const { gsap } = await loadGsap();
+  runs.get(root)?.kill();
+  gsap.killTweensOf([layer, ...strips]);
+  gsap.set(layer, { opacity: 1 });
+  gsap.set(strips, { clipPath: "inset(100% 0 0 0)" });
+  const tl = gsap.to(strips, {
+    clipPath: "inset(0% 0 0 0)",
+    duration: 0.75,
+    delay: 0.15,
+    ease: "power3.out",
+    stagger: { each: 0.07, from: "end" },
+  });
+  runs.set(root, { kill: () => tl.kill() });
+}
+
+function stopStripes(root: Element) {
+  const layer = root.querySelector<HTMLElement>("[data-player]");
+  const strips = Array.from(root.querySelectorAll<HTMLElement>("[data-pstripe]"));
+  if (!layer) return;
+  runs.get(root)?.kill();
+  void loadGsap().then(({ gsap }) => {
+    gsap.killTweensOf([layer, ...strips]);
+    gsap.to(layer, { opacity: 0, duration: 0.4, ease: "power1.out", onComplete: () => void gsap.set(strips, { clipPath: "inset(100% 0 0 0)" }) });
+  });
+}
+
 /**
  * Four full-width panels with a blue veil. The hovered panel grows, its veil fades out
  * and a white caption (title, text, arrow) slides up from the bottom.
@@ -67,8 +103,16 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
         <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow,flex-basis] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-0 lg:hover:basis-[calc(var(--ph)*1.364)] lg:has-[a:focus-visible]:grow-0 lg:has-[a:focus-visible]:basis-[calc(var(--ph)*1.364)]">
           <a
             href={p.href}
-            onPointerEnter={() => warm(p.href)}
-            onFocus={() => warm(p.href)}
+            onPointerEnter={(e) => {
+              warm(p.href);
+              if (e.pointerType !== "touch") void playStripes(e.currentTarget);
+            }}
+            onPointerLeave={(e) => stopStripes(e.currentTarget)}
+            onFocus={(e) => {
+              warm(p.href);
+              void playStripes(e.currentTarget);
+            }}
+            onBlur={(e) => stopStripes(e.currentTarget)}
             aria-label={p.title}
             className="group relative flex h-[360px] w-full flex-col overflow-hidden bg-navy text-white outline-none sm:h-[460px] lg:h-full"
           >
@@ -82,6 +126,28 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
               />
             ) : (
               <span aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,#082944,#0c448a)]" />
+            )}
+            {/* hover photo: stripes rise over the veiled picture (desktop) */}
+            {p.img && (
+              <div
+                aria-hidden
+                data-player
+                dir="ltr"
+                style={{ "--pos-open": p.posOpen ?? "50% 100%" } as React.CSSProperties}
+                className="pointer-events-none absolute inset-x-0 top-0 z-[1] hidden h-[calc(100%-var(--u)*164)] opacity-0 lg:flex"
+              >
+                {Array.from({ length: STRIPES }, (_, i) => (
+                  <div key={i} data-pstripe className="relative h-full flex-1 overflow-hidden" style={{ clipPath: "inset(100% 0 0 0)" }}>
+                    <img
+                      src={p.img}
+                      alt=""
+                      draggable={false}
+                      className="absolute top-0 block h-full max-w-none object-cover [object-position:var(--pos-open)]"
+                      style={{ width: `${STRIPES * 100}%`, left: `${-i * 100}%` }}
+                    />
+                  </div>
+                ))}
+              </div>
             )}
             {/* blue veil */}
             <div className="absolute inset-0 bg-[rgba(11,67,135,0.7)] transition-opacity duration-[900ms] lg:group-hover:opacity-0 lg:group-focus-visible:opacity-0" />

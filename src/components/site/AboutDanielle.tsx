@@ -1,3 +1,4 @@
+import { EnterFromCorner } from "./EnterFromCorner";
 import { FoldHeading } from "./FoldHeading";
 import { FxButton } from "./FxButton";
 import { ParallaxDecor } from "./ParallaxDecor";
@@ -66,7 +67,7 @@ export function AboutDanielle() {
       </div>
 
       {/* Portrait: runs to the bottom edge and slips under the next section's curve (no gap) */}
-      <img
+      <EnterFromCorner
         src="/images/home/danielle-about.webp"
         alt="דניאלי זוננפלד ע״ה"
         width={633}

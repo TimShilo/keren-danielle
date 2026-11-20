@@ -32,6 +32,7 @@ export function RevealStripes({
     const deco = Array.from(el.querySelectorAll<HTMLElement>("[data-deco]"));
     const finalImg = el.querySelector<HTMLElement>("[data-final]");
     const layer = el.querySelector<HTMLElement>("[data-layer]");
+    const box = el.querySelector<HTMLElement>("[data-box]");
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
     let cancelled = false;
@@ -44,6 +45,11 @@ export function RevealStripes({
     });
     deco.forEach((d) => (d.style.opacity = "0"));
     if (finalImg) finalImg.style.opacity = "0";
+    // no empty frame before the stripes arrive: the soft shadow fades in once the picture is complete
+    if (box) {
+      box.style.boxShadow = "0 0 0 0 rgba(0,0,0,0)";
+      box.style.transition = "box-shadow 0.8s ease";
+    }
 
     loadGsap().then(({ gsap, ScrollTrigger }) => {
       if (cancelled) return;
@@ -53,6 +59,7 @@ export function RevealStripes({
         onComplete: () => {
           if (finalImg) finalImg.style.opacity = "1";
           if (layer) layer.style.visibility = "hidden";
+          if (box) box.style.boxShadow = "4px 4px 9px rgba(0,0,0,0.25)";
         },
       });
       tl.to(strips, {
@@ -85,12 +92,16 @@ export function RevealStripes({
       deco.forEach((d) => (d.style.opacity = ""));
       if (finalImg) finalImg.style.opacity = "";
       if (layer) layer.style.visibility = "";
+      if (box) {
+        box.style.boxShadow = "";
+        box.style.transition = "";
+      }
     };
   }, [src, stripes]);
 
   return (
     <div ref={root} className={`relative ${className}`}>
-      <div className="relative w-full overflow-hidden shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" style={{ aspectRatio: aspect }}>
+      <div data-box className="relative w-full overflow-hidden shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" style={{ aspectRatio: aspect }}>
         <img data-final src={src} alt={alt} loading="lazy" className="absolute inset-0 block size-full object-cover" />
         <div aria-hidden data-layer dir="ltr" className="absolute inset-0 flex">
           {Array.from({ length: stripes }, (_, i) => (
