@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DEMO_SENTENCES, useHomeSentences } from "@/lib/home-feed";
+import { BackgroundVideo } from "./BackgroundVideo";
 import { EnterFromCorner } from "./EnterFromCorner";
 import { FxIconButton } from "./FxButton";
 import { ParallaxDecor } from "./ParallaxDecor";
@@ -13,8 +14,6 @@ export function QuoteCarousel() {
   const sentences = q.data && q.data.length ? q.data : DEMO_SENTENCES;
   const [i, setI] = useState(0);
   const paused = useRef(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
   const n = sentences.length;
 
   useEffect(() => {
@@ -23,13 +22,6 @@ export function QuoteCarousel() {
     }, INTERVAL);
     return () => window.clearInterval(t);
   }, [n]);
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    if (!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) v.play().catch(() => {});
-  }, []);
 
   const go = (d: number) => setI((x) => (x + d + n) % n);
 
@@ -50,18 +42,7 @@ export function QuoteCarousel() {
         className="absolute inset-0 -z-10"
       >
         <img src="/images/home/hero-poster.webp" alt="" loading="lazy" className="size-full object-cover opacity-[0.73]" />
-        <video
-          ref={videoRef}
-          className={`absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-1000 ${videoReady ? "!opacity-[0.73]" : ""}`}
-          src="/images/home/hero-video.mp4"
-          poster="/images/home/hero-poster.webp"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          onPlaying={() => setVideoReady(true)}
-        />
+        <BackgroundVideo src="/images/home/hero-video.mp4" poster="/images/home/hero-poster.webp" preload="metadata" className="absolute inset-0" />
       </div>
 
       {/* decor */}

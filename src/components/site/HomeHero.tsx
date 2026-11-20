@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { BackgroundVideo } from "./BackgroundVideo";
 import { EnterFromCorner } from "./EnterFromCorner";
 import { FoldHeading } from "./FoldHeading";
 import { FxButton } from "./FxButton";
@@ -24,18 +25,7 @@ export function Eyebrow({ children, className = "" }: { children: string; classN
 }
 
 export function HomeHero() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
   const [filmOpen, setFilmOpen] = useState(false);
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true; // autoplay policies require the muted *property*, not just the attribute
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-    v.play().catch(() => {});
-  }, []);
 
   // Chain the three title lines so letters keep unfolding one after another.
   let offset = 0.35;
@@ -57,19 +47,7 @@ export function HomeHero() {
         fetchPriority="high"
         className="absolute inset-0 -z-20 h-full w-full object-cover opacity-[0.73]"
       />
-      <video
-        ref={videoRef}
-        className={`absolute inset-0 -z-10 h-full w-full object-cover opacity-0 transition-opacity duration-1000 ${videoReady ? "!opacity-[0.73]" : ""}`}
-        src="/images/home/hero-video.mp4"
-        poster="/images/home/hero-poster.webp"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-        onPlaying={() => setVideoReady(true)}
-      />
+      <BackgroundVideo src="/images/home/hero-video.mp4" poster="/images/home/hero-poster.webp" className="absolute inset-0 -z-10" />
 
       {/* Portrait */}
       <EnterFromCorner when="mount" delay={0.2}
