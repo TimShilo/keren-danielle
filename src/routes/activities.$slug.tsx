@@ -11,24 +11,14 @@ export const Route = createFileRoute("/activities/$slug")({
   component: ActivityRoute,
 });
 
-/** Shown instantly while the data arrives: the page header is already there, the body is a soft placeholder. */
+/** Shown instantly while the data arrives: the page header is already there, the body is an empty light-blue area. */
 function PageSkeleton({ slug }: { slug: string }) {
   const title = decodeURIComponent(slug).replace(/-/g, " ");
   return (
     <>
       <PageHero title={title} crumbs={[{ label: "בית", href: "/" }, { label: "פעילויות", href: "/activities" }, { label: title }]} />
-      <div className="relative -mt-[calc(var(--u)*92)] bg-[#eef8ff] px-[5%] pb-[100px] pt-[calc(var(--u)*140)]" aria-busy="true">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
-          <div className="space-y-4">
-            <div className="h-5 w-40 animate-pulse rounded-full bg-navy/10" />
-            <div className="h-14 w-3/4 animate-pulse rounded-lg bg-navy/10" />
-            <div className="h-4 w-full animate-pulse rounded bg-navy/10" />
-            <div className="h-4 w-11/12 animate-pulse rounded bg-navy/10" />
-            <div className="h-4 w-4/5 animate-pulse rounded bg-navy/10" />
-          </div>
-          <div className="aspect-[4/3] w-full animate-pulse bg-navy/10" />
-        </div>
-      </div>
+      {/* nothing grey is drawn while loading: just the light-blue area, so pictures and text come in from scratch */}
+      <div aria-busy="true" className="relative -mt-[calc(var(--u)*92)] min-h-[70vh] bg-[#eef8ff]" />
     </>
   );
 }
