@@ -51,7 +51,7 @@ const PANELS: PanelItem[] = [
   },
 ];
 
-const STRIPES = 6;
+const STRIPES = 7;
 const runs = new WeakMap<Element, { kill: () => void }>();
 
 /** Hover: the full-colour photo rises in vertical stripes (right to left) over the veiled picture. */
@@ -67,10 +67,10 @@ async function playStripes(root: Element) {
   gsap.set(strips, { clipPath: "inset(100% 0 0 0)" });
   const tl = gsap.to(strips, {
     clipPath: "inset(0% 0 0 0)",
-    duration: 0.75,
-    delay: 0.15,
+    duration: 0.95,
+    delay: 0.2,
     ease: "power3.out",
-    stagger: { each: 0.07, from: "end" },
+    stagger: { each: 0.11, from: "end" },
   });
   runs.set(root, { kill: () => tl.kill() });
 }
@@ -114,7 +114,7 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
             }}
             onBlur={(e) => stopStripes(e.currentTarget)}
             aria-label={p.title}
-            className="group relative flex h-[360px] w-full flex-col overflow-hidden bg-navy text-white outline-none sm:h-[460px] lg:h-full"
+            className="group relative flex h-[360px] w-full flex-col overflow-hidden bg-[#0b4387] text-white outline-none sm:h-[460px] lg:h-full"
           >
             {p.img ? (
               <img
@@ -122,7 +122,7 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
                 alt=""
                 loading="lazy"
                 style={{ "--pos": p.pos ?? "50% 50%", "--pos-open": p.posOpen ?? "50% 100%" } as React.CSSProperties}
-                className="absolute inset-x-0 top-0 h-full w-full object-cover [object-position:var(--pos)] transition-[height,object-position,transform] duration-[1200ms] ease-out lg:group-hover:h-[calc(100%-var(--u)*164)] lg:group-hover:[object-position:var(--pos-open)] lg:group-focus-visible:h-[calc(100%-var(--u)*164)] lg:group-focus-visible:[object-position:var(--pos-open)]"
+                className="absolute inset-x-0 top-0 h-full w-full object-cover [object-position:var(--pos)] transition-[height,object-position,transform,opacity] duration-[1200ms] ease-out lg:group-hover:opacity-0 lg:group-focus-visible:opacity-0 lg:group-hover:h-[calc(100%-var(--u)*164)] lg:group-hover:[object-position:var(--pos-open)] lg:group-focus-visible:h-[calc(100%-var(--u)*164)] lg:group-focus-visible:[object-position:var(--pos-open)]"
               />
             ) : (
               <span aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,#082944,#0c448a)]" />
@@ -137,7 +137,7 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
                 className="pointer-events-none absolute inset-x-0 top-0 z-[1] hidden h-[calc(100%-var(--u)*164)] opacity-0 lg:flex"
               >
                 {Array.from({ length: STRIPES }, (_, i) => (
-                  <div key={i} data-pstripe className="relative h-full flex-1 overflow-hidden" style={{ clipPath: "inset(100% 0 0 0)" }}>
+                  <div key={i} data-pstripe className="relative -mr-px h-full flex-1 overflow-hidden pr-px" style={{ clipPath: "inset(100% 0 0 0)" }}>
                     <img
                       src={p.img}
                       alt=""
