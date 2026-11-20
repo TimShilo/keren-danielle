@@ -93,6 +93,9 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
   if (page.news.length) order.push("news");
 
 
+  // every page gets at least one dark blue area: the photos, or (when there are none) the videos, else the news
+  const darkKey: SectionKey | undefined = order.includes("gallery") ? "gallery" : order.includes("video") ? "video" : order.includes("news") ? "news" : undefined;
+
   const render: Record<SectionKey, () => React.ReactNode> = {
     more: () =>
       page.more ? (
@@ -229,8 +232,8 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
           ...order.map((key, i) => ({
             key,
             // fixed order on every page: intro, team/more, photos (always the dark curved wall), videos, news
-            edge: (key === "gallery" ? "sag" : undefined) as "sag" | undefined,
-            tone: (key === "gallery"
+            edge: (key === darkKey ? "sag" : undefined) as "sag" | undefined,
+            tone: (key === darkKey
               ? "dark"
               : (TONES as string[]).includes(page.tones[i + 1] ?? "")
                 ? (page.tones[i + 1] as Tone)
