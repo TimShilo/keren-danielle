@@ -55,7 +55,7 @@ export function PageSections({ sections }: { sections: SectionDef[] }) {
           );
         }
         return (
-          <Band {...common} tone={tone} curveTop={curve} edge={s.edge ?? "arch"}>
+          <Band {...common} tone={tone} curveTop={curve} edge={s.edge ?? (tone === "dark" ? "sag" : "arch")}>
             {s.children}
           </Band>
         );
