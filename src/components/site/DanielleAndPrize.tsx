@@ -1,4 +1,5 @@
 import { FoldHeading } from "./FoldHeading";
+import { RevealStripes } from "./RevealStripes";
 import { ScrollText } from "./ScrollText";
 
 interface Card {
@@ -60,13 +61,12 @@ export function DanielleAndPrize() {
               className="relative order-1 block w-full max-w-[311px] shrink-0 lg:absolute lg:left-[var(--l)] lg:top-[var(--t)] lg:order-none lg:w-[calc(var(--u)*311)] lg:max-w-none"
               style={{ "--l": u(c.photo.left), "--t": u(c.photo.top) } as React.CSSProperties}
             >
-              <img
+              <RevealStripes
                 src={c.img}
                 alt={c.alt}
-                loading="lazy"
-                className={`block aspect-[311/370] w-full object-cover transition-transform duration-500 ease-out group-hover:-translate-y-2 ${
-                  idx === 1 ? "shadow-[0_0_20px_5px_rgba(0,0,0,0.33)]" : ""
-                }`}
+                stripes={6}
+                aspect="311 / 370"
+                className="transition-transform duration-500 ease-out group-hover:-translate-y-2"
               />
               <img
                 src="/images/home/svg/bracket-yellow.svg"

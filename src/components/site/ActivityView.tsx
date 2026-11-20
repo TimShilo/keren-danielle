@@ -15,6 +15,7 @@ import { FxButton } from "./FxButton";
 import { GlowSection } from "./GlowSection";
 import { NewsCard, VideoCard } from "./HomeFeedSections";
 import { PageHero } from "./PageHero";
+import { RevealStripes } from "./RevealStripes";
 import { PageSections, TONES, type Tone } from "./PageSections";
 import { Eyebrow } from "./HomeHero";
 import { LoopCarousel } from "./LoopCarousel";
@@ -185,10 +186,15 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
                   />
                 </div>
                 {page.sideImage && (
-                  <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none">
-                    <img src={page.sideImage} alt={page.title} loading="lazy" className="aspect-[4/3] w-full rounded-[25px] object-cover shadow-[4px_4px_9px_rgba(0,0,0,0.25)]" />
-                    <img src="/images/home/svg/bracket-yellow.svg" alt="" aria-hidden className="pointer-events-none absolute -bottom-4 -right-4 hidden w-28 lg:block" />
-                  </div>
+                  <RevealStripes src={page.sideImage} alt={page.title} className="mx-auto w-full max-w-[560px] lg:max-w-none">
+                    <img
+                      data-deco
+                      src="/images/home/svg/bracket-yellow.svg"
+                      alt=""
+                      aria-hidden
+                      className="pointer-events-none absolute -bottom-4 -right-4 hidden w-28 translate-x-3 translate-y-3 lg:block"
+                    />
+                  </RevealStripes>
                 )}
               </div>
             ),
