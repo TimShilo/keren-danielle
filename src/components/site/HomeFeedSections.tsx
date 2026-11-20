@@ -60,8 +60,8 @@ export function NewsCard({ n }: { n: NewsCardData }) {
           <Icon className="size-5" style={{ color }} aria-hidden />
           {n.category}
         </p>
-        <h3 className="mt-2 line-clamp-2 text-[24px] font-bold leading-[1.3] text-[#1d2838]">{n.title}</h3>
-        <p className="mt-1 line-clamp-3 text-[18px] font-normal leading-[1.4] text-[#1d2838]">{n.excerpt}</p>
+        <h3 className="mt-2 line-clamp-2 text-[22px] font-bold leading-[1.3] text-[#1d2838]">{n.title}</h3>
+        <p className="mt-1 line-clamp-3 text-[20px] font-normal leading-[1.4] text-[#1d2838]">{n.excerpt}</p>
         <MoreArrow className="mt-auto pt-3" />
       </div>
     </a>
