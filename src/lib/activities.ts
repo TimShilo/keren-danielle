@@ -66,6 +66,7 @@ export const PAGE_OVERRIDES: Record<string, { image?: string; moreImage?: string
   "לזכר-דניאלי": { image: "/images/home/activities/page-lezecher.webp", logo: { src: "/images/home/logos/tikva.webp", alt: "תקות דניאלי" } },
   "מדרשת-דניאלי": { image: "/images/home/activities/page-midrasha.webp", logo: { src: "/images/home/logos/midrasha.webp", alt: "מדרשת דניאלי" } },
   "קרן-רעננה": { image: "/images/home/activities/page-raanana.webp", logo: { src: "/images/home/logos/raanana.webp", alt: "קרן רעננה" } },
+  "קליניקת-דניאלי": { moreImage: "/images/home/activities/more-clinic.webp" },
   "עשייה-והנצחה": { logo: { src: "/images/home/logos/hantzacha.webp", alt: "עשיה והנצחה" } },
 };
 
