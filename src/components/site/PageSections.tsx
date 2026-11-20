@@ -10,6 +10,8 @@ export interface SectionDef {
   /** background of this section; leave empty to take the next one in the default cycle */
   tone?: Tone | undefined;
   label?: string;
+  /** "sag": the dark photo wall whose top edge sags in the middle; it may also be the last section */
+  edge?: "sag" | undefined;
   className?: string;
   children: ReactNode;
 }
@@ -34,7 +36,7 @@ export function PageSections({ sections }: { sections: SectionDef[] }) {
     if (i === 0 && s.tone === "white") t = "white"; // an explicit choice still wins
     const prev = tones[i - 1];
     if (prev && prev === t) t = (CYCLE[(CYCLE.indexOf(t) + 1) % CYCLE.length] ?? "white") as Tone;
-    if (i === sections.length - 1 && t === "dark") t = prev === "glow" ? "white" : "glow";
+    if (i === sections.length - 1 && t === "dark" && !s.edge) t = prev === "glow" ? "white" : "glow";
     tones.push(t);
   });
 
@@ -53,7 +55,7 @@ export function PageSections({ sections }: { sections: SectionDef[] }) {
           );
         }
         return (
-          <Band {...common} tone={tone} curveTop={curve}>
+          <Band {...common} tone={tone} curveTop={curve} edge={s.edge ?? "arch"}>
             {s.children}
           </Band>
         );

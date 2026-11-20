@@ -10,6 +10,7 @@ import { curveTopStyle, EDGE_PAD, OVERLAP } from "./section-edges";
 export function Band({
   tone,
   curveTop = false,
+  edge = "arch",
   as: Tag = "section",
   className = "",
   children,
@@ -17,6 +18,7 @@ export function Band({
 }: {
   tone: "white" | "dark";
   curveTop?: boolean;
+  edge?: "arch" | "sag";
   as?: ElementType;
   className?: string;
   children: ReactNode;
@@ -25,7 +27,7 @@ export function Band({
   return (
     <Tag
       className={`relative isolate overflow-hidden ${bg} ${curveTop ? OVERLAP : ""} ${className}`}
-      style={curveTop ? curveTopStyle() : undefined}
+      style={curveTop ? curveTopStyle(edge) : undefined}
       {...rest}
     >
       {curveTop && <div aria-hidden className={EDGE_PAD} />}

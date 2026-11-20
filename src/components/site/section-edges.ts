@@ -11,10 +11,18 @@ const CURVE_MASK =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92" preserveAspectRatio="none"><path d="M0 89C0 89 1314.32 9.3 1920 89V92H0Z" fill="#000"/></svg>',
   );
 
-export function curveTopStyle(): CSSProperties {
+/** The opposite bend: the top edge sags in the middle (high at both corners), like the curved photo wall. */
+const SAG_MASK =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92" preserveAspectRatio="none"><path d="M0 0C640 84 1280 84 1920 0V92H0Z" fill="#000"/></svg>',
+  );
+
+export function curveTopStyle(edge: "arch" | "sag" = "arch"): CSSProperties {
+  const mask = edge === "sag" ? SAG_MASK : CURVE_MASK;
   return {
-    WebkitMaskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
-    maskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
+    WebkitMaskImage: `url("${mask}"), linear-gradient(#000, #000)`,
+    maskImage: `url("${mask}"), linear-gradient(#000, #000)`,
     WebkitMaskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92 + 2px)",
     maskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92 + 2px)",
     WebkitMaskPosition: "0 0, 0 calc(var(--u) * 92 - 2px)",

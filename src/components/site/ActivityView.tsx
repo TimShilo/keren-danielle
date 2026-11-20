@@ -91,9 +91,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
   if (page.layout.gallery && page.gallery.length) order.push("gallery"); // photos come before videos and news
   if (page.layout.video && page.videos.length) order.push("video");
   if (page.news.length) order.push("news");
-  // right after the intro, the gallery continues the same light-blue/yellow area instead of becoming a neighbour of the same colour
-  const galleryInIntro = order[0] === "gallery";
-  if (galleryInIntro) order.shift();
+
 
   const render: Record<SectionKey, () => React.ReactNode> = {
     more: () =>
@@ -225,15 +223,15 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
                   </RevealStripes>
                 )}
               </div>
-              {galleryInIntro && <div className="mt-[100px]">{render.gallery()}</div>}
               </>
             ),
           },
           ...order.map((key, i) => ({
             key,
-            // fixed order on every page: intro, team/more, photos (always light-blue + yellow), videos, news
+            // fixed order on every page: intro, team/more, photos (always the dark curved wall), videos, news
+            edge: (key === "gallery" ? "sag" : undefined) as "sag" | undefined,
             tone: (key === "gallery"
-              ? "glow"
+              ? "dark"
               : (TONES as string[]).includes(page.tones[i + 1] ?? "")
                 ? (page.tones[i + 1] as Tone)
                 : key === "news"
