@@ -56,7 +56,7 @@ function GalleryCard({ g, pageTitle }: { g: GalleryItem; pageTitle: string }) {
 
 function TeamCard({ m }: { m: TeamMember }) {
   return (
-    <li className={`flex flex-col items-center rounded-[25px] bg-white p-6 text-center text-navy ${CARD}`}>
+    <li className={`flex flex-col items-center rounded-[25px] bg-white p-6 text-center text-navy transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-2 hover:shadow-[4px_12px_22px_rgba(0,0,0,0.25)] ${CARD}`}>
       {m.image ? (
         <img src={m.image} alt="" loading="lazy" className="size-32 rounded-full object-cover" />
       ) : (
