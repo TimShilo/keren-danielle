@@ -16,6 +16,7 @@ import { GlowSection } from "./GlowSection";
 import { NewsCard, VideoCard } from "./HomeFeedSections";
 import { PageHero } from "./PageHero";
 import { RevealStripes } from "./RevealStripes";
+import { RichScrollText } from "./RichScrollText";
 import { PageSections, TONES, type Tone } from "./PageSections";
 import { Eyebrow } from "./HomeHero";
 import { LoopCarousel } from "./LoopCarousel";
@@ -95,9 +96,11 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
       page.more ? (
         <>
           <SectionHead eyebrow="עוד על הפעילות" title={page.more.title || "עוד"} center={false} />
-          <div
+          <RichScrollText
             className="rte-content mt-8 max-w-[1200px] text-lg leading-[1.5] lg:mt-[calc(var(--u)*40)] lg:text-[calc(var(--u)*24)] [&_ol]:columns-1 [&_ol]:gap-x-12 sm:[&_ol]:columns-2 lg:[&_ol]:columns-3 [&_li]:break-inside-avoid [&_li]:py-0.5"
-            dangerouslySetInnerHTML={{ __html: page.more.html }}
+            html={page.more.html}
+            start="top 85%"
+            end="bottom 60%"
           />
         </>
       ) : null,
@@ -180,9 +183,9 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
                   <h2 className={H2}>
                     <FoldHeading text={title} />
                   </h2>
-                  <div
+                  <RichScrollText
                     className="rte-content mt-6 text-lg leading-[1.5] text-navy lg:mt-[calc(var(--u)*32)] lg:text-[calc(var(--u)*24)] lg:leading-[1.45]"
-                    dangerouslySetInnerHTML={{ __html: page.bodyHtml || (page.excerpt ? `<p>${page.excerpt}</p>` : "") }}
+                    html={page.bodyHtml || (page.excerpt ? `<p>${page.excerpt}</p>` : "")}
                   />
                 </div>
                 {page.sideImage && (
@@ -229,9 +232,9 @@ export function MainActivityView({ page }: { page: MainActivityPage }) {
             <FoldHeading text={page.title} />
           </h2>
           {page.descriptionHtml ? (
-            <div
+            <RichScrollText
               className="rte-content mt-6 max-w-[900px] text-lg leading-[1.5] text-navy lg:mt-[calc(var(--u)*28)] lg:text-[calc(var(--u)*24)]"
-              dangerouslySetInnerHTML={{ __html: page.descriptionHtml }}
+              html={page.descriptionHtml}
             />
           ) : (
             <ScrollText as="p" text="הפעילויות של קרן דניאלי בתחום זה:" className="mt-6 text-lg text-navy lg:mt-[calc(var(--u)*28)] lg:text-[calc(var(--u)*24)]" />
