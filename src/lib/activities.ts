@@ -36,7 +36,7 @@ export interface SubActivityPage {
   logo: { src: string; alt: string } | null;
   layout: { gallery: boolean; video: boolean; posts: boolean; team: boolean };
   /** optional second block of the page ("more"): its own heading and rich text */
-  more: { title: string; html: string } | null;
+  more: { title: string; html: string; image?: string | undefined } | null;
   /** optional per-page choice of the body backgrounds, in order: "glow" | "white" | "dark" */
   tones: string[];
   gallery: GalleryItem[];
@@ -58,7 +58,7 @@ export type ActivityPage = SubActivityPage | MainActivityPage;
 type Row = Record<string, unknown>;
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 /** Hand-picked picture (and optional small partner logo under the title) for specific pages, by page slug. */
-export const PAGE_OVERRIDES: Record<string, { image?: string; logo?: { src: string; alt: string } }> = {
+export const PAGE_OVERRIDES: Record<string, { image?: string; moreImage?: string; logo?: { src: string; alt: string } }> = {
   "לב-דניאלי": { image: "/images/home/activities/page-lev-daniel.webp", logo: { src: "/images/home/logos/bonei-olam.webp", alt: "בוני עולם" } },
   "פרס-דניאלי": { image: "/images/home/activities/page-prize.webp" },
   "בשביל-דניאלי": { image: "/images/home/activities/page-bishvil.webp", logo: { src: "/images/home/logos/bishvil.webp", alt: "בשביל דניאלי" } },
@@ -184,7 +184,7 @@ export async function fetchActivityPage(slug: string): Promise<ActivityPage | nu
       heroImage: extraMap.get(str(d["header_media_id"])) ?? featured,
       logo: PAGE_OVERRIDES[slug]?.logo ?? null,
       more: moreHtml
-        ? { title: `${str(d["section_title_more"])} ${str(d["handwriting_title_more"])}`.trim(), html: cleanBody(moreHtml) }
+        ? { title: `${str(d["section_title_more"])} ${str(d["handwriting_title_more"])}`.trim(), html: cleanBody(moreHtml), image: PAGE_OVERRIDES[slug]?.moreImage }
         : null,
       tones: Array.isArray(d["section_tones"]) ? (d["section_tones"] as unknown[]).map(String) : [],
       layout: { gallery: on("gallery_switcher"), video: on("video_switcher"), posts: on("posts_switcher"), team: on("team") },

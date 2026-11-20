@@ -89,19 +89,24 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
   if (page.layout.gallery && page.gallery.length) order.push("gallery");
   if (page.layout.video && page.videos.length) order.push("video");
   if (page.layout.team && page.team.length) order.push("team");
-  if (page.layout.posts && page.news.length) order.push("news");
+  if (page.news.length) order.push("news");
 
   const render: Record<SectionKey, () => React.ReactNode> = {
     more: () =>
       page.more ? (
         <>
           <SectionHead eyebrow="עוד על הפעילות" title={page.more.title || "עוד"} center={false} />
-          <RichScrollText
-            className="rte-content mt-8 max-w-[1200px] text-lg leading-[1.5] lg:mt-[calc(var(--u)*40)] lg:text-[calc(var(--u)*24)] [&_ol]:columns-1 [&_ol]:gap-x-12 sm:[&_ol]:columns-2 lg:[&_ol]:columns-3 [&_li]:break-inside-avoid [&_li]:py-0.5"
-            html={page.more.html}
-            start="top 85%"
-            end="bottom 60%"
-          />
+          <div className={page.more.image ? "mt-8 grid items-start gap-8 lg:mt-[calc(var(--u)*40)] lg:grid-cols-[calc(var(--u)*420)_1fr] lg:gap-[calc(var(--u)*60)]" : ""}>
+            {page.more.image && (
+              <RevealStripes src={page.more.image} alt={page.more.title} className="mx-auto w-full max-w-[420px] lg:max-w-none" />
+            )}
+            <RichScrollText
+              className={`rte-content max-w-[1200px] text-lg leading-[1.5] lg:text-[calc(var(--u)*24)] [&_ol]:columns-1 [&_ol]:gap-x-12 sm:[&_ol]:columns-2 lg:[&_ol]:columns-3 [&_li]:break-inside-avoid [&_li]:py-0.5 ${page.more.image ? "" : "mt-8 lg:mt-[calc(var(--u)*40)]"}`}
+              html={page.more.html}
+              start="top 85%"
+              end="bottom 60%"
+            />
+          </div>
         </>
       ) : null,
     gallery: () => (
