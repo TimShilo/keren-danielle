@@ -33,6 +33,7 @@ export interface SubActivityPage {
   headerImage: string;
   sideImage: string;
   heroImage: string;
+  logo: { src: string; alt: string } | null;
   layout: { gallery: boolean; video: boolean; posts: boolean; team: boolean };
   /** optional second block of the page ("more"): its own heading and rich text */
   more: { title: string; html: string } | null;
@@ -56,6 +57,11 @@ export type ActivityPage = SubActivityPage | MainActivityPage;
 
 type Row = Record<string, unknown>;
 const str = (v: unknown) => (typeof v === "string" ? v : "");
+/** Hand-picked picture (and optional small partner logo under the title) for specific pages, by page slug. */
+export const PAGE_OVERRIDES: Record<string, { image?: string; logo?: { src: string; alt: string } }> = {
+  "לב-דניאלי": { image: "/images/home/activities/page-lev-daniel.webp" },
+};
+
 export const activityHref = (slug: string) => `/activities/${encodeURIComponent(slug)}`;
 
 function cleanBody(html: string) {
@@ -166,8 +172,9 @@ export async function fetchActivityPage(slug: string): Promise<ActivityPage | nu
       main: mainCat ? { name: mainCat.name_he, slug: str(mainCat["slug"]), href: activityHref(str(mainCat["slug"])) } : null,
       sub: { name: cat?.name_he ?? str(item["title"]) },
       headerImage: extraMap.get(str(d["header_media_id"])) ?? "",
-      sideImage: extraMap.get(str(d["side_media_id"])) ?? featured,
+      sideImage: PAGE_OVERRIDES[slug]?.image ?? extraMap.get(str(d["side_media_id"])) ?? featured,
       heroImage: extraMap.get(str(d["header_media_id"])) ?? featured,
+      logo: PAGE_OVERRIDES[slug]?.logo ?? null,
       more: moreHtml
         ? { title: `${str(d["section_title_more"])} ${str(d["handwriting_title_more"])}`.trim(), html: cleanBody(moreHtml) }
         : null,

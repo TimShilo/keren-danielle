@@ -183,6 +183,9 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
                   <h2 className={H2}>
                     <FoldHeading text={title} />
                   </h2>
+                  {page.logo && (
+                    <img src={page.logo.src} alt={page.logo.alt} loading="lazy" className="mt-4 h-14 w-auto object-contain lg:mt-[calc(var(--u)*18)] lg:h-[calc(var(--u)*72)]" />
+                  )}
                   <RichScrollText
                     className="rte-content mt-6 text-lg leading-[1.5] text-navy lg:mt-[calc(var(--u)*32)] lg:text-[calc(var(--u)*24)] lg:leading-[1.45]"
                     html={page.bodyHtml || (page.excerpt ? `<p>${page.excerpt}</p>` : "")}
