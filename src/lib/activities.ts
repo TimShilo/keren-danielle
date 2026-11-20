@@ -59,8 +59,14 @@ type Row = Record<string, unknown>;
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 /** Hand-picked picture (and optional small partner logo under the title) for specific pages, by page slug. */
 export const PAGE_OVERRIDES: Record<string, { image?: string; logo?: { src: string; alt: string } }> = {
-  "לב-דניאלי": { image: "/images/home/activities/page-lev-daniel.webp" },
+  "לב-דניאלי": { image: "/images/home/activities/page-lev-daniel.webp", logo: { src: "/images/home/logos/bonei-olam.webp", alt: "בוני עולם" } },
   "פרס-דניאלי": { image: "/images/home/activities/page-prize.webp" },
+  "בשביל-דניאלי": { image: "/images/home/activities/page-bishvil.webp", logo: { src: "/images/home/logos/bishvil.webp", alt: "בשביל דניאלי" } },
+  "בת-מלך": { image: "/images/home/activities/page-bat-melech.webp", logo: { src: "/images/home/logos/bat-melech.webp", alt: "בת מלך" } },
+  "לזכר-דניאלי": { image: "/images/home/activities/page-lezecher.webp", logo: { src: "/images/home/logos/tikva.webp", alt: "תקות דניאלי" } },
+  "מדרשת-דניאלי": { image: "/images/home/activities/page-midrasha.webp", logo: { src: "/images/home/logos/midrasha.webp", alt: "מדרשת דניאלי" } },
+  "קרן-רעננה": { image: "/images/home/activities/page-raanana.webp", logo: { src: "/images/home/logos/raanana.webp", alt: "קרן רעננה" } },
+  "עשייה-והנצחה": { logo: { src: "/images/home/logos/hantzacha.webp", alt: "עשיה והנצחה" } },
 };
 
 export const activityHref = (slug: string) => `/activities/${encodeURIComponent(slug)}`;
