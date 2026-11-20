@@ -19,6 +19,7 @@ import { RevealStripes } from "./RevealStripes";
 import { RichScrollText } from "./RichScrollText";
 import { PageSections, TONES, type Tone } from "./PageSections";
 import { Eyebrow } from "./HomeHero";
+import { CurvedGallery } from "./CurvedGallery";
 import { LoopCarousel } from "./LoopCarousel";
 import { ScrollText } from "./ScrollText";
 import { VideoModal } from "./VideoModal";
@@ -87,9 +88,9 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
   const order: SectionKey[] = [];
   if (page.layout.team && page.team.length) order.push("team"); // the team comes right after the intro
   if (page.more) order.push("more");
-  if (page.layout.gallery && page.gallery.length) order.push("gallery");
   if (page.layout.video && page.videos.length) order.push("video");
   if (page.news.length) order.push("news");
+  if (page.layout.gallery && page.gallery.length) order.push("gallery"); // the gallery sits on the light-blue/yellow background
 
   const render: Record<SectionKey, () => React.ReactNode> = {
     more: () =>
@@ -113,15 +114,21 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
       <>
         <SectionHead eyebrow="גלריה" title="תמונות" />
         <div className="mt-6 lg:mt-[calc(var(--u)*30)]">
-          <LoopCarousel
+          <CurvedGallery
             label="גלריית תמונות"
-            direction="right"
-            items={page.gallery.map((g) => (
-              <div key={g.id} className="h-full w-full">
-                <GalleryCard g={g} pageTitle={page.title} />
-              </div>
-            ))}
-            itemClassName={`${ITEM} flex`}
+            photos={page.gallery.map((g) => ({ src: g.image, alt: g.title || page.title }))}
+            fallback={
+              <LoopCarousel
+                label="גלריית תמונות"
+                direction="right"
+                items={page.gallery.map((g) => (
+                  <div key={g.id} className="h-full w-full">
+                    <GalleryCard g={g} pageTitle={page.title} />
+                  </div>
+                ))}
+                itemClassName={`${ITEM} flex`}
+              />
+            }
           />
         </div>
       </>
@@ -218,7 +225,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
           },
           ...order.map((key, i) => ({
             key,
-            tone: (TONES as string[]).includes(page.tones[i + 1] ?? "") ? (page.tones[i + 1] as Tone) : undefined,
+            tone: (key === "gallery" ? "glow" : (TONES as string[]).includes(page.tones[i + 1] ?? "") ? (page.tones[i + 1] as Tone) : undefined) as Tone | undefined,
             children: render[key](),
           })),
         ]}
