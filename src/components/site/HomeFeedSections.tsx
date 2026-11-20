@@ -48,7 +48,13 @@ export function NewsCard({ n }: { n: NewsCardData }) {
   const { Icon, color } = CHIP[n.icon];
   return (
     <a href={n.href} className={`group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy ${CARD_SHADOW}`}>
-      <img src={n.image} alt="" loading="lazy" className="aspect-[414/267] w-full object-cover" />
+      {n.image ? (
+        <img src={n.image} alt="" loading="lazy" className="aspect-[414/267] w-full object-cover" />
+      ) : (
+        <span aria-hidden className="grid aspect-[414/267] w-full place-items-center bg-[#eef8ff]">
+          <Icon className="size-14" style={{ color }} />
+        </span>
+      )}
       <div className="flex flex-1 flex-col p-6">
         <p className="flex items-center gap-2 text-lg leading-[1.3] text-[#1d2838]">
           <Icon className="size-5" style={{ color }} aria-hidden />

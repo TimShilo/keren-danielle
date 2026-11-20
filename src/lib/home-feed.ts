@@ -50,7 +50,12 @@ export const ICONS: Record<string, NewsCardData["icon"]> = {
 };
 
 export const ytId = (url: string) => /(?:v=|youtu\.be\/|embed\/)([\w-]{11})/.exec(url)?.[1] ?? "";
-export const strip = (html: string) => html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+const NAMED: Record<string, string> = { nbsp: " ", amp: "&", quot: '"', lt: "<", gt: ">", apos: "'" };
+const decode = (t: string) =>
+  t.replace(/&(?:#(\d+)|#x([0-9a-f]+)|([a-z]+));/gi, (m, d?: string, h?: string, n?: string) =>
+    d ? String.fromCodePoint(+d) : h ? String.fromCodePoint(parseInt(h, 16)) : (NAMED[(n ?? "").toLowerCase()] ?? m),
+  );
+export const strip = (html: string) => decode(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 
 export async function mediaMap(ids: string[]) {
   if (!ids.length) return new Map<string, string>();

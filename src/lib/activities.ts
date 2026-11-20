@@ -80,6 +80,9 @@ const pathUrl = (m: unknown) => {
   return path ? mediaUrl(path) : "";
 };
 
+/** Card photo fallback: the first picture inside the post text. */
+const firstBodyImage = (html: string) => /<img[^>]+src="([^"]+)"/i.exec(html)?.[1] ?? "";
+
 /** News of one sub-activity: posts filed under it + posts linked to it as a secondary category (2 parallel queries). */
 async function loadNews(catId: string, cats: Cat[]): Promise<NewsCardData[]> {
   const [own, linked] = await Promise.all([
@@ -89,17 +92,15 @@ async function loadNews(catId: string, cats: Cat[]): Promise<NewsCardData[]> {
       .eq("type", "news")
       .eq("status", "published")
       .eq("category_id", catId)
-      .not("featured_media_id", "is", null)
       .order("item_date", { ascending: false, nullsFirst: false })
-      .limit(12),
+      .limit(60),
     supabase
       .from("content_category_links")
       .select(`content_items!inner(${NEWS_COLS},type,status,featured_media_id)`)
       .eq("category_id", catId)
       .eq("content_items.type", "news")
       .eq("content_items.status", "published")
-      .not("content_items.featured_media_id", "is", null)
-      .limit(12),
+      .limit(60),
   ]);
   const rows = new Map<string, Row>();
   for (const r of (own.data ?? []) as Row[]) rows.set(str(r["id"]), r);
@@ -114,7 +115,7 @@ async function loadNews(catId: string, cats: Cat[]): Promise<NewsCardData[]> {
   };
   return [...rows.values()]
     .sort((a, b) => str(b["item_date"]).localeCompare(str(a["item_date"])))
-    .slice(0, 12)
+    .slice(0, 60)
     .map((r) => {
       const category = mainName(str(r["category_id"]) || null);
       return {
@@ -123,7 +124,7 @@ async function loadNews(catId: string, cats: Cat[]): Promise<NewsCardData[]> {
         excerpt: (str(r["excerpt"]) || strip(str(r["body_html"]))).slice(0, 260),
         category,
         icon: ICONS[category] ?? "tradition",
-        image: pathUrl(r["featured"]),
+        image: pathUrl(r["featured"]) || firstBodyImage(str(r["body_html"])),
         href: `/news/${str(r["slug"]) || str(r["id"])}`,
       };
     });

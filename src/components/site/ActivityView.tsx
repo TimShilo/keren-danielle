@@ -150,13 +150,19 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
     news: () => (
       <>
         <SectionHead eyebrow="מה חדש?" title="חדשות ועדכונים" />
-        <ul className="mx-auto mt-10 grid max-w-[1500px] grid-cols-1 gap-6 px-[5%] sm:grid-cols-2 lg:mt-[calc(var(--u)*50)] lg:grid-cols-3">
-          {page.news.slice(0, 3).map((n) => (
-            <li key={n.id} className="flex">
-              <NewsCard n={n} />
-            </li>
-          ))}
-        </ul>
+        <div className="mt-10 lg:mt-[calc(var(--u)*50)]">
+          <LoopCarousel
+            label="חדשות ועדכונים"
+            direction="left"
+            speed={30}
+            items={page.news.map((n) => (
+              <div key={n.id} className="h-full w-full">
+                <NewsCard n={n} />
+              </div>
+            ))}
+            itemClassName={`${ITEM} flex`}
+          />
+        </div>
         <p className="mt-10 flex justify-center text-center">
           <FxButton href={page.newsHref} variant="yellow" className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
             לכל החדשות והעדכונים ←
