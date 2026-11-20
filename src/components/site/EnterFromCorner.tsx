@@ -29,18 +29,20 @@ export function EnterFromCorner({
       const tl = gsap.timeline({ paused: true });
       tl.fromTo(
         el,
-        { xPercent: -28, yPercent: 32, opacity: 0, scale: 0.94 },
-        { xPercent: 0, yPercent: 0, opacity: 1, scale: 1, duration: 1.3, delay, ease: "power3.out" },
+        { xPercent: -20, yPercent: 24, opacity: 0, scale: 0.96 },
+        { xPercent: 0, yPercent: 0, opacity: 1, scale: 1, duration: 2, delay: delay + 0.1, ease: "power2.out" },
       );
       if (when === "mount") {
         tl.play();
         kill = () => tl.kill();
       } else {
         // plays when it comes into view, flies back out when it leaves, plays again on return
+        // the trigger is the (static) section around the picture, never the picture itself: its own
+        // transform would move the trigger and make the animation flip back and forth
         const st = ScrollTrigger.create({
-          trigger: el,
-          start: "top 92%",
-          end: "bottom 6%",
+          trigger: el.parentElement ?? el,
+          start: "top 85%",
+          end: "bottom 8%",
           onEnter: () => tl.play(),
           onEnterBack: () => tl.play(),
           onLeave: () => tl.reverse(),
