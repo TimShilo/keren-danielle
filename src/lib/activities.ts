@@ -246,3 +246,37 @@ export function useActivitiesOverview() {
     },
   });
 }
+
+export interface MegaMenuGroup {
+  name: string;
+  href: string;
+  subs: { name: string; href: string }[];
+}
+
+/** Menu data: the four main activities with their sub-activities (links go to the sub-activity pages). */
+export function useMegaMenu() {
+  return useQuery({
+    queryKey: ["mega-menu"],
+    staleTime: 10 * 60_000,
+    queryFn: async (): Promise<MegaMenuGroup[]> => {
+      const [catsRes, pagesRes] = await Promise.all([
+        supabase.from("categories").select("id,name_he,slug,parent_id,sort_order").order("sort_order"),
+        supabase.from("content_items").select("slug,category_id").eq("type", "activity").eq("status", "published"),
+      ]);
+      const cats = (catsRes.data ?? []) as (Pick<Category, "id" | "name_he" | "parent_id"> & Row)[];
+      const pages = (pagesRes.data ?? []) as Row[];
+      return cats
+        .filter((c) => !c.parent_id)
+        .map((m) => ({
+          name: m.name_he,
+          href: activityHref(str(m["slug"])),
+          subs: cats
+            .filter((c) => c.parent_id === m.id)
+            .map((c) => {
+              const page = pages.find((p) => p["category_id"] === c.id);
+              return { name: c.name_he, href: page ? activityHref(str(page["slug"])) : activityHref(str(m["slug"])) };
+            }),
+        }));
+    },
+  });
+}
