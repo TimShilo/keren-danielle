@@ -85,10 +85,10 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
 
   // present sections, in order; tones alternate glow / white so two equal areas never touch
   const order: SectionKey[] = [];
+  if (page.layout.team && page.team.length) order.push("team"); // the team comes right after the intro
   if (page.more) order.push("more");
   if (page.layout.gallery && page.gallery.length) order.push("gallery");
   if (page.layout.video && page.videos.length) order.push("video");
-  if (page.layout.team && page.team.length) order.push("team");
   if (page.news.length) order.push("news");
 
   const render: Record<SectionKey, () => React.ReactNode> = {
