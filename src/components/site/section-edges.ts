@@ -15,10 +15,10 @@ export function curveTopStyle(): CSSProperties {
   return {
     WebkitMaskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
     maskImage: `url("${CURVE_MASK}"), linear-gradient(#000, #000)`,
-    WebkitMaskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92)",
-    maskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92)",
-    WebkitMaskPosition: "0 0, 0 calc(var(--u) * 92)",
-    maskPosition: "0 0, 0 calc(var(--u) * 92)",
+    WebkitMaskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92 + 2px)",
+    maskSize: "100% calc(var(--u) * 92), 100% calc(100% - var(--u) * 92 + 2px)",
+    WebkitMaskPosition: "0 0, 0 calc(var(--u) * 92 - 2px)",
+    maskPosition: "0 0, 0 calc(var(--u) * 92 - 2px)",
     WebkitMaskRepeat: "no-repeat",
     maskRepeat: "no-repeat",
   };

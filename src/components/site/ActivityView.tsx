@@ -231,7 +231,14 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
           },
           ...order.map((key, i) => ({
             key,
-            tone: (key === "gallery" ? "glow" : (TONES as string[]).includes(page.tones[i + 1] ?? "") ? (page.tones[i + 1] as Tone) : undefined) as Tone | undefined,
+            // fixed order on every page: intro, team/more, photos (always light-blue + yellow), videos, news
+            tone: (key === "gallery"
+              ? "glow"
+              : (TONES as string[]).includes(page.tones[i + 1] ?? "")
+                ? (page.tones[i + 1] as Tone)
+                : key === "news"
+                  ? "glow"
+                  : "white") as Tone,
             children: render[key](),
           })),
         ]}
