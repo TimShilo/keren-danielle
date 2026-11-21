@@ -145,6 +145,13 @@
 
 /* Admin area theme (Keren Danielle management system) */
 .admin-theme {
+  /* management system: smaller type (0.875rem base) */
+  font-size: 0.875rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.5;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.375rem;
   --background: oklch(0.955 0.014 80);
   --foreground: oklch(0.24 0.04 262);
   --card: oklch(1 0 0);
@@ -163,6 +170,10 @@
   --sidebar: oklch(0.26 0.04 262);
   --sidebar-foreground: oklch(0.95 0.01 262);
   --sidebar-border: oklch(1 0 0 / 12%);
+}
+
+.admin-theme .rte-content {
+  font-size: 0.875rem;
 }
 
 /* Rich text editor / article body */

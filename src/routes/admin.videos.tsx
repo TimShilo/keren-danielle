@@ -17,7 +17,7 @@ interface VideoRowData {
   show_on_home: boolean;
   home_order: number;
   content_id: string;
-  content_items: { title: string; type: string } | null;
+  content_items: { title: string; type: string; category_id: string | null } | null;
 }
 
 function VideoLibrary() {
@@ -27,6 +27,9 @@ function VideoLibrary() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [dest, setDest] = useState("");
   const [onlyHome, setOnlyHome] = useState(false);
+  const [mainFilter, setMainFilter] = useState("");
+  const [subFilter, setSubFilter] = useState("");
+  const [sort, setSort] = useState<"newest" | "main" | "sub" | "title">("newest");
 
   const videos = useQuery({
     queryKey: ["video-library"],
@@ -34,7 +37,7 @@ function VideoLibrary() {
       const { data, error } = await supabase
         .from("content_videos")
         .select(
-          "id,url,title,sort_order,show_on_home,home_order,content_id,content_items(title,type)",
+          "id,url,title,sort_order,show_on_home,home_order,content_id,content_items(title,type,category_id)",
         )
         .order("created_at", { ascending: false })
         .limit(1000);
@@ -55,14 +58,42 @@ function VideoLibrary() {
     },
   });
 
+  const cats = useQuery({
+    queryKey: ["video-categories"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("categories")
+        .select("id,name_he,parent_id,sort_order")
+        .order("sort_order");
+      return (data ?? []) as { id: string; name_he: string; parent_id: string | null; sort_order: number }[];
+    },
+  });
+  const mains = (cats.data ?? []).filter((c) => !c.parent_id);
+  const subs = (cats.data ?? []).filter((c) => c.parent_id && (!mainFilter || c.parent_id === mainFilter));
+  // which main category / sub-activity a video belongs to (through the page it sits on)
+  const where = (v: VideoRowData) => {
+    const cid = v.content_items?.category_id ?? null;
+    const sub = (cats.data ?? []).find((c) => c.id === cid && c.parent_id) ?? null;
+    const main = (cats.data ?? []).find((c) => c.id === (sub ? sub.parent_id : cid)) ?? null;
+    return { main, sub };
+  };
+
   const rows = useMemo(() => {
     let r = videos.data ?? [];
     const q = search.trim();
     if (q) r = r.filter((v) => (v.title ?? "").includes(q) || v.url.includes(q));
     if (pageFilter) r = r.filter((v) => v.content_id === pageFilter);
+    if (mainFilter) r = r.filter((v) => where(v).main?.id === mainFilter);
+    if (subFilter) r = r.filter((v) => where(v).sub?.id === subFilter);
     if (onlyHome) r = r.filter((v) => v.show_on_home);
-    return onlyHome ? [...r].sort((a, b) => a.home_order - b.home_order) : r;
-  }, [videos.data, search, pageFilter, onlyHome]);
+    if (onlyHome) return [...r].sort((a, b) => a.home_order - b.home_order);
+    const key = (v: VideoRowData) => {
+      const w = where(v);
+      return sort === "main" ? (w.main?.name_he ?? "ת") : sort === "sub" ? (w.sub?.name_he ?? "ת") : (v.title ?? "");
+    };
+    return sort === "newest" ? r : [...r].sort((a, b) => key(a).localeCompare(key(b), "he"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videos.data, cats.data, search, pageFilter, onlyHome, mainFilter, subFilter, sort]);
   const visibleSelected = rows.filter((r) => selected.has(r.id)).map((r) => r.id);
 
   const pagesWithVideos = useMemo(() => {
@@ -166,6 +197,46 @@ function VideoLibrary() {
             </option>
           ))}
         </select>
+        <select
+          value={mainFilter}
+          onChange={(e) => {
+            setMainFilter(e.target.value);
+            setSubFilter("");
+          }}
+          className={`${inputClass} !w-auto`}
+          aria-label="קטגוריה ראשית"
+        >
+          <option value="">כל הקטגוריות</option>
+          {mains.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name_he}
+            </option>
+          ))}
+        </select>
+        <select
+          value={subFilter}
+          onChange={(e) => setSubFilter(e.target.value)}
+          className={`${inputClass} !w-auto`}
+          aria-label="תת-פעילות"
+        >
+          <option value="">כל התתי-פעילויות</option>
+          {subs.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name_he}
+            </option>
+          ))}
+        </select>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as typeof sort)}
+          className={`${inputClass} !w-auto`}
+          aria-label="מיון"
+        >
+          <option value="newest">מיון: החדשים קודם</option>
+          <option value="main">מיון: לפי קטגוריה</option>
+          <option value="sub">מיון: לפי תת-פעילות</option>
+          <option value="title">מיון: לפי כותרת</option>
+        </select>
         <label className="flex cursor-pointer items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -226,6 +297,7 @@ function VideoLibrary() {
               <th className="w-28 px-2 py-3" />
               <th className="px-4 py-3 text-start font-semibold">כותרת</th>
               <th className="px-4 py-3 text-start font-semibold">עמוד</th>
+              <th className="px-4 py-3 text-start font-semibold">קטגוריה / תת-פעילות</th>
               <th className="px-4 py-3 text-start font-semibold">בעמוד הראשי</th>
               <th className="px-4 py-3 text-start font-semibold">העברה</th>
             </tr>
@@ -233,7 +305,7 @@ function VideoLibrary() {
           <tbody>
             {videos.isLoading && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                   טוען…
                 </td>
               </tr>
@@ -283,6 +355,19 @@ function VideoLibrary() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {v.content_items?.title ?? "—"}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {(() => {
+                      const w = where(v);
+                      return w.main || w.sub ? (
+                        <>
+                          {w.main?.name_he}
+                          {w.sub ? <span className="block text-xs">{w.sub.name_he}</span> : null}
+                        </>
+                      ) : (
+                        "—"
+                      );
+                    })()}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
                     <div className="flex items-center gap-2">
