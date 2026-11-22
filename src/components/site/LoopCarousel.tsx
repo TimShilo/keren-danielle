@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { loadGsap } from "@/lib/gsap";
 import { FxIconButton } from "./FxButton";
 
@@ -24,6 +24,8 @@ const COPIES = 4;
 export function LoopCarousel({ items, direction, speed = 36, label, itemClassName = "" }: Props) {
   const viewport = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLUListElement>(null);
+  // when everything fits on the screen at once there is nothing to loop: show each item once, standing still
+  const [fits, setFits] = useState(false);
   const st = useRef({ x: 0, loop: 1, step: 300, paused: false, visible: false, tween: null as null | { kill: () => void } });
 
   const wrap = useCallback(() => {
@@ -41,21 +43,31 @@ export function LoopCarousel({ items, direction, speed = 36, label, itemClassNam
 
   const measure = useCallback(() => {
     const t = track.current;
-    if (!t) return;
+    const vp = viewport.current;
+    if (!t || !vp) return;
     const kids = Array.from(t.children) as HTMLElement[];
     const per = items.length;
+    if (fits) {
+      const w = kids.reduce((a, k) => a + k.offsetWidth, 0);
+      if (w > vp.clientWidth + 1) setFits(false);
+      return;
+    }
     if (kids.length < per + 1) return;
     const first = kids[0]!;
     const next = kids[per]!;
     // one copy = distance between item 0 and item 0 of the next copy (so the gap is included, RTL-safe)
     const loop = Math.abs(next.offsetLeft - first.offsetLeft);
     const step = Math.abs((kids[1]?.offsetLeft ?? 0) - first.offsetLeft) || 300;
+    if (loop <= vp.clientWidth + 1) {
+      setFits(true);
+      return;
+    }
     st.current.loop = loop || 1;
     st.current.step = step;
     if (!st.current.x) st.current.x = -loop / 2;
     wrap();
     apply();
-  }, [items.length, wrap, apply]);
+  }, [items.length, wrap, apply, fits]);
 
   useEffect(() => {
     const v = viewport.current;
@@ -66,6 +78,9 @@ export function LoopCarousel({ items, direction, speed = 36, label, itemClassNam
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(v);
+    if (fits) {
+      return () => ro.disconnect();
+    }
 
     let raf = 0;
     let last = performance.now();
@@ -114,6 +129,22 @@ export function LoopCarousel({ items, direction, speed = 36, label, itemClassNam
       },
     });
   };
+
+  if (fits) {
+    return (
+      <div role="region" aria-roledescription="קרוסלה" aria-label={label} className="relative">
+        <div ref={viewport} className="overflow-hidden py-6" dir="rtl">
+          <ul ref={track} className="flex justify-center">
+            {items.map((it, i) => (
+              <li key={i} dir="rtl" className={`shrink-0 ${itemClassName}`}>
+                {it}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  }
 
   // LTR track, items reversed: the first item sits on the right, as in a right-to-left page
   const ordered = [...items].reverse();

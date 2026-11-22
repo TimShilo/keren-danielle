@@ -144,6 +144,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
     let lastX = 0;
     let moved = 0;
     let offset = 0;
+    let still = false; // few photos: they all fit, so they stand still, centred, each shown once
     let vel = 0;
     let raf = 0;
     let last = performance.now();
@@ -282,7 +283,8 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       gl.viewport(0, 0, cv.width, cv.height);
       buildTextures();
       const per = Math.max(1, count);
-      const copies = Math.max(1, Math.ceil((cw + step * 3) / (step * per)));
+      still = count > 0 && count * step - (step - cardW) <= cw;
+      const copies = still ? 1 : Math.max(1, Math.ceil((cw + step * 3) / (step * per)));
       total = step * per * copies;
     };
 
@@ -290,10 +292,10 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       if (visible && count && total) {
-        const target = reduced ? 0 : (dragging ? 0 : hover ? 42 * 0.15 : 42);
+        const target = reduced || still ? 0 : (dragging ? 0 : hover ? 42 * 0.15 : 42);
         // pointer drag leaves a little inertia in `vel`
         vel += (target - vel) * Math.min(1, dt * 3);
-        offset += vel * dt;
+        if (!still) offset += vel * dt;
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.uniform2f(uHalf, cw / 2, ch / 2);
@@ -309,7 +311,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         const n = count * Math.round(copies);
         for (let i = 0; i < n; i++) {
           const base = i * step;
-          const x = ((((base + offset) % total) + total) % total) - total / 2;
+          const x = still ? ((count - 1) / 2 - i) * step : ((((base + offset) % total) + total) % total) - total / 2;
           if (Math.abs(x) > cw / 2 + sizeW) continue;
           gl.uniform2f(uCenter, x, 0);
           gl.bindTexture(gl.TEXTURE_2D, textures[i % count] ?? null);
@@ -366,7 +368,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       const dx = e.clientX - lastX;
       lastX = e.clientX;
       moved += Math.abs(dx);
-      offset += dx;
+      if (!still) offset += dx;
     };
     const onUp = (e: PointerEvent) => {
       const wasDragging = dragging;
@@ -379,7 +381,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       const per = count;
       const n = per * Math.round(total / (step * per));
       for (let i = 0; i < n; i++) {
-        const x = ((((i * step + offset) % total) + total) % total) - total / 2;
+        const x = still ? ((count - 1) / 2 - i) * step : ((((i * step + offset) % total) + total) % total) - total / 2;
         if (Math.abs(cx - x) <= cardW / 2) {
           const ph = texPhoto[i % per];
           if (ph !== undefined) setOpen(ph);
