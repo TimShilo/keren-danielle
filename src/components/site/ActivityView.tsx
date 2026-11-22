@@ -120,7 +120,7 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
         <div className="mt-6 lg:mt-[calc(var(--u)*30)]">
           <CurvedGallery
             label="גלריית תמונות"
-            photos={page.gallery.map((g) => ({ src: g.image, alt: g.title || page.title }))}
+            photos={page.gallery.map((g) => ({ src: g.image, alt: g.title || page.title, caption: /^(למלא|לכתוב)/.test(g.caption.trim()) ? "" : g.caption }))}
             fallback={
               <LoopCarousel
                 label="גלריית תמונות"

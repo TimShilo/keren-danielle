@@ -11,6 +11,8 @@ import { createPortal } from "react-dom";
 export interface CurvedPhoto {
   src: string;
   alt: string;
+  /** short description under the photo (two lines at most, then "…") */
+  caption?: string | undefined;
 }
 
 const VERT = `
@@ -171,11 +173,60 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         c.height = th;
         const g = c.getContext("2d");
         if (!g) return;
-        // object-fit: cover
-        const s = Math.max(tw / img.naturalWidth, th / img.naturalHeight);
+        const caption = (photosRef.current[idx]?.caption ?? "").replace(/\s+/g, " ").trim();
+        // with a description the card is a white card: photo on top, two lines of text below
+        const imgH = caption ? Math.round(th * 0.7) : th;
+        if (caption) {
+          g.fillStyle = "#fff";
+          g.fillRect(0, 0, tw, th);
+        }
+        // object-fit: cover (inside the photo area)
+        const s = Math.max(tw / img.naturalWidth, imgH / img.naturalHeight);
         const w = img.naturalWidth * s;
         const h = img.naturalHeight * s;
-        g.drawImage(img, (tw - w) / 2, (th - h) / 2, w, h);
+        g.save();
+        g.beginPath();
+        g.rect(0, 0, tw, imgH);
+        g.clip();
+        g.drawImage(img, (tw - w) / 2, (imgH - h) / 2, w, h);
+        g.restore();
+        if (caption) {
+          const scale = tw / cardW;
+          const fs = Math.max(13, cardW * 0.052) * scale;
+          const pad = cardW * 0.05 * scale;
+          const maxW = tw - pad * 2;
+          g.font = `400 ${fs}px "Discovery Fs", system-ui, sans-serif`;
+          g.fillStyle = "#082944";
+          g.direction = "rtl";
+          g.textAlign = "right";
+          g.textBaseline = "top";
+          // wrap into lines, keep two, and end the second with "…" when there is more
+          const words = caption.split(" ");
+          const lines: string[] = [];
+          let cur = "";
+          let cut = false;
+          for (let i = 0; i < words.length; i++) {
+            const t = cur ? `${cur} ${words[i]}` : (words[i] ?? "");
+            if (g.measureText(t).width <= maxW || !cur) cur = t;
+            else if (lines.length === 1) {
+              cut = true;
+              break;
+            } else {
+              lines.push(cur);
+              cur = words[i] ?? "";
+            }
+          }
+          if (!cut) lines.push(cur);
+          else lines.push(cur);
+          if (cut) {
+            let last = lines[1] ?? "";
+            while (last && g.measureText(`${last} …`).width > maxW) last = last.replace(/\s*\S+$/, "");
+            lines[1] = `${last} …`;
+          }
+          const lh = fs * 1.35;
+          const top = imgH + (th - imgH - lh * Math.min(2, lines.length)) / 2;
+          lines.slice(0, 2).forEach((l, i) => g.fillText(l, tw - pad, top + i * lh));
+        }
         const tex = gl.createTexture();
         if (!tex) return;
         gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -260,8 +311,12 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
           setFailed(true);
           return;
         }
-        layout();
-        raf = requestAnimationFrame(draw);
+        // wait for the site font so the descriptions are drawn with it
+        void (document.fonts?.load('16px "Discovery Fs"') ?? Promise.resolve()).catch(() => undefined).then(() => {
+          if (disposed) return;
+          layout();
+          raf = requestAnimationFrame(draw);
+        });
       }
     };
     list.forEach((p, idx) => {
