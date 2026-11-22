@@ -152,16 +152,16 @@ export function LoopCarousel({ items, direction, speed = 36, label, itemClassNam
       {/* arrows */}
       <FxIconButton
         variant="white"
-        aria-label="הקודם"
-        onClick={() => void nudge(st.current.step)}
+        aria-label="גלילה ימינה"
+        onClick={() => void nudge(-st.current.step)}
         className="absolute right-[2.5%] top-1/2 z-10 size-12 text-navy -translate-y-1/2 shadow-lg lg:size-[calc(var(--u)*64)]"
       >
         <ArrowRight className="size-5 lg:size-[calc(var(--u)*26)]" />
       </FxIconButton>
       <FxIconButton
         variant="white"
-        aria-label="הבא"
-        onClick={() => void nudge(-st.current.step)}
+        aria-label="גלילה שמאלה"
+        onClick={() => void nudge(st.current.step)}
         className="absolute left-[2.5%] top-1/2 z-10 size-12 text-navy -translate-y-1/2 shadow-lg lg:size-[calc(var(--u)*64)]"
       >
         <ArrowLeft className="size-5 lg:size-[calc(var(--u)*26)]" />
