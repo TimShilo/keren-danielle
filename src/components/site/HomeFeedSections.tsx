@@ -27,10 +27,10 @@ function MoreArrow({ className = "" }: { className?: string }) {
     <span className={`flex ${className}`}>
       <span
         aria-hidden
-        className="relative grid size-11 place-items-center overflow-hidden rounded-full border-2 border-navy text-navy transition-colors duration-500 group-hover/card:border-brand-yellow group-focus-visible/card:border-brand-yellow"
+        className="relative grid size-8 place-items-center overflow-hidden rounded-full border-2 border-navy text-navy transition-colors duration-500 group-hover/card:border-brand-yellow group-focus-visible/card:border-brand-yellow"
       >
         <span className="absolute inset-0 scale-0 rounded-full bg-brand-yellow transition-transform duration-500 ease-out group-hover/card:scale-100 group-focus-visible/card:scale-100" />
-        <ArrowLeft className="relative size-5" />
+        <ArrowLeft className="relative size-4" />
       </span>
       <span className="sr-only">לפרטים</span>
     </span>
@@ -55,14 +55,14 @@ export function NewsCard({ n }: { n: NewsCardData }) {
           <Icon className="size-14" style={{ color }} />
         </span>
       )}
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col px-6 pb-4 pt-6">
         <p className="flex items-center gap-2 text-lg leading-[1.3] text-[#1d2838]">
           <Icon className="size-5" style={{ color }} aria-hidden />
           {n.category}
         </p>
         <h3 className="mt-2 line-clamp-2 text-[22px] font-bold leading-[1] text-[#1d2838]">{n.title}</h3>
-        <p className="mt-1 line-clamp-3 text-[20px] font-normal leading-[1.4] text-[#1d2838]">{n.excerpt}</p>
-        <MoreArrow className="mt-auto pt-3" />
+        <p className="mt-[30px] line-clamp-3 text-[18px] font-normal leading-[1.2] text-[#1d2838]">{n.excerpt}</p>
+        <MoreArrow className="mt-auto pt-2" />
       </div>
     </a>
   );
