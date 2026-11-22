@@ -21,6 +21,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminVideosRouteImport } from './routes/admin.videos'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as AdminContentTypeRouteImport } from './routes/admin.content.$type'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +84,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/news/$slug',
+  path: '/news/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminContentTypeRoute = AdminContentTypeRouteImport.update({
   id: '/content/$type',
   path: '/content/$type',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/admin/videos': typeof AdminVideosRoute
   '/admin/login': typeof AdminLoginRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/activities/': typeof ActivitiesIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/admin/videos': typeof AdminVideosRoute
   '/admin/login': typeof AdminLoginRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/activities': typeof ActivitiesIndexRoute
   '/admin': typeof AdminIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/admin/videos': typeof AdminVideosRoute
   '/admin_/login': typeof AdminLoginRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/activities/': typeof ActivitiesIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/videos'
     | '/admin/login'
+    | '/news/$slug'
     | '/activities/'
     | '/admin/'
     | '/admin/content/$type'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/videos'
     | '/admin/login'
+    | '/news/$slug'
     | '/activities'
     | '/admin'
     | '/admin/content/$type'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/videos'
     | '/admin_/login'
+    | '/news/$slug'
     | '/activities/'
     | '/admin/'
     | '/admin/content/$type'
@@ -186,6 +198,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   ActivitiesSlugRoute: typeof ActivitiesSlugRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  NewsSlugRoute: typeof NewsSlugRoute
   ActivitiesIndexRoute: typeof ActivitiesIndexRoute
 }
 
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/news/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/content/$type': {
       id: '/admin/content/$type'
       path: '/content/$type'
@@ -314,6 +334,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   ActivitiesSlugRoute: ActivitiesSlugRoute,
   AdminLoginRoute: AdminLoginRoute,
+  NewsSlugRoute: NewsSlugRoute,
   ActivitiesIndexRoute: ActivitiesIndexRoute,
 }
 export const routeTree = rootRouteImport
