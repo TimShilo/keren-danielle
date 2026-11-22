@@ -35,6 +35,7 @@ const FRAG = `
 precision mediump float;
 uniform sampler2D uTex;
 uniform vec2 uCard;
+uniform float uCap;
 uniform float uRadius;
 varying vec2 vLocal;
 float box(vec2 p, vec2 b, float r) {
@@ -42,17 +43,22 @@ float box(vec2 p, vec2 b, float r) {
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
 }
 void main() {
+  // the photo sits at the top of the plane, the description (white text) below it
+  vec2 lp = vLocal - vec2(0.0, uCap * 0.5);
   vec2 hb = uCard * 0.5;
-  float d = box(vLocal, hb, uRadius);
+  float d = box(lp, hb, uRadius);
   float cardA = 1.0 - smoothstep(-1.0, 1.0, d);
-  float ds = box(vLocal - vec2(0.0, -uRadius * 0.4), hb, uRadius);
+  float ds = box(lp - vec2(0.0, -uRadius * 0.4), hb, uRadius);
   float shadow = (1.0 - smoothstep(0.0, uRadius * 1.1, ds)) * 0.2;
-  vec2 uv = vLocal / uCard + 0.5;
-  vec3 tex = texture2D(uTex, uv).rgb;
+  vec2 uv = vec2(vLocal.x / uCard.x + 0.5, vLocal.y / (uCard.y + uCap) + 0.5);
+  vec4 t = texture2D(uTex, clamp(uv, 0.0, 1.0));
+  float inside = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
+  float textA = t.a * inside * (1.0 - cardA);
   vec3 shadowCol = vec3(0.043, 0.078, 0.094);
-  float a = cardA + (1.0 - cardA) * shadow;
-  vec3 rgb = tex * cardA + shadowCol * (1.0 - cardA) * shadow;
-  gl_FragColor = vec4(rgb, a);
+  float rest = (1.0 - cardA);
+  float a = cardA + rest * max(shadow, textA);
+  vec3 num = t.rgb * cardA + rest * (textA * t.rgb + (1.0 - textA) * shadow * shadowCol);
+  gl_FragColor = vec4(num / max(a, 0.001), a);
 }`;
 
 function compile(gl: WebGLRenderingContext, type: number, src: string) {
@@ -105,6 +111,7 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
     const uCurve = loc("uCurve");
     const uCard = loc("uCard");
     const uRadius = loc("uRadius");
+    const uCap = loc("uCap");
     const aPos = gl.getAttribLocation(prog, "aPos");
 
     // a 24x24 grid so the vertical stretch bends smoothly
@@ -147,6 +154,8 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
     let dpr = 1;
     let cardW = 0;
     let cardH = 0;
+    let capH = 0;
+    let fontPx = 14;
     let step = 0;
     let total = 0;
     let count = 0;
@@ -164,8 +173,10 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
 
     const buildTextures = () => {
       freeTextures();
-      const tw = Math.max(64, Math.round(cardW * dpr * 1.2));
-      const th = Math.max(64, Math.round(cardH * dpr * 1.2));
+      const k = dpr * 1.2;
+      const tw = Math.max(64, Math.round(cardW * k));
+      const thImg = Math.max(64, Math.round(cardH * k));
+      const th = thImg + Math.round(capH * k);
       images.sort((a, b) => a.idx - b.idx);
       images.forEach(({ img, idx }) => {
         const c = document.createElement("canvas");
@@ -174,29 +185,33 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         const g = c.getContext("2d");
         if (!g) return;
         const caption = (photosRef.current[idx]?.caption ?? "").replace(/\s+/g, " ").trim();
-        // with a description the card is a white card: photo on top, two lines of text below
-        const imgH = caption ? Math.round(th * 0.7) : th;
-        if (caption) {
-          g.fillStyle = "#fff";
-          g.fillRect(0, 0, tw, th);
-        }
-        // object-fit: cover (inside the photo area)
-        const s = Math.max(tw / img.naturalWidth, imgH / img.naturalHeight);
-        const w = img.naturalWidth * s;
-        const h = img.naturalHeight * s;
+        // the whole photo is shown: a photo that is not the card's shape sits inside a dark backdrop of itself
+        const ar = img.naturalWidth / img.naturalHeight;
+        const cr = tw / thImg;
+        const cover = Math.max(tw / img.naturalWidth, thImg / img.naturalHeight);
         g.save();
         g.beginPath();
-        g.rect(0, 0, tw, imgH);
+        g.rect(0, 0, tw, thImg);
         g.clip();
-        g.drawImage(img, (tw - w) / 2, (imgH - h) / 2, w, h);
+        if (Math.abs(ar / cr - 1) < 0.12) {
+          g.drawImage(img, (tw - img.naturalWidth * cover) / 2, (thImg - img.naturalHeight * cover) / 2, img.naturalWidth * cover, img.naturalHeight * cover);
+        } else {
+          g.drawImage(img, (tw - img.naturalWidth * cover) / 2, (thImg - img.naturalHeight * cover) / 2, img.naturalWidth * cover, img.naturalHeight * cover);
+          g.fillStyle = "rgba(8, 41, 68, 0.8)";
+          g.fillRect(0, 0, tw, thImg);
+          const fit = Math.min(tw / img.naturalWidth, thImg / img.naturalHeight);
+          const w = img.naturalWidth * fit;
+          const h = img.naturalHeight * fit;
+          g.drawImage(img, (tw - w) / 2, (thImg - h) / 2, w, h);
+        }
         g.restore();
         if (caption) {
-          const scale = tw / cardW;
-          const fs = Math.max(13, cardW * 0.052) * scale;
-          const pad = cardW * 0.05 * scale;
+          const scale = k;
+          const fs = fontPx * scale;
+          const pad = cardW * 0.02 * scale;
           const maxW = tw - pad * 2;
           g.font = `400 ${fs}px "Discovery Fs", system-ui, sans-serif`;
-          g.fillStyle = "#082944";
+          g.fillStyle = "#fff";
           g.direction = "rtl";
           g.textAlign = "right";
           g.textBaseline = "top";
@@ -216,16 +231,14 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
               cur = words[i] ?? "";
             }
           }
-          if (!cut) lines.push(cur);
-          else lines.push(cur);
+          lines.push(cur);
           if (cut) {
             let last = lines[1] ?? "";
             while (last && g.measureText(`${last} …`).width > maxW) last = last.replace(/\s*\S+$/, "");
             lines[1] = `${last} …`;
           }
           const lh = fs * 1.35;
-          const top = imgH + (th - imgH - lh * Math.min(2, lines.length)) / 2;
-          lines.slice(0, 2).forEach((l, i) => g.fillText(l, tw - pad, top + i * lh));
+          lines.slice(0, 2).forEach((l, i) => g.fillText(l, tw - pad, thImg + fs * 0.7 + i * lh));
         }
         const tex = gl.createTexture();
         if (!tex) return;
@@ -251,13 +264,16 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
       if (!cw) return;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       const small = window.innerWidth < 769;
-      cardW = small ? cw / 2.3 : cw / 5.3;
-      cardH = cardW * 0.72;
-      const gap = cardW * 0.08;
+      // three big photos on a desktop screen (about one and a half on a phone)
+      cardW = small ? cw / 1.6 : cw / 3.3;
+      cardH = cardW * 0.7;
+      const gap = cardW * 0.06;
+      fontPx = Math.max(14, cardW * 0.045);
+      capH = Math.round(fontPx * 1.35 * 2 + fontPx * 1.1);
       step = cardW + gap;
       curve = small ? 0.45 : 0.8;
       radius = Math.round(cardW * 0.06);
-      ch = Math.round(cardH * (small ? 1.6 : 1.85) + 60);
+      ch = Math.round((cardH + capH) * (small ? 1.45 : 1.55) + 30);
       host.style.height = `${ch}px`;
       cv.width = Math.round(cw * dpr);
       cv.height = Math.round(ch * dpr);
@@ -283,10 +299,11 @@ export function CurvedGallery({ photos, label, fallback }: { photos: CurvedPhoto
         gl.uniform2f(uHalf, cw / 2, ch / 2);
         gl.uniform1f(uCurve, curve);
         gl.uniform2f(uCard, cardW, cardH);
+        gl.uniform1f(uCap, capH);
         gl.uniform1f(uRadius, radius);
         const marginX = radius * 1.6;
         const sizeW = cardW + marginX * 2;
-        const sizeH = cardH + marginX * 2;
+        const sizeH = cardH + capH + marginX * 2;
         gl.uniform2f(uSize, sizeW, sizeH);
         const copies = total / (step * count);
         const n = count * Math.round(copies);

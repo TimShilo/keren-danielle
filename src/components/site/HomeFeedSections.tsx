@@ -61,7 +61,7 @@ export function NewsCard({ n }: { n: NewsCardData }) {
           {n.category}
         </p>
         <h3 className="mt-2 line-clamp-2 text-[22px] font-bold leading-[1] text-[#1d2838]">{n.title}</h3>
-        <p className="mt-[30px] line-clamp-3 text-[18px] font-normal leading-[1.2] text-[#1d2838]">{n.excerpt}</p>
+        <p className="mt-5 line-clamp-3 text-[18px] font-normal leading-[1.2] text-[#1d2838]">{n.excerpt}</p>
         <MoreArrow className="mt-auto pt-2" />
       </div>
     </a>
