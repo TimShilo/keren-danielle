@@ -129,7 +129,7 @@ export function NewsLens() {
         phase={1}
         className="absolute hidden lg:block lg:left-[calc(var(--u)*100)] lg:top-[calc(var(--u)*110)] lg:w-[calc(var(--u)*242)]"
       />
-      <div className="px-[5%] pb-20 pt-28 text-center text-white lg:pb-[calc(var(--u)*121)] lg:pt-[calc(var(--u)*162)]">
+      <div className="px-[5%] pb-20 pt-[calc(100px+var(--u)*80)] text-center text-white lg:pb-[calc(var(--u)*121)]">
         <Eyebrow className="justify-center">מה חדש?</Eyebrow>
         <h2 className="mt-4 text-[clamp(36px,8vw,64px)] font-bold leading-none lg:mt-[calc(var(--u)*30)] lg:text-[calc(var(--u)*64)]">
           <FoldHeading text="חדשות ועדכונים" />
@@ -147,7 +147,7 @@ export function NewsLens() {
           itemClassName={`${ITEM} flex`}
         />
       </div>
-      <p className="flex justify-center pb-24 pt-6 text-center lg:pb-[calc(var(--u)*130)] lg:pt-[calc(var(--u)*54)]">
+      <p className="flex justify-center pb-[100px] pt-6 text-center lg:pt-[calc(var(--u)*54)]">
         <FxButton href="/news" variant="yellow" className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
           לכל החדשות והעדכונים ←
         </FxButton>

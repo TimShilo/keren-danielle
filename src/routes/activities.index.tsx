@@ -16,7 +16,7 @@ function ActivitiesIndex() {
   return (
     <SiteShell>
       <PageHero title="פעילויות" crumbs={[{ label: "בית", href: "/" }, { label: "פעילויות" }]} />
-      <GlowSection curveTop aria-label="פעילות הקרן" className="pb-[100px] pt-[calc(var(--u)*40)]">
+      <GlowSection curveTop aria-label="פעילות הקרן" className="pb-[100px] pt-[100px]">
         <div className="px-[5%]">
           <Eyebrow>פעילות הקרן</Eyebrow>
           <h2 className="mt-4 text-[clamp(36px,8vw,64px)] font-bold leading-none lg:mt-[calc(var(--u)*30)] lg:text-[calc(var(--u)*64)]">

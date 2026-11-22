@@ -260,7 +260,7 @@ export function MainActivityView({ page }: { page: MainActivityPage }) {
   return (
     <>
       <PageHero title={page.title} crumbs={crumbs} />
-      <GlowSection curveTop aria-label="הפעילויות" className="pb-[100px] pt-[calc(var(--u)*40)]">
+      <GlowSection curveTop aria-label="הפעילויות" className="pb-[100px] pt-[100px]">
         <div className="px-[5%]">
           <Eyebrow>על התחום</Eyebrow>
           <h2 className={H2}>

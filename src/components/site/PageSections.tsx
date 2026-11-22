@@ -17,7 +17,11 @@ export interface SectionDef {
 }
 
 const CYCLE: Tone[] = ["glow", "white", "dark"];
-const PAD = "px-[5%] pb-[100px] pt-[calc(var(--u)*30)]";
+/** 100px from the start of a section to its content, and 100px from its content to the end */
+const PAD_TOP = "px-[5%] pt-[100px]";
+const PAD_BOTTOM = "pb-[100px]";
+/** the next section tucks under this one by 92 design-px (its curve), so this one keeps that much extra */
+const PAD_BOTTOM_CURVED_NEXT = "pb-[calc(100px+var(--u)*92)]";
 
 /**
  * Stacks the body sections of an inner page under the page header.
@@ -46,7 +50,13 @@ export function PageSections({ sections }: { sections: SectionDef[] }) {
         const tone = tones[i] as Tone;
         const prev = tones[i - 1];
         const curve = i === 0 || tone === "dark" || prev === "dark";
-        const common = { key: s.key, "aria-label": s.label ?? s.key, className: `${PAD} ${s.className ?? ""}`.trim() };
+        const nextTone = tones[i + 1];
+        const nextCurved = nextTone !== undefined && (nextTone === "dark" || tone === "dark");
+        const common = {
+          key: s.key,
+          "aria-label": s.label ?? s.key,
+          className: `${PAD_TOP} ${nextCurved ? PAD_BOTTOM_CURVED_NEXT : PAD_BOTTOM} ${s.className ?? ""}`.trim(),
+        };
         if (tone === "glow") {
           return (
             <GlowSection {...common} curveTop={curve} edge={prev === "dark" ? "mirror" : "arch"}>
