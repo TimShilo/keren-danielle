@@ -101,9 +101,9 @@ export function SubActivityView({ page }: { page: SubActivityPage }) {
       page.more ? (
         <>
           <SectionHead eyebrow="עוד על הפעילות" title={page.more.title || "עוד"} center={false} />
-          <div className={page.more.image ? "mt-8 grid items-start gap-8 lg:mt-[calc(var(--u)*40)] lg:grid-cols-[calc(var(--u)*420)_1fr] lg:gap-[calc(var(--u)*60)]" : ""}>
+          <div className={page.more.image ? "mt-8 grid items-center gap-8 lg:mt-[calc(var(--u)*40)] lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]" : ""}>
             {page.more.image && (
-              <RevealStripes src={page.more.image} alt={page.more.title} className="mx-auto w-full max-w-[420px] lg:max-w-none" />
+              <RevealStripes src={page.more.image} alt={page.more.title} className="mx-auto w-full max-w-[560px] lg:max-w-none" />
             )}
             <RichScrollText
               className={`rte-content max-w-[1200px] text-lg leading-[1.5] lg:text-[calc(var(--u)*24)] [&_ol]:columns-1 [&_ol]:gap-x-12 sm:[&_ol]:columns-2 lg:[&_ol]:columns-3 [&_li]:break-inside-avoid [&_li]:py-0.5 ${page.more.image ? "" : "mt-8 lg:mt-[calc(var(--u)*40)]"}`}
