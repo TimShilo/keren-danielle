@@ -1,3 +1,4 @@
+import { useRouterState } from "@tanstack/react-router";
 import { useMegaMenu } from "@/lib/activities";
 import { MAIN_ICONS } from "./CategoryCard";
 import { ScrollText } from "lucide-react";
@@ -12,6 +13,16 @@ const THUMBS: Record<string, string> = {
 /** "פעילויות" mega menu: four columns, each with the main activity (photo, icon) and its sub-activities. */
 export function MegaMenu({ onNavigate }: { onNavigate?: () => void }) {
   const q = useMegaMenu();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const norm = (x: string) => {
+    try {
+      return decodeURIComponent(x).replace(/\/+$/, "");
+    } catch {
+      return x.replace(/\/+$/, "");
+    }
+  };
+  const here = norm(path);
+  const isHere = (href: string | null) => !!href && norm(href) === here;
   const groups = q.data ?? [];
   return (
     <div
@@ -26,7 +37,8 @@ export function MegaMenu({ onNavigate }: { onNavigate?: () => void }) {
             <a
               href={g.href}
               onClick={onNavigate}
-              className="group flex items-center gap-[calc(var(--u)*16)] text-white"
+              aria-current={isHere(g.href) ? "page" : undefined}
+              className={`group flex items-center gap-[calc(var(--u)*16)] ${isHere(g.href) ? "text-brand-yellow" : "text-white"}`}
             >
               {thumb && (
                 <img
@@ -47,7 +59,8 @@ export function MegaMenu({ onNavigate }: { onNavigate?: () => void }) {
                   <a
                     href={s.href}
                     onClick={onNavigate}
-                    className="group/sub flex items-center gap-[calc(var(--u)*10)] text-[calc(var(--u)*18)] leading-[1.35] text-white/90 transition-colors duration-300 hover:text-brand-yellow"
+                    aria-current={isHere(s.href) ? "page" : undefined}
+                    className={`group/sub flex items-center gap-[calc(var(--u)*10)] text-[calc(var(--u)*18)] leading-[1.35] transition-colors duration-300 hover:text-brand-yellow ${isHere(s.href) ? "text-brand-yellow" : "text-white/90"}`}
                   >
                     <Icon aria-hidden className="size-[calc(var(--u)*18)] shrink-0 opacity-80" />
                     {s.name}
