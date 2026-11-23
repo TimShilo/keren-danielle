@@ -58,7 +58,7 @@ function ContactRow({ href, icon, children, external }: { href: string; icon: Re
 
 /** Same footer on every page of the site. */
 export function SiteFooter() {
-  const year = new Date().getFullYear();
+  const year = Math.max(2027, new Date().getFullYear());
   return (
     <footer dir="rtl" className="relative text-white">
       {/* Danielle's sentences over the video: part of the footer, so they appear on every page */}
