@@ -149,9 +149,13 @@
   font-size: 0.875rem;
   --text-base: 0.875rem;
   --text-base--line-height: 1.5;
+  /* nothing in the admin area is larger than 16px */
   --text-lg: 1rem;
-  --text-xl: 1.125rem;
-  --text-2xl: 1.375rem;
+  --text-xl: 1rem;
+  --text-2xl: 1rem;
+  --text-3xl: 1rem;
+  --text-4xl: 1rem;
+  --text-5xl: 1rem;
   --background: oklch(0.955 0.014 80);
   --foreground: oklch(0.24 0.04 262);
   --card: oklch(1 0 0);
@@ -174,6 +178,10 @@
 
 .admin-theme .rte-content {
   font-size: 0.875rem;
+}
+.admin-theme .rte-content h2,
+.admin-theme .rte-content h3 {
+  font-size: 1rem;
 }
 
 /* Rich text editor / article body */
