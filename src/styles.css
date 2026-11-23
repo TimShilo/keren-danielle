@@ -146,16 +146,12 @@
 
 /* Admin area theme (Keren Danielle management system) */
 .admin-theme {
-  /* management system: clean and light, like the Biznest admin (Heebo, smaller type, lighter weights) */
-  font-family: "Heebo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-  font-size: 0.8125rem;
-  font-weight: 400;
-  --text-xs: 0.6875rem;
-  --text-sm: 0.75rem;
-  --text-base: 0.8125rem;
+  /* management system: smaller type (0.875rem base) */
+  font-size: 0.875rem;
+  --text-base: 0.875rem;
   --text-base--line-height: 1.5;
   /* nothing in the admin area is larger than 16px */
-  --text-lg: 0.9375rem;
+  --text-lg: 1rem;
   --text-xl: 1rem;
   --text-2xl: 1rem;
   --text-3xl: 1rem;
@@ -170,11 +166,11 @@
   --secondary: oklch(0.93 0.02 75);
   --secondary-foreground: oklch(0.3 0.04 262);
   --muted: oklch(0.93 0.015 80);
-  --muted-foreground: oklch(0.55 0.02 262);
+  --muted-foreground: oklch(0.5 0.03 262);
   --accent: oklch(0.92 0.03 70);
   --accent-foreground: oklch(0.3 0.04 262);
-  --border: oklch(0.92 0.01 80);
-  --input: oklch(0.9 0.01 80);
+  --border: oklch(0.89 0.015 80);
+  --input: oklch(0.89 0.015 80);
   --ring: oklch(0.67 0.14 48);
   --sidebar: oklch(0.26 0.04 262);
   --sidebar-foreground: oklch(0.95 0.01 262);
@@ -182,25 +178,7 @@
 }
 
 .admin-theme .rte-content {
-  font-size: 0.8125rem;
-}
-/* lighter weights everywhere in the admin: nothing shouts */
-.admin-theme .font-bold,
-.admin-theme .font-extrabold,
-.admin-theme .font-black {
-  font-weight: 600;
-}
-.admin-theme .font-semibold {
-  font-weight: 500;
-}
-.admin-theme h1,
-.admin-theme h2,
-.admin-theme h3 {
-  font-weight: 600;
-  letter-spacing: 0;
-}
-.admin-theme table th {
-  font-weight: 500;
+  font-size: 0.875rem;
 }
 .admin-theme .rte-content h2,
 .admin-theme .rte-content h3 {

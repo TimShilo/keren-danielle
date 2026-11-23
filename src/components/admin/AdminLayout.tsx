@@ -46,14 +46,14 @@ const CONTENT_NAV = [
 
 function Count({ n }: { n: number | undefined }) {
   return (
-    <span className="ms-auto min-w-7 rounded-full bg-white/15 px-2 py-0.5 text-center text-xs font-bold tabular-nums">
+    <span className="ms-auto min-w-6 rounded-full bg-white/15 px-1.5 py-0.5 text-center text-[10px] font-medium tabular-nums">
       {n ?? "…"}
     </span>
   );
 }
 
 const linkClass =
-  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-white/10 hover:text-sidebar-foreground";
+  "flex items-center gap-3 rounded-lg px-3 py-1.5 text-[12px] font-normal text-sidebar-foreground/80 transition-colors hover:bg-white/10 hover:text-sidebar-foreground [&_svg]:!size-4";
 const activeClass = "!bg-primary !text-primary-foreground shadow-sm";
 
 export function AdminLayout() {
@@ -123,14 +123,14 @@ export function AdminLayout() {
 
   return (
     <div className="admin-theme flex min-h-screen bg-background text-foreground" dir="rtl">
-      <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col overflow-y-auto bg-sidebar p-4 text-sidebar-foreground">
+      <aside className="sticky top-0 flex h-screen w-56 shrink-0 flex-col overflow-y-auto bg-sidebar p-4 font-[Heebo,system-ui,sans-serif] text-[12px] text-sidebar-foreground">
         <div className="mb-5 flex items-center gap-3 px-1 pt-1">
-          <div className="grid size-12 place-items-center rounded-xl bg-white/10 text-lg font-bold text-primary">
+          <div className="grid size-10 place-items-center rounded-xl bg-white/10 text-[14px] font-semibold text-primary">
             קד
           </div>
           <div className="leading-tight">
-            <div className="text-lg font-bold">קרן דניאלי</div>
-            <div className="text-xs text-sidebar-foreground/60">ניהול האתר</div>
+            <div className="text-[14px] font-semibold">קרן דניאלי</div>
+            <div className="text-[11px] text-sidebar-foreground/60">ניהול האתר</div>
           </div>
         </div>
 
@@ -143,7 +143,7 @@ export function AdminLayout() {
           >
             <LayoutDashboard className="size-5" /> לוח בקרה
           </Link>
-          <div className="mb-1 mt-3 px-4 text-xs font-bold text-sidebar-foreground/45">תוכן</div>
+          <div className="mb-1 mt-3 px-4 text-[11px] font-medium text-sidebar-foreground/45">תוכן</div>
           <Link
             to="/admin/parent-activities"
             className={linkClass}
@@ -166,7 +166,7 @@ export function AdminLayout() {
               />
             </Link>
           ))}
-          <div className="mb-1 mt-3 px-4 text-xs font-bold text-sidebar-foreground/45">ניהול</div>
+          <div className="mb-1 mt-3 px-4 text-[11px] font-medium text-sidebar-foreground/45">ניהול</div>
           <Link
             to="/admin/videos"
             className={linkClass}
