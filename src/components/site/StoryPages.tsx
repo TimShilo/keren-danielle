@@ -5,7 +5,6 @@ import { useContentList, usePageItem, usePressArchive, type ListItem, type Press
 import { shortTitle } from "./PageHero";
 import type { VideoCardData } from "@/lib/home-feed";
 import { FoldHeading } from "./FoldHeading";
-import { FxButton } from "./FxButton";
 import { trackPointer } from "./FxButton";
 import { Eyebrow } from "./HomeHero";
 import { CandleFlame } from "./CandleFlame";
@@ -339,7 +338,7 @@ export function PressPage() {
   const list = all.slice(0, shown);
   return (
     <>
-      <PageHero title="כתבו עלינו" crumbs={[HOME, { label: "כתבו עלינו" }]} />
+      <PageHero title="כתבו עלינו בתקשורת" crumbs={[HOME, { label: "כתבו עלינו" }]} />
       <PageSections
         sections={[
           {
@@ -348,7 +347,7 @@ export function PressPage() {
             tone: "glow",
             children: (
               <>
-                <Head eyebrow="בתקשורת" title="כתבו עלינו" intro="כתבות, ראיונות וסיקור תקשורתי על קרן דניאלי ועל פעילותה." />
+                <Head eyebrow="מן העיתונות" title="כתבו עלינו בתקשורת" />
                 <ul className="mx-auto mt-10 grid max-w-[1720px] grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-[calc(var(--u)*60)] lg:grid-cols-4 lg:gap-[calc(var(--u)*30)]">
                   {list.map((p) => (
                     <li key={p.id} className="flex">
@@ -359,9 +358,13 @@ export function PressPage() {
                 {!all.length && !q.isLoading && <p className="mt-10 text-center text-xl">התוכן יתווסף בקרוב.</p>}
                 {shown < all.length && (
                   <div className="mt-12 flex justify-center">
-                    <FxButton variant="yellow" onClick={() => setShown((n) => n + PER_PAGE)} className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
+                    <button
+                      type="button"
+                      onClick={() => setShown((n) => n + PER_PAGE)}
+                      className="cursor-pointer text-[22px] font-bold text-navy underline-offset-8 transition-colors hover:text-[#b99a00] hover:underline lg:text-[calc(var(--u)*24)]"
+                    >
                       טען עוד
-                    </FxButton>
+                    </button>
                   </div>
                 )}
               </>
