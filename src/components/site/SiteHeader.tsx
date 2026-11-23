@@ -24,6 +24,7 @@ export function SiteHeader() {
   const [panel, setPanel] = useState<PanelKey | null>(null);
   const [aboutOpen, setAboutOpen] = useState<string | null>(null);
   const mega = panel !== null;
+  const [dark, setDark] = useState(false);
   const closeTimer = useRef<number | undefined>(undefined);
   const path = useRouterState({ select: (s) => s.location.pathname });
   useMegaMenu(); // warm the menu data
@@ -40,6 +41,39 @@ export function SiteHeader() {
   useEffect(() => setPanel(null), [path]);
   const isActive = (href: string) => href !== "#" && (path === href || path.startsWith(`${href}/`));
 
+  // Light-on-dark / dark-on-light: look at what is behind the header and fade the colours to match.
+  useEffect(() => {
+    let raf = 0;
+    const probe = () => {
+      raf = 0;
+      const h = document.querySelector("header[data-site-header]");
+      if (!h) return;
+      const r = h.getBoundingClientRect();
+      const y = r.top + r.height / 2;
+      let votes = 0;
+      const xs = [0.25, 0.5, 0.75].map((f) => window.innerWidth * f);
+      for (const x of xs) {
+        const el = document.elementsFromPoint(x, y).find((e) => !h.contains(e) && e !== document.documentElement && e !== document.body);
+        const zone = el?.closest("[data-dark],section,footer");
+        if (zone?.hasAttribute("data-dark")) votes++;
+      }
+      setDark(votes >= 2);
+    };
+    const queue = () => {
+      if (!raf) raf = requestAnimationFrame(probe);
+    };
+    probe();
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    const t = window.setInterval(queue, 400); // pages that load their content late
+    return () => {
+      window.removeEventListener("scroll", queue);
+      window.removeEventListener("resize", queue);
+      window.clearInterval(t);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [path]);
+
   // Stays pinned to the top while scrolling and shrinks a little to take less room.
   useEffect(() => {
     const onScroll = () => setScrolled((was) => (was ? window.scrollY > 12 : window.scrollY > 60));
@@ -50,6 +84,7 @@ export function SiteHeader() {
 
   return (
     <header
+      data-site-header=""
       className={`fixed inset-x-4 z-50 transition-[top] duration-300 lg:inset-x-[5%] ${
         scrolled ? "top-2 lg:top-[calc(var(--u)*14)]" : "top-4 lg:top-[calc(var(--u)*48)]"
       }`}
@@ -69,7 +104,7 @@ export function SiteHeader() {
       </div>
 
       <div
-        className={`relative z-10 flex items-center justify-between rounded-full border border-white/70 bg-gradient-to-b from-white/55 to-white/25 shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 transition-[height] duration-300 lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)] ${
+        className={`relative z-10 flex items-center justify-between rounded-full border bg-gradient-to-b shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 transition-[height,color,background-color,border-color] duration-700 ease-out ${dark ? "border-white/30 from-white/15 to-white/5 text-white" : "border-white/70 from-white/55 to-white/25 text-navy"} lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)] ${
           scrolled ? "h-14 lg:h-[calc(var(--u)*68)]" : "h-16 lg:h-[calc(var(--u)*98)]"
         }`}
       >
@@ -92,7 +127,14 @@ export function SiteHeader() {
           <img
             src="/images/home/svg/logo-heart.svg"
             alt=""
-            className="absolute block"
+            className={`absolute block transition-opacity duration-700 ${dark ? "opacity-0" : "opacity-100"}`}
+            style={{ insetInlineEnd: 0, width: "51.49%", top: "15%", height: "67.54%" }}
+          />
+          <img
+            src="/images/home/svg/logo-heart-light.svg"
+            alt=""
+            aria-hidden
+            className={`absolute block transition-opacity duration-700 ${dark ? "opacity-100" : "opacity-0"}`}
             style={{ insetInlineEnd: 0, width: "51.49%", top: "15%", height: "67.54%" }}
           />
         </a>

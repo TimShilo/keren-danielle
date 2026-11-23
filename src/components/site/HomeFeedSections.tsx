@@ -116,7 +116,7 @@ export function NewsLens() {
   const q = useHomeNews();
   const news = q.data && q.data.length ? q.data : DEMO_NEWS;
   return (
-    <section aria-label="חדשות ועדכונים" className="relative mt-[100px]">
+    <section data-dark="" aria-label="חדשות ועדכונים" className="relative mt-[100px]">
       <img
         src="/images/home/svg/news-lens.svg"
         alt=""

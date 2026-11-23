@@ -18,6 +18,7 @@ const LINES = [
 export function AboutDanielle() {
   return (
     <section
+      data-dark=""
       id="about"
       aria-label="על דניאלי"
       className="relative isolate flex flex-col overflow-hidden bg-[linear-gradient(to_bottom,#082944_17%,#0c448a_93%)] text-white lg:block lg:h-[calc(var(--u)*806)]"

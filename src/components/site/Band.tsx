@@ -26,6 +26,7 @@ export function Band({
   const bg = tone === "dark" ? "bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] text-white [--card-ink:#fff] [--muted-ink:rgba(255,255,255,0.85)]" : "bg-white";
   return (
     <Tag
+      {...(tone === "dark" ? { "data-dark": "" } : {})}
       className={`relative isolate overflow-hidden ${bg} ${curveTop ? OVERLAP : ""} ${className}`}
       style={curveTop ? curveTopStyle(edge) : undefined}
       {...rest}

@@ -60,7 +60,7 @@ function ContactRow({ href, icon, children, external }: { href: string; icon: Re
 export function SiteFooter() {
   const year = Math.max(2027, new Date().getFullYear());
   return (
-    <footer dir="rtl" className="relative text-white">
+    <footer data-dark="" dir="rtl" className="relative text-white">
       {/* Danielle's sentences over the video: part of the footer, so they appear on every page */}
       <QuoteCarousel />
       <div className="relative bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-14 lg:pb-0">

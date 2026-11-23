@@ -18,6 +18,7 @@ export interface Crumb {
 export function PageHero({ title, crumbs }: { title: string; crumbs: Crumb[] }) {
   return (
     <section
+      data-dark=""
       aria-label={title}
       className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-[5%] pb-24 pt-[150px] text-center text-white lg:h-[calc(var(--u)*409)] lg:pb-0 lg:pt-[calc(var(--u)*192)]"
     >

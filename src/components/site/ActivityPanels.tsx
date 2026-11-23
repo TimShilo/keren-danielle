@@ -98,7 +98,7 @@ export function ActivityPanels({ items = PANELS }: { items?: PanelItem[] }) {
     if (m?.[1]) void qc.prefetchQuery(activityPageQuery(decodeURIComponent(m[1])));
   };
   return (
-    <ul className="flex w-full flex-col gap-4 lg:[--ph:max(70vh,480px)] lg:h-[var(--ph)] lg:flex-row lg:gap-[calc(var(--u)*18)]">
+    <ul data-dark="" className="flex w-full flex-col gap-4 lg:[--ph:max(70vh,480px)] lg:h-[var(--ph)] lg:flex-row lg:gap-[calc(var(--u)*18)]">
       {items.map((p) => (
         <li key={p.key} className="min-w-0 lg:grow lg:basis-0 lg:transition-[flex-grow,flex-basis] lg:duration-[1200ms] lg:ease-[cubic-bezier(0.22,1,0.36,1)] lg:hover:grow-0 lg:hover:basis-[calc(var(--ph)*1.364)] lg:has-[a:focus-visible]:grow-0 lg:has-[a:focus-visible]:basis-[calc(var(--ph)*1.364)]">
           <a
