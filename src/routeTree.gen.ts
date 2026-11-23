@@ -34,6 +34,8 @@ import { Route as DanielleCreationsRouteImport } from './routes/danielle.creatio
 import { Route as DanielleMomentsRouteImport } from './routes/danielle.moments'
 import { Route as DanielleSongsRouteImport } from './routes/danielle.songs'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
+import { Route as PressIndexRouteImport } from './routes/press.index'
+import { Route as PressSlugRouteImport } from './routes/press.$slug'
 import { Route as AdminContentTypeRouteImport } from './routes/admin.content.$type'
 import { Route as DanielleFriendsIndexRouteImport } from './routes/danielle.friends.index'
 import { Route as DanielleFriendsSlugRouteImport } from './routes/danielle.friends.$slug'
@@ -163,6 +165,16 @@ const NewsSlugRoute = NewsSlugRouteImport.update({
   path: '/news/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PressIndexRoute = PressIndexRouteImport.update({
+  id: '/press/',
+  path: '/press/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PressSlugRoute = PressSlugRouteImport.update({
+  id: '/press/$slug',
+  path: '/press/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminContentTypeRoute = AdminContentTypeRouteImport.update({
   id: '/content/$type',
   path: '/content/$type',
@@ -201,10 +213,12 @@ export interface FileRoutesByFullPath {
   '/danielle/moments': typeof DanielleMomentsRoute
   '/danielle/songs': typeof DanielleSongsRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/press/$slug': typeof PressSlugRoute
   '/about/': typeof AboutIndexRoute
   '/activities/': typeof ActivitiesIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/danielle/': typeof DanielleIndexRoute
+  '/press/': typeof PressIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
   '/danielle/friends/$slug': typeof DanielleFriendsSlugRoute
   '/danielle/friends/': typeof DanielleFriendsIndexRoute
@@ -230,10 +244,12 @@ export interface FileRoutesByTo {
   '/danielle/moments': typeof DanielleMomentsRoute
   '/danielle/songs': typeof DanielleSongsRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/press/$slug': typeof PressSlugRoute
   '/about': typeof AboutIndexRoute
   '/activities': typeof ActivitiesIndexRoute
   '/admin': typeof AdminIndexRoute
   '/danielle': typeof DanielleIndexRoute
+  '/press': typeof PressIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
   '/danielle/friends/$slug': typeof DanielleFriendsSlugRoute
   '/danielle/friends': typeof DanielleFriendsIndexRoute
@@ -261,10 +277,12 @@ export interface FileRoutesById {
   '/danielle/moments': typeof DanielleMomentsRoute
   '/danielle/songs': typeof DanielleSongsRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/press/$slug': typeof PressSlugRoute
   '/about/': typeof AboutIndexRoute
   '/activities/': typeof ActivitiesIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/danielle/': typeof DanielleIndexRoute
+  '/press/': typeof PressIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
   '/danielle/friends/$slug': typeof DanielleFriendsSlugRoute
   '/danielle/friends/': typeof DanielleFriendsIndexRoute
@@ -293,10 +311,12 @@ export interface FileRouteTypes {
     | '/danielle/moments'
     | '/danielle/songs'
     | '/news/$slug'
+    | '/press/$slug'
     | '/about/'
     | '/activities/'
     | '/admin/'
     | '/danielle/'
+    | '/press/'
     | '/admin/content/$type'
     | '/danielle/friends/$slug'
     | '/danielle/friends/'
@@ -322,10 +342,12 @@ export interface FileRouteTypes {
     | '/danielle/moments'
     | '/danielle/songs'
     | '/news/$slug'
+    | '/press/$slug'
     | '/about'
     | '/activities'
     | '/admin'
     | '/danielle'
+    | '/press'
     | '/admin/content/$type'
     | '/danielle/friends/$slug'
     | '/danielle/friends'
@@ -352,10 +374,12 @@ export interface FileRouteTypes {
     | '/danielle/moments'
     | '/danielle/songs'
     | '/news/$slug'
+    | '/press/$slug'
     | '/about/'
     | '/activities/'
     | '/admin/'
     | '/danielle/'
+    | '/press/'
     | '/admin/content/$type'
     | '/danielle/friends/$slug'
     | '/danielle/friends/'
@@ -377,9 +401,11 @@ export interface RootRouteChildren {
   DanielleMomentsRoute: typeof DanielleMomentsRoute
   DanielleSongsRoute: typeof DanielleSongsRoute
   NewsSlugRoute: typeof NewsSlugRoute
+  PressSlugRoute: typeof PressSlugRoute
   AboutIndexRoute: typeof AboutIndexRoute
   ActivitiesIndexRoute: typeof ActivitiesIndexRoute
   DanielleIndexRoute: typeof DanielleIndexRoute
+  PressIndexRoute: typeof PressIndexRoute
   DanielleFriendsSlugRoute: typeof DanielleFriendsSlugRoute
   DanielleFriendsIndexRoute: typeof DanielleFriendsIndexRoute
 }
@@ -561,6 +587,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/press/': {
+      id: '/press/'
+      path: '/press'
+      fullPath: '/press/'
+      preLoaderRoute: typeof PressIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/press/$slug': {
+      id: '/press/$slug'
+      path: '/press/$slug'
+      fullPath: '/press/$slug'
+      preLoaderRoute: typeof PressSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/content/$type': {
       id: '/admin/content/$type'
       path: '/content/$type'
@@ -625,9 +665,11 @@ const rootRouteChildren: RootRouteChildren = {
   DanielleMomentsRoute: DanielleMomentsRoute,
   DanielleSongsRoute: DanielleSongsRoute,
   NewsSlugRoute: NewsSlugRoute,
+  PressSlugRoute: PressSlugRoute,
   AboutIndexRoute: AboutIndexRoute,
   ActivitiesIndexRoute: ActivitiesIndexRoute,
   DanielleIndexRoute: DanielleIndexRoute,
+  PressIndexRoute: PressIndexRoute,
   DanielleFriendsSlugRoute: DanielleFriendsSlugRoute,
   DanielleFriendsIndexRoute: DanielleFriendsIndexRoute,
 }

@@ -69,3 +69,44 @@ export function usePageItem(slug: string) {
     },
   });
 }
+
+export interface PressItem {
+  id: string;
+  title: string;
+  source: string;
+  image: string;
+  href: string;
+  external: boolean;
+}
+
+/** Every published press article (the archive page): newest first, undated ones after. */
+export function usePressArchive() {
+  return useQuery({
+    queryKey: ["press-archive"],
+    staleTime: 5 * 60_000,
+    queryFn: async (): Promise<PressItem[]> => {
+      const { data } = await supabase
+        .from("content_items")
+        .select("id,title,slug,external_url,data,item_date,sort_order,featured:media!featured_media_id(storage_path)")
+        .eq("type", "press_article")
+        .eq("status", "published")
+        .order("item_date", { ascending: false, nullsFirst: false })
+        .order("sort_order", { ascending: true, nullsFirst: false })
+        .order("title")
+        .limit(500);
+      return ((data ?? []) as Row[]).map((r) => {
+        const d = (r["data"] ?? {}) as Row;
+        const ext = str(r["external_url"]);
+        const feat = path(r["featured"]);
+        return {
+          id: str(r["id"]),
+          title: str(r["title"]),
+          source: str(d["source_label"]) || str(d["source"]) || str(d["author"]),
+          image: feat ? mediaUrl(feat) : "",
+          href: ext || `/press/${str(r["slug"]) || str(r["id"])}`,
+          external: !!ext,
+        };
+      });
+    },
+  });
+}

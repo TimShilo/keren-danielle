@@ -1,10 +1,11 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { useContentList, usePageItem, type ListItem } from "@/lib/content-list";
+import { useContentList, usePageItem, usePressArchive, type ListItem, type PressItem } from "@/lib/content-list";
 import { shortTitle } from "./PageHero";
 import type { VideoCardData } from "@/lib/home-feed";
 import { FoldHeading } from "./FoldHeading";
+import { FxButton } from "./FxButton";
 import { trackPointer } from "./FxButton";
 import { Eyebrow } from "./HomeHero";
 import { CandleFlame } from "./CandleFlame";
@@ -299,6 +300,73 @@ export function BookPage() {
             ),
           },
           { key: "other", label: "עוד על דניאלי", tone: "dark", edge: "sag", children: <OtherPages current="/danielle/book" /> },
+        ]}
+      />
+    </>
+  );
+}
+
+/* ───────── כתבו עלינו – ארכיון ───────── */
+const PER_PAGE = 20; // five rows of four
+
+function PressTile({ p }: { p: PressItem }) {
+  return (
+    <a
+      href={p.href}
+      {...(p.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy shadow-[4px_4px_9px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
+    >
+      <span className="relative block aspect-[414/267] shrink-0 border-b-2 border-black/30 bg-white">
+        {p.image ? (
+          <img src={p.image} alt="" loading="lazy" className="absolute inset-0 size-full object-contain p-[14%]" />
+        ) : (
+          <span className="absolute inset-0 grid place-items-center bg-[#eef8ff] px-6 text-center text-[24px] font-bold leading-[1.1] text-navy/70">{p.source || "בתקשורת"}</span>
+        )}
+      </span>
+      <span className="flex flex-1 flex-col p-6">
+        <span className="line-clamp-2 text-[22px] font-bold leading-[1.2] text-[#1d2838]">{p.title}</span>
+        {p.source && p.image && <span className="mt-2 line-clamp-1 text-[16px] text-navy/80">{p.source}</span>}
+        <MoreArrow className="mt-auto pt-4" />
+      </span>
+    </a>
+  );
+}
+
+export function PressPage() {
+  const q = usePressArchive();
+  const all = q.data ?? [];
+  const [shown, setShown] = useState(PER_PAGE);
+  const list = all.slice(0, shown);
+  return (
+    <>
+      <PageHero title="כתבו עלינו" crumbs={[HOME, { label: "כתבו עלינו" }]} />
+      <PageSections
+        sections={[
+          {
+            key: "press",
+            label: "כתבו עלינו",
+            tone: "glow",
+            children: (
+              <>
+                <Head eyebrow="בתקשורת" title="כתבו עלינו" intro="כתבות, ראיונות וסיקור תקשורתי על קרן דניאלי ועל פעילותה." />
+                <ul className="mx-auto mt-10 grid max-w-[1720px] grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-[calc(var(--u)*60)] lg:grid-cols-4 lg:gap-[calc(var(--u)*30)]">
+                  {list.map((p) => (
+                    <li key={p.id} className="flex">
+                      <PressTile p={p} />
+                    </li>
+                  ))}
+                </ul>
+                {!all.length && !q.isLoading && <p className="mt-10 text-center text-xl">התוכן יתווסף בקרוב.</p>}
+                {shown < all.length && (
+                  <div className="mt-12 flex justify-center">
+                    <FxButton variant="yellow" onClick={() => setShown((n) => n + PER_PAGE)} className="h-[50px] text-xl lg:h-[calc(var(--u)*50)] lg:text-[calc(var(--u)*20)] [&_.fx-label]:leading-none lg:[&_.fx-label]:px-[calc(var(--u)*34)]">
+                      טען עוד
+                    </FxButton>
+                  </div>
+                )}
+              </>
+            ),
+          },
         ]}
       />
     </>

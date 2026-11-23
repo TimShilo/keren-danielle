@@ -26,11 +26,11 @@ function cleanBody(html: string) {
     .trim();
 }
 
-export type PostKind = "news" | "friend";
+export type PostKind = "news" | "friend" | "press";
 
 async function fetchNewsPost(slug: string, kind: PostKind = "news"): Promise<NewsPost | null> {
-  const type = kind === "friend" ? "friend_story" : "news";
-  const base0 = kind === "friend" ? "/danielle/friends" : "/news";
+  const type = kind === "friend" ? "friend_story" : kind === "press" ? "press_article" : "news";
+  const base0 = kind === "friend" ? "/danielle/friends" : kind === "press" ? "/press" : "/news";
   const key = decodeURIComponent(slug);
   const cols = "id,title,body_html,slug,category_id,item_date,featured:media!featured_media_id(storage_path)";
   const base = supabase.from("content_items").select(cols).eq("type", type).eq("status", "published");
@@ -42,11 +42,11 @@ async function fetchNewsPost(slug: string, kind: PostKind = "news"): Promise<New
   const catId = str(r["category_id"]);
   const [cats, siblings] = await Promise.all([
     supabase.from("categories").select("id,name_he,slug,parent_id"),
-    kind === "friend"
+    kind !== "news"
       ? supabase
           .from("content_items")
           .select("id,title,slug,item_date")
-          .eq("type", "friend_story")
+          .eq("type", type)
           .eq("status", "published")
           .order("sort_order", { ascending: true, nullsFirst: false })
           .order("title")
