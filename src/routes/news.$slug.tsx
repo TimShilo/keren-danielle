@@ -21,7 +21,7 @@ function SharePanel({ title }: { title: string }) {
   useEffect(() => setUrl(window.location.href), []);
   const u = encodeURIComponent(url);
   return (
-    <div className="flex h-full flex-col justify-between bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-8 py-10 text-center text-white lg:px-[calc(var(--u)*40)] lg:py-[calc(var(--u)*50)]">
+    <div className="flex h-full flex-col justify-between bg-[linear-gradient(to_bottom,#082944_26%,#0c448a_95%)] px-8 py-10 text-center text-white lg:py-[calc(var(--u)*50)] lg:pl-[calc(var(--u)*150)] lg:pr-[calc(var(--u)*50)]">
       <h2 className="text-[clamp(26px,5vw,40px)] font-bold leading-[1.15] lg:text-[calc(var(--u)*40)]">{title}</h2>
       <div className="my-8 flex items-center gap-4" aria-hidden>
         <span className="h-0.5 flex-1 bg-white" />
@@ -71,7 +71,8 @@ function PostView({ post }: { post: NewsPost }) {
     <>
       <PageHero title={post.title} crumbs={crumbs} />
       <GlowSection curveTop aria-label={post.title} className="px-[5%] pb-[100px] pt-[100px]">
-        <div className={`grid items-stretch gap-0 ${post.image ? "lg:grid-cols-2" : ""}`}>
+        {/* 70vw wide, flush with the right edge of the screen; the left end is a half circle */}
+        <div className={`grid items-stretch gap-0 overflow-hidden lg:-mr-[5vw] lg:w-[70vw] lg:rounded-l-full ${post.image ? "lg:grid-cols-2" : "lg:min-h-[26vw]"}`}>
           {post.image && (
             <RevealStripes src={post.image} alt={post.title} className="w-full" />
           )}
@@ -140,7 +141,7 @@ function NewsRoute() {
       ) : !q.data ? (
         <div className="grid min-h-[70vh] place-items-center px-[5%] text-center">
           <div>
-            <h1 className="text-5xl font-bold">הכתבה לא נמצאה</h1>
+            <h1 className="text-[50px] font-bold">הכתבה לא נמצאה</h1>
             <p className="mt-4 text-xl">ייתכן שהיא עדיין לא פורסמה.</p>
             <Link to="/" className="mt-8 inline-block text-xl font-bold underline">
               חזרה לדף הבית

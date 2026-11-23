@@ -33,7 +33,7 @@ function ActivityRoute() {
       ) : !q.data ? (
         <div className="grid min-h-[70vh] place-items-center px-[5%] text-center">
           <div>
-            <h1 className="text-5xl font-bold">העמוד לא נמצא</h1>
+            <h1 className="text-[50px] font-bold">העמוד לא נמצא</h1>
             <p className="mt-4 text-xl">ייתכן שהוא עדיין לא פורסם.</p>
             <Link to="/" className="mt-8 inline-block text-xl font-bold underline">
               חזרה לדף הבית
