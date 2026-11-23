@@ -133,10 +133,18 @@ function LinkCards({ items }: { items: { label: string; href: string }[] }) {
   );
 }
 
+const DANIELLE_CARDS = [
+  { label: "חברים כותבים על דניאלי", href: "/danielle/friends", img: "/images/pages/danielle-friends.webp" },
+  { label: "רגעים מחייה של דניאלי", href: "/danielle/moments", img: "/images/pages/danielle-moments.webp" },
+  { label: "יצירות של דניאלי", href: "/danielle/creations", img: "/images/pages/danielle-creations.webp" },
+  { label: "השירים של דניאלי", href: "/danielle/songs", img: "/images/pages/danielle-songs.webp" },
+  { label: 'הספר "דניאלי שלי"', href: "/danielle/book", img: "/images/pages/danielle-book.webp" },
+];
+
 export function DanielleView() {
   return (
     <>
-      <PageHero title={'על דניאלי ע"ה'} crumbs={[HOME, ABOUT, { label: 'על דניאלי ע"ה' }]} />
+      <PageHero title="על דניאלי" crumbs={[HOME, { label: "על דניאלי" }]} />
       <PageSections
         sections={[
           {
@@ -144,21 +152,29 @@ export function DanielleView() {
             label: "הסיפור של דניאלי",
             tone: "glow",
             children: (
-              <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
+              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-[calc(var(--u)*120)]">
                 <div>
-                  <Eyebrow>הסיפור</Eyebrow>
+                  <Eyebrow>הסיפור של דניאלי</Eyebrow>
                   <h2 className={H2}>
-                    <FoldHeading text={'על דניאלי ע"ה'} />
+                    <FoldHeading text="על דניאלי" />
                   </h2>
                   <RichScrollText
                     className={`${BODY} mt-6 lg:mt-[calc(var(--u)*32)]`}
                     html={paras(
-                      "דניאלי זוננפלד ע\"ה, נולדה בריו דה ז'ניירו שבברזיל בב' באדר א' תשנ\"ה (02/02/1995). כבר מקטנות ניתן היה להבחין בייחודיות שלה. בחיוכה, באהבת האדם שבה ובשמחת החיים המיוחדת, שבתה את ליבם של כל רואיה. פשטותה הנפלאה, במיוחד לאור כשרונותיה הנדירים, הקסימה את כל סביבתה. בהיותה בת שמונה וחצי, עלתה עם משפחתה ארצה והתגוררה ברעננה. למדה בבתי הספר היסודיים \"בילו\" ו\"נועם\", בחטיבת הביניים \"חורב\" ברעננה ובתיכון לוסטיג ברמת גן. בכל מקום בו למדה הצטיינה בלימודיה והייתה חביבת המורות והחברות. דניאלי היתה לומדת מכל אדם ומאירת פנים, וכך בחרה לעצמה קו של נתינה מושלמת ואהבת אין קץ לכל אדם באשר הוא.",
-                      "עם סיום לימודיה, בהצטיינות רבה, בחרה דניאלי לשרת בשירות לאומי במחלקת אונקולוגיה ילדים בבית החולים \"שניידר\" בפתח תקוה, מתוך שאיפה לשרת במקום בו תוכל לתרום ולעזור. בדרכה המיוחדת, זכתה דניאלי להביא חיוך לפניהם המיוסרות של הילדים החולים ולמשפחותיהם. כמו קרן אור זרחה עם בואה למחלקה. היא הייתה שם בשביל הילדים עם אוזן קשבת ויד תומכת. לא חששה להתמודד עם קשיים, והייתה מאושרת כשהצליחה להעניק לילדים אופטימיות ליום המחר. דניאלי חתמה את שנת השירות הראשונה שלה במחלקה האונקולוגית והחליטה להקדיש את שנת השירות השניה לנוער בסיכון בעיר עכו. גם בשנה זו המשיכה להתנדב במקביל במחלקה האונקולוגית ב\"שניידר\", למרות המרחק.",
+                      "דניאלי זוננפלד ע\"ה, נולדה בריו דה ז'ניירו שבברזיל בב' באדר א' תשנ\"ה (02/02/1995). כבר מקטנות ניתן היה להבחין בייחודיות שלה. בחיוכה, באהבת האדם שבה ובשמחת החיים המיוחדת, שבתה את ליבם של כל רואיה. פשטותה הנפלאה, במיוחד לאור כשרונותיה הנדירים, הקסימה את כל סביבתה.",
+                      'בהיותה בת שמונה וחצי, עלתה עם משפחתה ארצה והתגוררה ברעננה. למדה בבתי הספר היסודיים "בילו" ו"נועם", בחטיבת הביניים "חורב" ברעננה ובתיכון לוסטיג ברמת גן. בכל מקום בו למדה הצטיינה בלימודיה והייתה חביבת המורות והחברות. דניאלי היתה לומדת מכל אדם ומאירת פנים, וכך בחרה לעצמה קו של נתינה מושלמת ואהבת אין קץ לכל אדם באשר הוא.',
                     )}
                   />
                 </div>
-                <EnterFromCorner when="scroll" src="/images/pages/danielle-about.webp" alt={'דניאלי זוננפלד ע"ה'} className="mx-auto block w-full max-w-[560px] lg:max-w-none" />
+                <RevealStripes src="/images/pages/danielle-ward.webp" alt="דניאלי עם הילדים במחלקה" className="mx-auto w-full max-w-[560px] lg:max-w-none">
+                  <img
+                    data-deco
+                    src="/images/home/svg/bracket-yellow.svg"
+                    alt=""
+                    aria-hidden
+                    className="pointer-events-none absolute -bottom-4 -right-4 hidden w-28 translate-x-3 translate-y-3 lg:block"
+                  />
+                </RevealStripes>
               </div>
             ),
           },
@@ -167,16 +183,29 @@ export function DanielleView() {
             label: "המשך הסיפור",
             tone: "dark",
             edge: "sag",
+            className: "relative lg:min-h-[calc(var(--u)*760)]",
             children: (
-              <RichScrollText
-                className={`${BODY.replace("text-navy", "text-white")} mx-auto max-w-[1200px]`}
-                html={paras(
-                  "תושבי עכו והשוהים במחלקת אונקולוגיה ב\"שניידר\" זכו לנתינה יחודית ויוצאת דופן מדניאלי. בשני המקומות ראתה דניאלי שליחות מיוחדת להיות שם בשביל אלו שהמלחמה היומיומית שלהם היא מלחמת השגרה, בעבור נוער בסיכון שנלחם על מיטה חמה ועל מעט אהבה, לצד חולים שהמלחמה שלהם היא מלחמת החיים. בשתי המלחמות האלו דניאלי הייתה שם כדי לעזור להם לנצח.",
-                  "היה זה אך טבעי, שלאחר התקופה המשמעותית שלה ב\"שניידר\", החליטה דניאלי ללמוד רפואה (תוצאות הפסיכומטרי: 768 הגיעו במהלך השבעה…), מתוך שאיפה להעניק \"רפואה עם לב\".",
-                  "עם לכתה, בתאונת דרכים טראגית, אחרי עוד יום של מסירות טוטאלית לילדים ב\"שניידר\", בלילה מר, ליל תענית אסתר, י\"ג אדר תשע\"ה, כבה האור הגדול שזרח מפניה של דניאלי. אור של צניעות, ענווה, אהבת חסד, כשרונות ברוכים ושמחת חיים. \"קרן דניאלי\" הוקמה על ידי אביה מר מוטי זוננפלד להנצחת זכרה הברוך, וכהמשך טבעי לפועלה בימיה הקצרים.",
-                  "<strong>יהא זכרה ברוך!</strong>",
-                )}
-              />
+              <>
+                <div className="relative z-10 max-w-[1200px] lg:mr-auto lg:max-w-[calc(var(--u)*880)]">
+                  <RichScrollText
+                    className={BODY.replace("text-navy", "text-white")}
+                    html={paras(
+                      "עם סיום לימודיה, בהצטיינות רבה, בחרה דניאלי לשרת בשירות לאומי במחלקת אונקולוגיה ילדים בבית החולים \"שניידר\" בפתח תקוה, מתוך שאיפה לשרת במקום בו תוכל לתרום ולעזור. בדרכה המיוחדת, זכתה דניאלי להביא חיוך לפניהם המיוסרות של הילדים החולים ולמשפחותיהם. כמו קרן אור זרחה עם בואה למחלקה. היא הייתה שם בשביל הילדים עם אוזן קשבת ויד תומכת. לא חששה להתמודד עם קשיים, והייתה מאושרת כשהצליחה להעניק לילדים אופטימיות ליום המחר. דניאלי חתמה את שנת השירות הראשונה שלה במחלקה האונקולוגית והחליטה להקדיש את שנת השירות השניה לנוער בסיכון בעיר עכו. גם בשנה זו המשיכה להתנדב במקביל במחלקה האונקולוגית ב\"שניידר\", למרות המרחק.",
+                      "תושבי עכו והשוהים במחלקת אונקולוגיה ב\"שניידר\" זכו לנתינה יחודית ויוצאת דופן מדניאלי. בשני המקומות ראתה דניאלי שליחות מיוחדת להיות שם בשביל אלו שהמלחמה היומיומית שלהם היא מלחמת השגרה, בעבור נוער בסיכון שנלחם על מיטה חמה ועל מעט אהבה, לצד חולים שהמלחמה שלהם היא מלחמת החיים. בשתי המלחמות האלו דניאלי הייתה שם כדי לעזור להם לנצח.",
+                      "היה זה אך טבעי, שלאחר התקופה המשמעותית שלה ב\"שניידר\", החליטה דניאלי ללמוד רפואה (תוצאות הפסיכומטרי: 768 הגיעו במהלך השבעה…), מתוך שאיפה להעניק \"רפואה עם לב\".",
+                      "עם לכתה, בתאונת דרכים טראגית, אחרי עוד יום של מסירות טוטאלית לילדים ב\"שניידר\", בלילה מר, ליל תענית אסתר, י\"ג אדר תשע\"ה, כבה האור הגדול שזרח מפניה של דניאלי. אור של צניעות, ענווה, אהבת חסד, כשרונות ברוכים ושמחת חיים. \"קרן דניאלי\" הוקמה על ידי אביה מר מוטי זוננפלד להנצחת זכרה הברוך, וכהמשך טבעי לפועלה בימיה הקצרים.",
+                      "<strong>יהא זכרה ברוך!</strong>",
+                    )}
+                  />
+                </div>
+                {/* the portrait stands on the bottom edge of the band, on the right */}
+                <img
+                  src="/images/pages/danielle-about.webp"
+                  alt={'דניאלי זוננפלד ע"ה'}
+                  loading="lazy"
+                  className="pointer-events-none absolute bottom-0 right-0 hidden w-[calc(var(--u)*640)] lg:block lg:right-[5%]"
+                />
+              </>
             ),
           },
           {
@@ -184,10 +213,20 @@ export function DanielleView() {
             label: "עוד על דניאלי",
             tone: "glow",
             children: (
-              <>
-                <Head eyebrow="עוד" title="להכיר את דניאלי" center />
-                <LinkCards items={DANIELLE_LINKS} />
-              </>
+              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-[calc(var(--u)*26)]">
+                {DANIELLE_CARDS.map((c) => (
+                  <li key={c.href}>
+                    <a
+                      href={c.href}
+                      className="group relative block aspect-[1/1.05] overflow-hidden rounded-[14px] shadow-[2px_6px_14px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:-translate-y-1"
+                    >
+                      <img src={c.img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <span aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
+                      <span className="absolute inset-x-0 bottom-0 p-4 text-center text-[18px] font-bold leading-[1.15] text-white lg:text-[calc(var(--u)*20)]">{c.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             ),
           },
         ]}
