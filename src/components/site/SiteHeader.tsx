@@ -104,7 +104,7 @@ export function SiteHeader() {
       </div>
 
       <div
-        className={`relative z-10 flex items-center justify-between rounded-full border bg-gradient-to-b shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 transition-[height,color,background-color,border-color] duration-700 ease-out ${dark ? "border-white/30 from-white/15 to-white/5 text-white" : "border-white/70 from-white/55 to-white/25 text-navy"} lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)] ${
+        className={`relative z-10 flex items-center justify-between rounded-full border bg-gradient-to-b shadow-[0_8px_32px_rgba(7,40,69,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl backdrop-saturate-150 pe-3 ps-5 transition-[height,color,background-color,border-color] duration-300 ease-out ${dark ? "border-white/30 from-white/15 to-white/5 text-white" : "border-white/70 from-white/55 to-white/25 text-navy"} lg:pe-[calc(var(--u)*31)] lg:ps-[calc(var(--u)*109)] ${
           scrolled ? "h-14 lg:h-[calc(var(--u)*68)]" : "h-16 lg:h-[calc(var(--u)*98)]"
         }`}
       >
@@ -127,14 +127,14 @@ export function SiteHeader() {
           <img
             src="/images/home/svg/logo-heart.svg"
             alt=""
-            className={`absolute block transition-opacity duration-700 ${dark ? "opacity-0" : "opacity-100"}`}
+            className={`absolute block transition-opacity duration-300 ${dark ? "opacity-0" : "opacity-100"}`}
             style={{ insetInlineEnd: 0, width: "51.49%", top: "15%", height: "67.54%" }}
           />
           <img
             src="/images/home/svg/logo-heart-light.svg"
             alt=""
             aria-hidden
-            className={`absolute block transition-opacity duration-700 ${dark ? "opacity-100" : "opacity-0"}`}
+            className={`absolute block transition-opacity duration-300 ${dark ? "opacity-100" : "opacity-0"}`}
             style={{ insetInlineEnd: 0, width: "51.49%", top: "15%", height: "67.54%" }}
           />
         </a>
