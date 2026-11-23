@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutIndexRouteImport } from './routes/about.index'
+import { Route as AboutCertificatesRouteImport } from './routes/about.certificates'
+import { Route as AboutFoundationRouteImport } from './routes/about.foundation'
+import { Route as AboutHonorRouteImport } from './routes/about.honor'
 import { Route as ActivitiesIndexRouteImport } from './routes/activities.index'
 import { Route as ActivitiesSlugRouteImport } from './routes/activities.$slug'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -21,6 +26,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminVideosRouteImport } from './routes/admin.videos'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
+import { Route as DanielleIndexRouteImport } from './routes/danielle.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as AdminContentTypeRouteImport } from './routes/admin.content.$type'
 
@@ -32,6 +38,31 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutIndexRoute = AboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutCertificatesRoute = AboutCertificatesRouteImport.update({
+  id: '/about/certificates',
+  path: '/about/certificates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutFoundationRoute = AboutFoundationRouteImport.update({
+  id: '/about/foundation',
+  path: '/about/foundation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutHonorRoute = AboutHonorRouteImport.update({
+  id: '/about/honor',
+  path: '/about/honor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ActivitiesIndexRoute = ActivitiesIndexRouteImport.update({
@@ -84,6 +115,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DanielleIndexRoute = DanielleIndexRouteImport.update({
+  id: '/danielle/',
+  path: '/danielle/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
   path: '/news/$slug',
@@ -98,6 +134,10 @@ const AdminContentTypeRoute = AdminContentTypeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/about/certificates': typeof AboutCertificatesRoute
+  '/about/foundation': typeof AboutFoundationRoute
+  '/about/honor': typeof AboutHonorRoute
   '/activities/$slug': typeof ActivitiesSlugRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
@@ -107,12 +147,18 @@ export interface FileRoutesByFullPath {
   '/admin/videos': typeof AdminVideosRoute
   '/admin/login': typeof AdminLoginRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/about/': typeof AboutIndexRoute
   '/activities/': typeof ActivitiesIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/danielle/': typeof DanielleIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/about/certificates': typeof AboutCertificatesRoute
+  '/about/foundation': typeof AboutFoundationRoute
+  '/about/honor': typeof AboutHonorRoute
   '/activities/$slug': typeof ActivitiesSlugRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
@@ -122,14 +168,20 @@ export interface FileRoutesByTo {
   '/admin/videos': typeof AdminVideosRoute
   '/admin/login': typeof AdminLoginRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/about': typeof AboutIndexRoute
   '/activities': typeof ActivitiesIndexRoute
   '/admin': typeof AdminIndexRoute
+  '/danielle': typeof DanielleIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/about/certificates': typeof AboutCertificatesRoute
+  '/about/foundation': typeof AboutFoundationRoute
+  '/about/honor': typeof AboutHonorRoute
   '/activities/$slug': typeof ActivitiesSlugRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
@@ -139,8 +191,10 @@ export interface FileRoutesById {
   '/admin/videos': typeof AdminVideosRoute
   '/admin_/login': typeof AdminLoginRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/about/': typeof AboutIndexRoute
   '/activities/': typeof ActivitiesIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/danielle/': typeof DanielleIndexRoute
   '/admin/content/$type': typeof AdminContentTypeRoute
 }
 export interface FileRouteTypes {
@@ -148,6 +202,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/contact'
+    | '/about/certificates'
+    | '/about/foundation'
+    | '/about/honor'
     | '/activities/$slug'
     | '/admin/categories'
     | '/admin/media'
@@ -157,12 +215,18 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin/login'
     | '/news/$slug'
+    | '/about/'
     | '/activities/'
     | '/admin/'
+    | '/danielle/'
     | '/admin/content/$type'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/contact'
+    | '/about/certificates'
+    | '/about/foundation'
+    | '/about/honor'
     | '/activities/$slug'
     | '/admin/categories'
     | '/admin/media'
@@ -172,13 +236,19 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin/login'
     | '/news/$slug'
+    | '/about'
     | '/activities'
     | '/admin'
+    | '/danielle'
     | '/admin/content/$type'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/contact'
+    | '/about/certificates'
+    | '/about/foundation'
+    | '/about/honor'
     | '/activities/$slug'
     | '/admin/categories'
     | '/admin/media'
@@ -188,18 +258,26 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin_/login'
     | '/news/$slug'
+    | '/about/'
     | '/activities/'
     | '/admin/'
+    | '/danielle/'
     | '/admin/content/$type'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  ContactRoute: typeof ContactRoute
+  AboutCertificatesRoute: typeof AboutCertificatesRoute
+  AboutFoundationRoute: typeof AboutFoundationRoute
+  AboutHonorRoute: typeof AboutHonorRoute
   ActivitiesSlugRoute: typeof ActivitiesSlugRoute
   AdminLoginRoute: typeof AdminLoginRoute
   NewsSlugRoute: typeof NewsSlugRoute
+  AboutIndexRoute: typeof AboutIndexRoute
   ActivitiesIndexRoute: typeof ActivitiesIndexRoute
+  DanielleIndexRoute: typeof DanielleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -216,6 +294,41 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/': {
+      id: '/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof AboutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/certificates': {
+      id: '/about/certificates'
+      path: '/about/certificates'
+      fullPath: '/about/certificates'
+      preLoaderRoute: typeof AboutCertificatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/foundation': {
+      id: '/about/foundation'
+      path: '/about/foundation'
+      fullPath: '/about/foundation'
+      preLoaderRoute: typeof AboutFoundationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/honor': {
+      id: '/about/honor'
+      path: '/about/honor'
+      fullPath: '/about/honor'
+      preLoaderRoute: typeof AboutHonorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/activities/': {
@@ -288,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/danielle/': {
+      id: '/danielle/'
+      path: '/danielle'
+      fullPath: '/danielle/'
+      preLoaderRoute: typeof DanielleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news/$slug': {
       id: '/news/$slug'
       path: '/news/$slug'
@@ -332,10 +452,16 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  ContactRoute: ContactRoute,
+  AboutCertificatesRoute: AboutCertificatesRoute,
+  AboutFoundationRoute: AboutFoundationRoute,
+  AboutHonorRoute: AboutHonorRoute,
   ActivitiesSlugRoute: ActivitiesSlugRoute,
   AdminLoginRoute: AdminLoginRoute,
   NewsSlugRoute: NewsSlugRoute,
+  AboutIndexRoute: AboutIndexRoute,
   ActivitiesIndexRoute: ActivitiesIndexRoute,
+  DanielleIndexRoute: DanielleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

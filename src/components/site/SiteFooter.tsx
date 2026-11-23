@@ -17,7 +17,7 @@ const COLUMNS = [
     links: [
       { label: "בית", href: "/" },
       { label: 'על דניאלי ע"ה', href: "/danielle" },
-      { label: "קרן דניאלי", href: "/about" },
+      { label: "קרן דניאלי", href: "/about/foundation" },
       { label: "פרס דניאלי", href: "/prize" },
       { label: "פעילויות", href: "/activities" },
     ],
