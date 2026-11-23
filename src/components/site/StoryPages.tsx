@@ -8,6 +8,7 @@ import { FoldHeading } from "./FoldHeading";
 import { trackPointer } from "./FxButton";
 import { Eyebrow } from "./HomeHero";
 import { CandleFlame } from "./CandleFlame";
+import { DanielleCards } from "./InfoPages";
 import { MoreArrow, VideoCard } from "./HomeFeedSections";
 import { PageHero, type Crumb } from "./PageHero";
 import { PageSections } from "./PageSections";
@@ -42,20 +43,12 @@ function Head({ eyebrow, title, intro }: { eyebrow: string; title: string; intro
 
 /** Links to the other "about Danielle" pages, on the dark curved band that closes the page. */
 function OtherPages({ current }: { current: string }) {
-  const items = DANIELLE_LINKS.filter((l) => l.href !== current);
   return (
     <>
       <Head eyebrow="עוד" title="להמשיך להכיר את דניאלי" />
-      <ul className="mx-auto mt-10 grid max-w-[1500px] grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-[calc(var(--u)*50)] lg:grid-cols-4 lg:gap-[calc(var(--u)*30)]">
-        {items.map((l) => (
-          <li key={l.href}>
-            <a href={l.href} className={`group flex h-full min-h-[110px] items-center justify-between gap-4 rounded-[25px] bg-white px-7 py-6 text-navy transition-transform duration-300 hover:-translate-y-1 ${CARD}`}>
-              <span className="text-[20px] font-bold leading-[1.2] lg:text-[calc(var(--u)*24)]">{l.label}</span>
-              <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-navy transition-colors duration-300 group-hover:border-brand-yellow group-hover:bg-brand-yellow">←</span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-10 lg:mt-[calc(var(--u)*50)]">
+        <DanielleCards skip={current} />
+      </div>
     </>
   );
 }

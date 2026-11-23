@@ -141,6 +141,26 @@ const DANIELLE_CARDS = [
   { label: 'הספר "דניאלי שלי"', href: "/danielle/book", img: "/images/pages/danielle-book.webp" },
 ];
 
+/** Photo cards linking to the "about Danielle" pages; `skip` leaves out the page we are on. */
+export function DanielleCards({ skip }: { skip?: string }) {
+  return (
+    <ul className="mx-auto grid max-w-[1500px] grid-cols-2 justify-center gap-4 sm:grid-cols-3 lg:flex lg:flex-wrap lg:gap-[calc(var(--u)*26)]">
+      {DANIELLE_CARDS.filter((c) => c.href !== skip).map((c) => (
+        <li key={c.href} className="lg:w-[calc((100%-4*var(--u)*26)/5)]">
+          <a
+            href={c.href}
+            className="group relative block aspect-[1/1.05] overflow-hidden rounded-[14px] shadow-[2px_6px_14px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:-translate-y-1"
+          >
+            <img src={c.img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <span aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
+            <span className="absolute inset-x-0 bottom-0 p-4 text-center text-[18px] font-bold leading-[1.15] text-white lg:text-[calc(var(--u)*20)]">{c.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function DanielleView() {
   return (
     <>
@@ -213,20 +233,7 @@ export function DanielleView() {
             label: "עוד על דניאלי",
             tone: "glow",
             children: (
-              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-[calc(var(--u)*26)]">
-                {DANIELLE_CARDS.map((c) => (
-                  <li key={c.href}>
-                    <a
-                      href={c.href}
-                      className="group relative block aspect-[1/1.05] overflow-hidden rounded-[14px] shadow-[2px_6px_14px_rgba(0,0,0,0.22)] transition-transform duration-300 hover:-translate-y-1"
-                    >
-                      <img src={c.img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                      <span aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
-                      <span className="absolute inset-x-0 bottom-0 p-4 text-center text-[18px] font-bold leading-[1.15] text-white lg:text-[calc(var(--u)*20)]">{c.label}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <DanielleCards />
             ),
           },
         ]}
