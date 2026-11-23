@@ -5,6 +5,7 @@ import { strip } from "@/lib/home-feed";
 
 export interface ListItem {
   id: string;
+  slug: string;
   title: string;
   html: string;
   excerpt: string;
@@ -28,7 +29,7 @@ async function fetchList(type: string): Promise<ListItem[]> {
   const { data } = await supabase
     .from("content_items")
     .select(
-      "id,title,body_html,excerpt,item_date,sort_order,featured:media!featured_media_id(storage_path),content_media(sort_order,role,caption,media(storage_path))",
+      "id,title,slug,body_html,excerpt,item_date,sort_order,featured:media!featured_media_id(storage_path),content_media(sort_order,role,caption,media(storage_path))",
     )
     .eq("type", type)
     .eq("status", "published")
@@ -45,6 +46,7 @@ async function fetchList(type: string): Promise<ListItem[]> {
     const inBody = /<img[^>]+src="([^"]+)"/i.exec(html)?.[1] ?? "";
     return {
       id: str(r["id"]),
+      slug: str(r["slug"]),
       title: str(r["title"]),
       html,
       excerpt: (str(r["excerpt"]) || strip(html)).slice(0, 220),

@@ -22,7 +22,7 @@ const ITEM = "w-[clamp(300px,calc(var(--u)*432),590px)] px-[clamp(8px,calc(var(-
 const CARD_SHADOW = "shadow-[4px_4px_9px_rgba(0,0,0,0.25)]";
 
 /** "לפרטים": round arrow; on card hover a yellow disc grows inside it and the arrow turns white */
-function MoreArrow({ className = "" }: { className?: string }) {
+export function MoreArrow({ className = "" }: { className?: string }) {
   return (
     <span className={`flex ${className}`}>
       <span

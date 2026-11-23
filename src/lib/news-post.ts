@@ -17,7 +17,7 @@ export interface NewsPost {
 type Row = Record<string, unknown>;
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const postHref = (r: Row) => `/news/${str(r["slug"]) || str(r["id"])}`;
+const postHref = (r: Row, base = "/news") => `${base}/${str(r["slug"]) || str(r["id"])}`;
 
 function cleanBody(html: string) {
   return html
@@ -26,10 +26,14 @@ function cleanBody(html: string) {
     .trim();
 }
 
-async function fetchNewsPost(slug: string): Promise<NewsPost | null> {
+export type PostKind = "news" | "friend";
+
+async function fetchNewsPost(slug: string, kind: PostKind = "news"): Promise<NewsPost | null> {
+  const type = kind === "friend" ? "friend_story" : "news";
+  const base0 = kind === "friend" ? "/danielle/friends" : "/news";
   const key = decodeURIComponent(slug);
   const cols = "id,title,body_html,slug,category_id,item_date,featured:media!featured_media_id(storage_path)";
-  const base = supabase.from("content_items").select(cols).eq("type", "news").eq("status", "published");
+  const base = supabase.from("content_items").select(cols).eq("type", type).eq("status", "published");
   const { data } = UUID.test(key) ? await base.eq("id", key).maybeSingle() : await base.eq("slug", key).maybeSingle();
   if (!data) return null;
   const r = data as unknown as Row;
@@ -38,17 +42,26 @@ async function fetchNewsPost(slug: string): Promise<NewsPost | null> {
   const catId = str(r["category_id"]);
   const [cats, siblings] = await Promise.all([
     supabase.from("categories").select("id,name_he,slug,parent_id"),
-    catId
+    kind === "friend"
       ? supabase
           .from("content_items")
           .select("id,title,slug,item_date")
-          .eq("type", "news")
+          .eq("type", "friend_story")
           .eq("status", "published")
-          .eq("category_id", catId)
-          .order("item_date", { ascending: false, nullsFirst: false })
+          .order("sort_order", { ascending: true, nullsFirst: false })
           .order("title")
           .limit(200)
-      : Promise.resolve({ data: [] as Row[] }),
+      : catId
+        ? supabase
+            .from("content_items")
+            .select("id,title,slug,item_date")
+            .eq("type", "news")
+            .eq("status", "published")
+            .eq("category_id", catId)
+            .order("item_date", { ascending: false, nullsFirst: false })
+            .order("title")
+            .limit(200)
+        : Promise.resolve({ data: [] as Row[] }),
   ]);
   const all = (cats.data ?? []) as Row[];
   const sub = all.find((c) => str(c["id"]) === catId) ?? null;
@@ -57,7 +70,7 @@ async function fetchNewsPost(slug: string): Promise<NewsPost | null> {
 
   const list = (siblings.data ?? []) as Row[];
   const at = list.findIndex((x) => str(x["id"]) === str(r["id"]));
-  const nb = (i: number) => (i >= 0 && i < list.length ? { title: str(list[i]?.["title"]), href: postHref(list[i] as Row) } : null);
+  const nb = (i: number) => (i >= 0 && i < list.length ? { title: str(list[i]?.["title"]), href: postHref(list[i] as Row, base0) } : null);
 
   // main picture: the featured one, else the first picture inside the text (and take it out of the text)
   let html = cleanBody(str(r["body_html"]));
@@ -83,5 +96,5 @@ async function fetchNewsPost(slug: string): Promise<NewsPost | null> {
   };
 }
 
-export const useNewsPost = (slug: string) =>
-  useQuery({ queryKey: ["news-post", slug], queryFn: () => fetchNewsPost(slug), staleTime: 5 * 60_000 });
+export const useNewsPost = (slug: string, kind: PostKind = "news") =>
+  useQuery({ queryKey: ["news-post", kind, slug], queryFn: () => fetchNewsPost(slug, kind), staleTime: 5 * 60_000 });

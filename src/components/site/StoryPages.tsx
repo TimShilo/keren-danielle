@@ -2,11 +2,13 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useContentList, usePageItem, type ListItem } from "@/lib/content-list";
+import { shortTitle } from "./PageHero";
 import type { VideoCardData } from "@/lib/home-feed";
 import { FoldHeading } from "./FoldHeading";
 import { trackPointer } from "./FxButton";
 import { Eyebrow } from "./HomeHero";
-import { VideoCard } from "./HomeFeedSections";
+import { CandleFlame } from "./CandleFlame";
+import { MoreArrow, VideoCard } from "./HomeFeedSections";
 import { PageHero, type Crumb } from "./PageHero";
 import { PageSections } from "./PageSections";
 import { RichScrollText } from "./RichScrollText";
@@ -166,9 +168,60 @@ function ListPage({
   );
 }
 
-export const FriendsPage = () => (
-  <ListPage title="חברים כותבים על דניאלי" crumbs={[HOME, ABOUT, DANIELLE, { label: "חברים כותבים על דניאלי" }]} eyebrow={'על דניאלי ע"ה'} heading="חברים כותבים על דניאלי" type="friend_story" current="/danielle/friends" quote />
-);
+/** four words at most, then "…" */
+const fourWords = (t: string) => {
+  const w = t.trim().replace(/\s+/g, " ").split(" ");
+  return w.length > 4 ? `${w.slice(0, 4).join(" ")}…` : t;
+};
+
+function FriendCard({ it }: { it: ListItem }) {
+  return (
+    <a
+      href={`/danielle/friends/${it.slug || it.id}`}
+      className="group/card relative flex flex-col rounded-[20px] bg-[#f7f5f2] px-7 pb-5 pt-6 text-navy transition-transform duration-300 hover:-translate-y-1 shadow-[2px_6px_14px_rgba(0,0,0,0.18)] lg:px-[calc(var(--u)*34)]"
+    >
+      <h3 className="truncate text-[22px] font-bold leading-[1.2] lg:text-[calc(var(--u)*24)]">{fourWords(it.title)}</h3>
+      <div className="mt-3 flex items-start gap-4">
+        <CandleFlame className="h-[110px] lg:h-[calc(var(--u)*123)]" />
+        <p className="line-clamp-4 min-h-[5.2em] flex-1 text-[16px] leading-[1.3] lg:text-[calc(var(--u)*17)]">{it.excerpt}</p>
+      </div>
+      <MoreArrow className="mt-3 justify-end" />
+    </a>
+  );
+}
+
+export function FriendsPage() {
+  const q = useContentList("friend_story");
+  const items = q.data ?? [];
+  return (
+    <>
+      <PageHero title="חברים כותבים על דניאלי" crumbs={[HOME, ABOUT, DANIELLE, { label: "חברים כותבים על דניאלי" }]} />
+      <PageSections
+        sections={[
+          {
+            key: "list",
+            label: "חברים כותבים על דניאלי",
+            tone: "glow",
+            children: (
+              <>
+                <Head eyebrow="מה החברים מספרים" title="חברים מספרים על דניאלי" />
+                <ul className="mx-auto mt-10 grid max-w-[1720px] grid-cols-1 gap-6 md:grid-cols-2 lg:mt-[calc(var(--u)*60)] lg:grid-cols-3 lg:gap-[calc(var(--u)*36)]">
+                  {items.map((it) => (
+                    <li key={it.id} className="flex">
+                      <FriendCard it={it} />
+                    </li>
+                  ))}
+                </ul>
+                {!items.length && !q.isLoading && <p className="mt-10 text-center text-xl">התוכן יתווסף בקרוב.</p>}
+              </>
+            ),
+          },
+          { key: "other", label: "עוד על דניאלי", tone: "dark", edge: "sag", children: <OtherPages current="/danielle/friends" /> },
+        ]}
+      />
+    </>
+  );
+}
 export const MomentsPage = () => (
   <ListPage title="רגעים מחייה של דניאלי" crumbs={[HOME, ABOUT, DANIELLE, { label: "רגעים מחייה של דניאלי" }]} eyebrow={'על דניאלי ע"ה'} heading="רגעים מחייה של דניאלי" type="moment" current="/danielle/moments" />
 );
