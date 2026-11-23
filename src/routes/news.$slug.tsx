@@ -71,10 +71,10 @@ function PostView({ post }: { post: NewsPost }) {
     <>
       <PageHero title={post.title} crumbs={crumbs} />
       <GlowSection curveTop aria-label={post.title} className="px-[5%] pb-[100px] pt-[100px]">
-        {/* 70vw wide, flush with the right edge of the screen; the left end is a half circle */}
-        <div className={`grid items-stretch gap-0 overflow-hidden lg:-mr-[5vw] lg:w-[70vw] lg:rounded-l-full ${post.image ? "lg:grid-cols-2" : "lg:min-h-[26vw]"}`}>
+        {/* 80vw wide (the size of the Danielle / prize area on the home page), flush with the right edge of the screen; the left end is a half circle */}
+        <div className={`grid items-stretch gap-0 overflow-hidden lg:-mr-[5vw] lg:w-[80vw] lg:rounded-l-full ${post.image ? "lg:grid-cols-2" : "lg:min-h-[32vw]"}`}>
           {post.image && (
-            <RevealStripes src={post.image} alt={post.title} className="w-full" />
+            <RevealStripes src={post.image} alt={post.title} aspect="5 / 4" className="w-full" />
           )}
           <SharePanel title={post.title} />
         </div>
