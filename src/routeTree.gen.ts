@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as PublishedRouteImport } from './routes/published'
 import { Route as AboutIndexRouteImport } from './routes/about.index'
 import { Route as AboutCertificatesRouteImport } from './routes/about.certificates'
 import { Route as AboutFoundationRouteImport } from './routes/about.foundation'
@@ -27,6 +29,11 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminVideosRouteImport } from './routes/admin.videos'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as DanielleIndexRouteImport } from './routes/danielle.index'
+import { Route as DanielleBookRouteImport } from './routes/danielle.book'
+import { Route as DanielleCreationsRouteImport } from './routes/danielle.creations'
+import { Route as DanielleFriendsRouteImport } from './routes/danielle.friends'
+import { Route as DanielleMomentsRouteImport } from './routes/danielle.moments'
+import { Route as DanielleSongsRouteImport } from './routes/danielle.songs'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as AdminContentTypeRouteImport } from './routes/admin.content.$type'
 
@@ -43,6 +50,16 @@ const AdminRoute = AdminRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublishedRoute = PublishedRouteImport.update({
+  id: '/published',
+  path: '/published',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
@@ -120,6 +137,31 @@ const DanielleIndexRoute = DanielleIndexRouteImport.update({
   path: '/danielle/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DanielleBookRoute = DanielleBookRouteImport.update({
+  id: '/danielle/book',
+  path: '/danielle/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DanielleCreationsRoute = DanielleCreationsRouteImport.update({
+  id: '/danielle/creations',
+  path: '/danielle/creations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DanielleFriendsRoute = DanielleFriendsRouteImport.update({
+  id: '/danielle/friends',
+  path: '/danielle/friends',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DanielleMomentsRoute = DanielleMomentsRouteImport.update({
+  id: '/danielle/moments',
+  path: '/danielle/moments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DanielleSongsRoute = DanielleSongsRouteImport.update({
+  id: '/danielle/songs',
+  path: '/danielle/songs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
   path: '/news/$slug',
@@ -135,6 +177,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
+  '/published': typeof PublishedRoute
   '/about/certificates': typeof AboutCertificatesRoute
   '/about/foundation': typeof AboutFoundationRoute
   '/about/honor': typeof AboutHonorRoute
@@ -146,6 +190,11 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/admin/videos': typeof AdminVideosRoute
   '/admin/login': typeof AdminLoginRoute
+  '/danielle/book': typeof DanielleBookRoute
+  '/danielle/creations': typeof DanielleCreationsRoute
+  '/danielle/friends': typeof DanielleFriendsRoute
+  '/danielle/moments': typeof DanielleMomentsRoute
+  '/danielle/songs': typeof DanielleSongsRoute
   '/news/$slug': typeof NewsSlugRoute
   '/about/': typeof AboutIndexRoute
   '/activities/': typeof ActivitiesIndexRoute
@@ -156,6 +205,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
+  '/published': typeof PublishedRoute
   '/about/certificates': typeof AboutCertificatesRoute
   '/about/foundation': typeof AboutFoundationRoute
   '/about/honor': typeof AboutHonorRoute
@@ -167,6 +218,11 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/admin/videos': typeof AdminVideosRoute
   '/admin/login': typeof AdminLoginRoute
+  '/danielle/book': typeof DanielleBookRoute
+  '/danielle/creations': typeof DanielleCreationsRoute
+  '/danielle/friends': typeof DanielleFriendsRoute
+  '/danielle/moments': typeof DanielleMomentsRoute
+  '/danielle/songs': typeof DanielleSongsRoute
   '/news/$slug': typeof NewsSlugRoute
   '/about': typeof AboutIndexRoute
   '/activities': typeof ActivitiesIndexRoute
@@ -179,6 +235,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
+  '/published': typeof PublishedRoute
   '/about/certificates': typeof AboutCertificatesRoute
   '/about/foundation': typeof AboutFoundationRoute
   '/about/honor': typeof AboutHonorRoute
@@ -190,6 +248,11 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/admin/videos': typeof AdminVideosRoute
   '/admin_/login': typeof AdminLoginRoute
+  '/danielle/book': typeof DanielleBookRoute
+  '/danielle/creations': typeof DanielleCreationsRoute
+  '/danielle/friends': typeof DanielleFriendsRoute
+  '/danielle/moments': typeof DanielleMomentsRoute
+  '/danielle/songs': typeof DanielleSongsRoute
   '/news/$slug': typeof NewsSlugRoute
   '/about/': typeof AboutIndexRoute
   '/activities/': typeof ActivitiesIndexRoute
@@ -203,6 +266,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/contact'
+    | '/events'
+    | '/published'
     | '/about/certificates'
     | '/about/foundation'
     | '/about/honor'
@@ -214,6 +279,11 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/videos'
     | '/admin/login'
+    | '/danielle/book'
+    | '/danielle/creations'
+    | '/danielle/friends'
+    | '/danielle/moments'
+    | '/danielle/songs'
     | '/news/$slug'
     | '/about/'
     | '/activities/'
@@ -224,6 +294,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/contact'
+    | '/events'
+    | '/published'
     | '/about/certificates'
     | '/about/foundation'
     | '/about/honor'
@@ -235,6 +307,11 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/videos'
     | '/admin/login'
+    | '/danielle/book'
+    | '/danielle/creations'
+    | '/danielle/friends'
+    | '/danielle/moments'
+    | '/danielle/songs'
     | '/news/$slug'
     | '/about'
     | '/activities'
@@ -246,6 +323,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/contact'
+    | '/events'
+    | '/published'
     | '/about/certificates'
     | '/about/foundation'
     | '/about/honor'
@@ -257,6 +336,11 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/videos'
     | '/admin_/login'
+    | '/danielle/book'
+    | '/danielle/creations'
+    | '/danielle/friends'
+    | '/danielle/moments'
+    | '/danielle/songs'
     | '/news/$slug'
     | '/about/'
     | '/activities/'
@@ -269,11 +353,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
+  EventsRoute: typeof EventsRoute
+  PublishedRoute: typeof PublishedRoute
   AboutCertificatesRoute: typeof AboutCertificatesRoute
   AboutFoundationRoute: typeof AboutFoundationRoute
   AboutHonorRoute: typeof AboutHonorRoute
   ActivitiesSlugRoute: typeof ActivitiesSlugRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  DanielleBookRoute: typeof DanielleBookRoute
+  DanielleCreationsRoute: typeof DanielleCreationsRoute
+  DanielleFriendsRoute: typeof DanielleFriendsRoute
+  DanielleMomentsRoute: typeof DanielleMomentsRoute
+  DanielleSongsRoute: typeof DanielleSongsRoute
   NewsSlugRoute: typeof NewsSlugRoute
   AboutIndexRoute: typeof AboutIndexRoute
   ActivitiesIndexRoute: typeof ActivitiesIndexRoute
@@ -301,6 +392,20 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/published': {
+      id: '/published'
+      path: '/published'
+      fullPath: '/published'
+      preLoaderRoute: typeof PublishedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/': {
@@ -408,6 +513,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DanielleIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/danielle/book': {
+      id: '/danielle/book'
+      path: '/danielle/book'
+      fullPath: '/danielle/book'
+      preLoaderRoute: typeof DanielleBookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/danielle/creations': {
+      id: '/danielle/creations'
+      path: '/danielle/creations'
+      fullPath: '/danielle/creations'
+      preLoaderRoute: typeof DanielleCreationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/danielle/friends': {
+      id: '/danielle/friends'
+      path: '/danielle/friends'
+      fullPath: '/danielle/friends'
+      preLoaderRoute: typeof DanielleFriendsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/danielle/moments': {
+      id: '/danielle/moments'
+      path: '/danielle/moments'
+      fullPath: '/danielle/moments'
+      preLoaderRoute: typeof DanielleMomentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/danielle/songs': {
+      id: '/danielle/songs'
+      path: '/danielle/songs'
+      fullPath: '/danielle/songs'
+      preLoaderRoute: typeof DanielleSongsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news/$slug': {
       id: '/news/$slug'
       path: '/news/$slug'
@@ -453,11 +593,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
+  EventsRoute: EventsRoute,
+  PublishedRoute: PublishedRoute,
   AboutCertificatesRoute: AboutCertificatesRoute,
   AboutFoundationRoute: AboutFoundationRoute,
   AboutHonorRoute: AboutHonorRoute,
   ActivitiesSlugRoute: ActivitiesSlugRoute,
   AdminLoginRoute: AdminLoginRoute,
+  DanielleBookRoute: DanielleBookRoute,
+  DanielleCreationsRoute: DanielleCreationsRoute,
+  DanielleFriendsRoute: DanielleFriendsRoute,
+  DanielleMomentsRoute: DanielleMomentsRoute,
+  DanielleSongsRoute: DanielleSongsRoute,
   NewsSlugRoute: NewsSlugRoute,
   AboutIndexRoute: AboutIndexRoute,
   ActivitiesIndexRoute: ActivitiesIndexRoute,

@@ -1,13 +1,15 @@
 import { useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useMegaMenu } from "@/lib/activities";
+import { ABOUT_GROUPS, MORE_GROUPS, PanelMenu } from "./AboutMenu";
 import { MegaMenu } from "./MegaMenu";
 import { FxIconButton } from "./FxButton";
 
-const NAV = [
-  { label: "אודות", href: "/about" },
-  { label: "פעילויות", href: "/activities" },
-  { label: "עוד", href: "#" },
+type PanelKey = "about" | "activities" | "more";
+const NAV: { label: string; href: string; panel?: PanelKey }[] = [
+  { label: "אודות", href: "/about", panel: "about" },
+  { label: "פעילויות", href: "/activities", panel: "activities" },
+  { label: "עוד", href: "#", panel: "more" },
   { label: "פרס דניאלי", href: "/prize" },
   { label: "כתבו עלינו", href: "/press" },
   { label: "צור קשר", href: "/contact" },
@@ -19,20 +21,23 @@ const NAV = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mega, setMega] = useState(false);
+  const [panel, setPanel] = useState<PanelKey | null>(null);
+  const [aboutOpen, setAboutOpen] = useState<string | null>(null);
+  const mega = panel !== null;
   const closeTimer = useRef<number | undefined>(undefined);
   const path = useRouterState({ select: (s) => s.location.pathname });
   useMegaMenu(); // warm the menu data
 
-  const openMega = () => {
+  const openPanel = (k: PanelKey) => {
     window.clearTimeout(closeTimer.current);
-    setMega(true);
+    setPanel(k);
   };
+  const keepOpen = () => window.clearTimeout(closeTimer.current);
   const closeMega = () => {
     window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setMega(false), 180);
+    closeTimer.current = window.setTimeout(() => setPanel(null), 180);
   };
-  useEffect(() => setMega(false), [path]);
+  useEffect(() => setPanel(null), [path]);
   const isActive = (href: string) => href !== "#" && (path === href || path.startsWith(`${href}/`));
 
   // Stays pinned to the top while scrolling and shrinks a little to take less room.
@@ -53,12 +58,14 @@ export function SiteHeader() {
       {/* mega menu panel: opens under the pill and slides behind it */}
       <div
         inert={!mega}
-        onPointerEnter={openMega}
+        onPointerEnter={keepOpen}
         className={`absolute inset-x-0 top-0 hidden overflow-hidden rounded-[calc(var(--u)*48)] bg-[linear-gradient(to_bottom,#072845_30%,#0c448a_100%)] shadow-[0_24px_60px_rgba(7,40,69,0.35)] transition-[opacity,transform] duration-300 lg:block ${
           mega ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
         }`}
       >
-        <MegaMenu onNavigate={() => setMega(false)} />
+        {panel === "activities" && <MegaMenu onNavigate={() => setPanel(null)} />}
+        {panel === "about" && <PanelMenu groups={ABOUT_GROUPS} onNavigate={() => setPanel(null)} />}
+        {panel === "more" && <PanelMenu groups={MORE_GROUPS} onNavigate={() => setPanel(null)} />}
       </div>
 
       <div
@@ -98,12 +105,12 @@ export function SiteHeader() {
             <a
               key={n.label}
               href={n.href}
-              onPointerEnter={n.href === "/activities" ? openMega : closeMega}
-              onFocus={n.href === "/activities" ? openMega : undefined}
-              aria-haspopup={n.href === "/activities" ? "true" : undefined}
-              aria-expanded={n.href === "/activities" ? mega : undefined}
+              onPointerEnter={n.panel ? () => openPanel(n.panel as PanelKey) : closeMega}
+              onFocus={n.panel ? () => openPanel(n.panel as PanelKey) : undefined}
+              aria-haspopup={n.panel ? "true" : undefined}
+              aria-expanded={n.panel ? panel === n.panel : undefined}
               className={`whitespace-nowrap transition-colors duration-300 hover:text-brand-yellow focus-visible:text-brand-yellow ${
-                isActive(n.href) || (n.href === "/activities" && mega) ? "text-brand-yellow" : ""
+                isActive(n.href) || (n.panel && panel === n.panel) ? "text-brand-yellow" : ""
               }`}
             >
               {n.label}
@@ -142,15 +149,51 @@ export function SiteHeader() {
           aria-label="תפריט נייד"
           className="mt-2 flex flex-col rounded-3xl border border-white/70 bg-white/60 px-6 py-3 text-xl shadow-lg backdrop-blur-xl lg:hidden"
         >
-          {NAV.map((n) => (
-            <a
-              key={n.label}
-              href={n.href}
-              className={`border-b border-navy/10 py-3 last:border-0 ${isActive(n.href) ? "text-[#b89400]" : ""}`}
-            >
-              {n.label}
-            </a>
-          ))}
+          {NAV.map((n) =>
+            n.panel === "about" ? (
+              <div key={n.label} className="border-b border-navy/10 py-1">
+                <a href={n.href} className={`block py-2 ${isActive(n.href) ? "text-[#b89400]" : ""}`}>
+                  {n.label}
+                </a>
+                {ABOUT_GROUPS.map((g) => (
+                  <div key={g.title} className="ps-4">
+                    <div className="flex items-center justify-between">
+                      <a href={g.href} className="block py-2 text-lg">
+                        {g.title}
+                      </a>
+                      <button
+                        type="button"
+                        aria-label={`פתיחת ${g.title}`}
+                        aria-expanded={aboutOpen === g.title}
+                        onClick={() => setAboutOpen((v) => (v === g.title ? null : g.title))}
+                        className="grid size-9 cursor-pointer place-items-center text-navy"
+                      >
+                        <span aria-hidden className={`inline-block transition-transform ${aboutOpen === g.title ? "rotate-180" : ""}`}>⌄</span>
+                      </button>
+                    </div>
+                    {aboutOpen === g.title && (
+                      <ul className="pb-2 ps-3">
+                        {g.links.map((l) => (
+                          <li key={l.href}>
+                            <a href={l.href} className={`block py-1.5 text-base ${isActive(l.href) ? "text-[#b89400]" : ""}`}>
+                              {l.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : n.panel === "more" ? null : (
+              <a key={n.label} href={n.href} className={`border-b border-navy/10 py-3 last:border-0 ${isActive(n.href) ? "text-[#b89400]" : ""}`}>
+                {n.label}
+              </a>
+            ),
+          )}
+          <a href="/published" className={`border-b border-navy/10 py-3 ${isActive("/published") ? "text-[#b89400]" : ""}`}>
+            ראו אור
+          </a>
         </nav>
       )}
     </header>
