@@ -44,7 +44,7 @@ function ContactRow({ href, icon, children, external }: { href: string; icon: Re
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="group flex items-center gap-4 text-[18px] leading-none"
+      className="group flex items-center gap-4 text-[16px] leading-none"
     >
       <span className="grid size-[33px] shrink-0 place-items-center rounded-full bg-white/15 text-white transition-colors duration-300 group-hover:bg-brand-yellow group-hover:text-navy">
         {icon}
@@ -68,11 +68,11 @@ export function SiteFooter() {
         <div className="mx-auto grid grid-cols-2 gap-x-6 gap-y-12 lg:h-[calc(var(--u)*350)] lg:max-w-none lg:grid-cols-[446fr_488fr_424fr_562fr] lg:gap-x-0">
           {COLUMNS.map((c) => (
             <nav key={c.title} aria-label={c.title}>
-              <h2 className="text-[18px] font-bold leading-[1.3]">{c.title}</h2>
+              <h2 className="text-[16px] font-bold leading-[1.3]">{c.title}</h2>
               <ul className="mt-6 space-y-2 lg:mt-[calc(var(--u)*26)] lg:space-y-[calc(var(--u)*7)]">
                 {c.links.map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="inline-block text-[18px] leading-[1.5] underline-offset-4 hover:underline">
+                    <a href={l.href} className="inline-block text-[16px] leading-[1.5] underline-offset-4 hover:underline">
                       {l.label}
                     </a>
                   </li>
@@ -116,7 +116,7 @@ export function SiteFooter() {
             </li>
           ))}
         </ul>
-        <div className="mt-6 grid grid-cols-1 items-center gap-3 text-center text-[18px] leading-[1.3] lg:mt-[calc(var(--u)*30)] lg:grid-cols-3 lg:text-start">
+        <div className="mt-6 grid grid-cols-1 items-center gap-3 text-center text-[16px] leading-[1.3] lg:mt-[calc(var(--u)*30)] lg:grid-cols-3 lg:text-start">
           <p>© {year} כל הזכויות שמורות לקרן דניאלי</p>
           <p className="flex justify-center gap-8 lg:gap-12">
             <a href="/accessibility" className="underline-offset-4 hover:underline">
