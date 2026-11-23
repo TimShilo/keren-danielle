@@ -313,19 +313,21 @@ function PressTile({ p }: { p: PressItem }) {
     <a
       href={p.href}
       {...(p.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="group/card flex h-full w-full flex-col overflow-hidden rounded-[25px] bg-white text-navy shadow-[4px_4px_9px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
+      className="group/card flex h-full w-full flex-col overflow-hidden rounded-[22px] bg-white text-navy shadow-[2px_6px_14px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:-translate-y-1"
     >
-      <span className="relative block aspect-[414/267] shrink-0 border-b-2 border-black/30 bg-white">
+      <span className="relative block aspect-[1/0.78] shrink-0 border-b border-black/15 bg-white">
         {p.image ? (
-          <img src={p.image} alt="" loading="lazy" className="absolute inset-0 size-full object-contain p-[14%]" />
+          <img src={p.image} alt="" loading="lazy" className="absolute inset-0 size-full object-contain p-[8%]" />
         ) : (
-          <span className="absolute inset-0 grid place-items-center bg-[#eef8ff] px-6 text-center text-[24px] font-bold leading-[1.1] text-navy/70">{p.source || "בתקשורת"}</span>
+          <span className="absolute inset-0 grid place-items-center bg-[#eef8ff] px-6 text-center text-[26px] font-bold leading-[1.1] text-navy/70">{p.source || "בתקשורת"}</span>
         )}
       </span>
-      <span className="flex flex-1 flex-col p-6">
-        <span className="line-clamp-2 text-[22px] font-bold leading-[1.2] text-[#1d2838]">{p.title}</span>
-        {p.source && p.image && <span className="mt-2 line-clamp-1 text-[16px] text-navy/80">{p.source}</span>}
-        <MoreArrow className="mt-auto pt-4" />
+      <span className="flex flex-1 flex-col px-5 pb-4 pt-4">
+        <span className="line-clamp-2 min-h-[2.4em] text-[18px] font-bold leading-[1.2] text-[#1d2838] lg:text-[calc(var(--u)*19)]">{p.title}</span>
+        <span className="mt-auto line-clamp-1 pt-3 text-[14px] text-navy/70">{p.source}</span>
+        <span className="mt-2 flex items-center gap-1.5 text-[14px] text-navy transition-colors group-hover/card:text-[#b99a00]">
+          לפרטים <span aria-hidden>←</span>
+        </span>
       </span>
     </a>
   );
